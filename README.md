@@ -16,7 +16,7 @@ Vojtech Petr<sup>1,2</sup>, Samuel L. Liu<sup>3</sup>, Filip Tichanek<sup>1</sup
 
 ---------------------------------------------------------------------------------------------------
 
-This is a statistical report of the study titled ***Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction *** currently *under review* in the [*American Journal of Transplantation*](https://www.amjtransplant.org/) journal.
+This is a statistical report of the study titled ***Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction*** currently *under review* in the [*American Journal of Transplantation*](https://www.amjtransplant.org/) journal.
 
 When using this code or data, cite the original publication:
 
