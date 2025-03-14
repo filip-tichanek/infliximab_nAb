@@ -1,0 +1,5910 @@
+---
+title: "Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction "
+subtitle: "Statistical report"
+format: 
+  html:  
+    embed-resources: true
+    keep-md: false
+    toc: true
+    toc-expand: 2
+    toc-depth: 4
+    toc-location: left
+    number-sections: true
+    number-depth: 4
+    code-fold: true
+    code-tools: true
+    code-summary: "Open code"
+    grid: 
+      body-width: 1000px
+      sidebar-width: 600px
+      margin-width: 100px
+editor: source
+
+theme: darkly
+highlight-style: github-dark
+fontsize: 12 px
+fontcolor: "#C4C4C4"
+code-block-bg: "#2D2D31"
+monobackgroundcolor: "#3B3B3B"
+bibliography: references.bib
+---
+
+------------------------------------------------------------------------
+
+**Authors and affiliations**
+
+<div style="font-size: larger;">
+Vojtech Petr<sup>1,2</sup>, Samuel L. Liu<sup>3</sup>, Filip Tichanek<sup>1</sup>, Felix Poppelaars<sup>2</sup>, Brandon Renner<sup>2</sup>, Jennifer Laskowski<sup>2</sup>, Shrey Purohit<sup>2</sup>, Ming Zhao<sup>3</sup>, Diana Jalal<sup>4,5</sup>, Peter S. Heeger<sup>6,#</sup>, Joshua M. Thurman<sup>3,#</sup>
+</div>
+
+<br>
+
+<sup>1</sup> Institute for Clinical and Experimental Medicine, Prague, Czech Republic     
+<sup>2</sup> Department of Medicine, University of Colorado School of Medicine, Anschutz Medical Campus, Aurora, CO, USA     
+<sup>3</sup> Feinberg Cardiovascular and Renal Research Institute, Northwestern University, Chicago, IL, USA      
+<sup>4</sup> Department of Medicine, Carver College of Medicine, University of Iowa, IA, USA     
+<sup>5</sup> Iowa City VA HCS, Iowa City, IA, USA      
+<sup>6</sup> Departments of Medicine, Surgery and Biomedical Sciences, Cedars Sinai Medical Center, Los Angeles, CA, USA      
+<sup>#</sup> Co-senior authors, contributed equally
+
+---------------------------------------------------------------------------------------------------
+
+This is a statistical report of the study titled ***Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction*** currently *under review* in the [*American Journal of Transplantation*](https://www.amjtransplant.org/) journal.
+
+When using this code or data, cite the original publication:
+
+> TO BE ADDED
+
+BibTex citation for the original publication:
+
+> TO BE ADDED
+
+---------------------------------------------------------------------------------------------------
+
+Original [GitHub repository](https://github.com/filip-tichanek/infliximab_nAb): https://github.com/filip-tichanek/infliximab_nAb
+
+Statistical **reports** can be found [here](https://filip-tichanek.github.io/infliximab_nAb/)
+
+----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{css, echo=FALSE}
+code.sourceCode {
+  font-size: 0.85em;
+  border: 1px solid #ffffff; 
+  padding: 9px; 
+}
+
+code{
+    color: #EEE8AA; 
+    background: #96464D
+}
+
+.equation {
+  text-align: center;
+  display: block;
+  margin: auto;
+}
+
+body {
+  text-align: justify;
+}
+```
+
+------------------------------------------------------------------------
+
+
+# Manuscript text
+
+## Statistical analysis methods
+
+### Full version
+
+Analyses were performed in R (version 4.4.2) [@R] and GraphPad Prism (version 10.2.3). Continuous variables are reported as medians with interquartile ranges and categorical variables as counts and percentages. Group comparisons were conducted using the Mann–Whitney test, and correlations were assessed via Spearman’s rank correlation.  
+
+Unadjusted effects of covariates (including nAb and their interaction with infliximab) were estimated using complete-case logistic regression for binary outcomes (DGF, infection, and BKV infection) and linear models for eGFR.  
+
+For outcome–nAb combinations where the 95% confidence interval of the interaction term did not include the null effect, we fit multivariable Bayesian models with a non-linear interaction between log$_2$-transformed nAb levels and infliximab using penalized B-splines with 5 knots (separately for each treatment group). Logistic Bayesian regression was used for binary outcomes, while Bayesian robust regression (Student’s t-distribution) was used for eGFR. Covariates were prespecified based on their well-documented association with kidney transplant outcomes and included donor and recipient sex, HLA mismatch count, KDPI, perfusion event, recipient age, and cold ischemia time. 
+
+Missing data (35 for HLA mismatch, 21 for perfusion event, 3 for cold ischemia time) were handled via multiple imputation (80 datasets) using the 'mice' package [@mice]. Binary variables were imputed via logistic regression, and numeric variables via predictive mean matching. Bayesian models were run using the 'brms' package [@brms] with Hamiltonian Monte Carlo sampling (4 chains, 2000 iterations including 1900 warm-ups per each of 80 imputed datasets, yielding 32,000 post-warmup samples). Posterior distributions were summarized by the median (point estimate) and the 2.5th and 97.5th percentiles (95% credible interval, 95% CrI).
+
+Priors for fixed effects were Gaussian, centered at 0 ($\mu = 0$), with $\sigma$ defined as follows: 
+
+In logistic model (binary outcomes):  
+
+$\sigma = 4$ for binary predictors   
+
+$\sigma = \frac{2}{\text{SD}(\text{predictor})}$ for numeric predictors  
+
+For robust regression (eGFR):    
+
+$\sigma = 4 \times \text{SD}(\text{eGFR})$ for binary predictors   
+
+$\sigma = \frac{2 \times \text{SD}(\text{eGFR})}{\text{SD}(\text{predictor})}$ for numeric predictors     
+
+
+Non-linear effects used Student’s t priors:    
+
+Baseline spline: $df = 3, \mu = 0, \sigma = 0.6$    
+
+Treatment-specific spline: $df = 3, \mu = 0, \sigma = 0.3$    
+
+Posterior estimates for infliximab effects were obtained at the 5th, 25th, 50th, 75th, and 95th percentiles of nAb levels. We quantified the modulation of infliximab treatment by comparing the posterior distributions of the treatment effect at the 5th and 95th percentiles of nAb levels. For each posterior sample, we computed the ratio of odds ratios (OR at 95th percentile / OR at 5th percentile) in logistic models and the difference in treatment effects ($\beta_{\text{infliximab}}|\text{nAbs}=95^\text{th}$ – $\beta_{\text{infliximab}}|\text{nAbs}=5^\text{th}$) in robust regression for eGFR. 
+
+Mediation analysis was performed using the 'bayestestR' package [@bayestest] to assess whether infliximab affected eGFR and whether this effect was mediated through DGF. Analyses were conducted separately for individuals with below- and above-median aCL IgG levels.
+
+Because the highest aCL IgG levels were only observed in the control group, we performed a sensitivity analysis by restricting the dataset to patients with aCL IgG levels within the range observed in the infliximab group.
+
+### Short version (manuscript)
+
+All analyses were conducted in R (version 4.4.2) and GraphPad Prism (version 10.2.3). Continuous variables are reported as medians with interquartile ranges, and categorical variables as percentages. Spearman’s rank correlation assessed associations.
+
+Unadjusted analyses used logistic regression for binary outcomes (DGF, infection, and BKV infection) and linear models for eGFR, both based on complete cases. When the 95% confidence interval of the interaction term between nAb and infliximab did not include the null effect, multivariable Bayesian models with non-linear interactions (using group-specific B splines) were fitted to using the 'brms' R package. These models employed logistic regression for binary outcomes and robust (Student’s t) regression for eGFR, with multiple imputation (80 datasets) for missing data.
+
+Pre-specified covariates included donor and recipient sex, HLA mismatch count, KDPI, perfusion event, recipient age, and cold ischemia time. Posterior distributions were summarized by medians with 95% credible intervals (CrI). To evaluate infliximab treatment effects across different nAb levels, we obtained posterior distributions at the 5th, 25th, 50th, 75th, and 95th percentiles of these levels. To quantify how strongly nAb levels modulate the infliximab effect, we compared infliximab estimates at the 95th and 5th percentiles, reporting the ratio of odds ratios for binary outcomes and the difference in treatment effects for eGFR.
+
+Bayesian mediation analysis (using 'bayestestR') was used to assess whether infliximab’s effect on eGFR is mediated through DGF, stratified by above- vs. below-median aCL IgG levels. A sensitivity analysis was performed by restricting the dataset to patients with aCL IgG levels within the range observed in the infliximab group.
+
+A full description of the statistical modeling methods, including prior specifications and posterior sampling details, is provided in the Supplementary Methods and online with the code (https://filip-tichanek.github.io/infliximab_nAb).
+
+
+## Results
+
+### Data Distributions and nAB levels correlations
+
+The distribution of antibody levels across different groups, defined by treatment group and either DGF (aCL) or infection (aPE), is shown in Figure 1. The figure indicates substantial variability in nAB levels and suggests differences across groups.
+
+No correlation was found between IgG levels of aCL and aPE (Supplementary Figure 1). In contrast, IgM antibodies exhibited strong positive correlations among each other, correlations between IgM and IgG of the same epitope (e.g., aCL IgG and aCL IgM) were weaker. Altogether, this suggests that IgG aCL and aPE antibodies serve different purposes and reflect distinct immune responses of individual subjects.
+
+### aCL level mediates infliximab effect on DGF risk
+
+Univariable logistic regression suggests that DGF risk may be associated with male recipient sex, HLA mismatch, cold ischemia time, and also infliximab:aCL IgG interaction (Supplementary Table 1), indicating that aCL may modulate the effect of infliximab on DGF risk.
+
+To further explore this possible modulation, we fit a multivariable Bayesian logistic model allowing a non-linear relationship between aCL and DGF risk separately for each treatment group (Table 1). The results are in line with the unadjusted findings: the effect of infliximab varies with aCL IgG level, with the odds ratio for infliximab estimated to be 47 times larger (95% CrI: 4.4 to 610) in patients at the 5th percentile of aCL IgG level (0.29 µg/ml) versus those at the 95th percentile (5.78 µg/ml). Specifically, infliximab is expected to reduce the odds of DGF by 87% for those at the 5th percentile (OR: 0.13, 95% CrI: 0.03 to 0.49, Figure 2), whereas at the 95th percentile (5.78 µg/ml), the odds ratio reverses direction (OR: 6.24, 95% CrI: 1.38 to 30.32).
+
+When we excluded patients in the control group with aCL levels higher than the maximum observed in the infliximab group, results remained consistent (Supplementary Figure 2). A similar pattern is observed for IgM, though the modulation effect is weaker (Supplementary Figure 3, Table 1). Subgroup analysis based on aCL IgG levels $< median$ or $\geq median$ also shows a similar pattern: infliximab reduces DGF risk at those with relatively low aCL IgG (OR: 0.21, 95% CrI: 0.06 to 0.64) but exhibits the opposite effect when aCL IgG $\geq median$ (OR: 2.9, 95% CrI: 1.01 to 8.7).
+
+In short, infliximab very likely reduces DGF risk when aCL is low but tends to increase it with relatively high aCL.
+
+### aCL mediates infliximab effect on eGFR
+
+Univariable linear models suggested that eGFR may be associated with low KDPI, absence of DGF, and absence of perfusion event, as well as with the `infliximab`:`aCL IgG` interaction (Supplementary Table 2).
+
+A subsequent Bayesian linear model shows a congruent result: infliximab is associated with a small negative to possibly large positive effect on eGFR for patients at the 5th percentile of aCL IgG (β: 7.7, 95% CrI: -2.4 to 17.9) but has likely negative effect at the 95th percentile (β: -17.4, 95% CrI: -30 to -5.1; Table 1; Supplementary Figure 2). Similar patterns emerge for aCL IgM (Supplementary Figure 4) and when excluding control patients whose aCL IgG exceeded the maximum level observed in the infliximab group (Supplementary Figure 5).
+
+In unadjusted analysis, DGF was a strong predictor of eGFR. Since infliximab reduces DGF risk at low aCL but worsens it at high aCL, we tested whether aCL might modulate infliximab’s effect on eGFR via DGF. In patients with aCL below the median, Bayesian mediation analysis showed a positive indirect effect of infliximab on eGFR through reduced DGF risk (ACME: 5.4, 95% CrI: 1.6 to 10.6) and no clear direct effect (ACD: 2.1, 95% CrI: -6.1 to 10.1; Supplementary Table 3). By contrast, for aCL ≥ median, infliximab had a direct negative effect on eGFR (ADE: -11.1, 95% CrI: -19.1 to -2.9) with possible contribution with indirect negative effect via incressing DGF risk (ACME: -2.3, 95% CrI: -6.6 to 0.3).
+
+In conclusion, infliximab may have positive indirect effect on eGFR via reducing DGF risk when aCL is low, but it likely decreases eGFR directly in patients with relatively high aCL.
+
+### aPE modulates infliximab effect on infection
+
+Univariable logistic regression showed that infection risk was associated with KDPI and, surprisingly, **negatively** associated with longer cold ischemia time. There was also an interaction between infliximab and aPE, particularly with co-factor independent aPE (though less clearly with co-factor dependent aPE; Supplementary Table 4).
+
+A Bayesian logistic model allowing a non-linear interaction between infliximab and co-factor independent aPE confirmed that infliximab likely increases infection risk at lower aPE levels (5th and 25th percentiles) but has an uncertain or possibly positive effect at higher levels (Supplementary Figure 6, Table 1). A similar pattern emerged for co-factor dependent aPE IgG (Supplementary Figure 7, Table 1). 
+
+Overall, these results suggest infliximab may raise infection risk, especially for patients with relatively low aPE levels.
+
+### Infliximab effects on BK viremia risk
+
+Univariable logistic regression suggested that BKV infection risk is generally increased with infliximab, and there was no indication of effect modification by nAB level (Supplementary Table 5).
+
+
+# Initiation
+
+Packages
+
+```{r}
+if (TRUE) {rm(list = ls() )}
+if (TRUE) { 
+  suppressWarnings(suppressMessages({
+    library(tidyverse)
+    library(stringr)
+    library(stringi)
+    library(ggpubr)
+    library(emmeans)
+    library(gtsummary)
+    library(skimr)
+    library(car)
+    library(RJDBC)
+    library(sjPlot)
+    library(flextable)
+    library(openxlsx)
+    library(mgcv)
+    library(pROC)
+    library(cowplot)
+    library(boot)
+    library(glmnet)
+    library(brms)
+    library(projpred)
+    library(janitor)
+    library(arm)
+    library(corrplot)
+    library(lubridate)
+    library(kableExtra)    
+    library(ggdist)
+    library(bayesplot)
+    library(coxed)
+    library(quantreg)
+    library(ggbeeswarm)
+    library(mgcv)
+    library(mice)
+    library(MASS)
+    library(bayestestR)
+     
+    # Functions clashes
+    select <- dplyr::select
+    rename <- dplyr::rename
+    mutate <- dplyr::mutate
+    recode <- dplyr::recode
+    summarize <- dplyr::summarize
+    count <- dplyr::count
+    
+    # Simple math functions
+    logit <-function(x){log(x/(1-x))}
+    inv_logit <- function(x){exp(x)/(1+exp(x))}
+  }))
+}
+```
+
+Functions
+
+```{r}
+run <- function(expr, path, reuse = TRUE) {
+  fit <- NULL
+  if (reuse) {
+    path <- paste0(path, ".Rds")
+    fit <- suppressWarnings(try(readRDS(path), silent = TRUE))
+    if (inherits(fit, "try-error")) {
+      fit <- NULL
+    }
+  }
+  if (is.null(fit)) {
+    fit <- eval(substitute(expr))
+    if (reuse && !is.null(path) && nzchar(path)) {
+      saveRDS(fit, file = path)
+    }
+  }
+  return(fit)
+}
+```
+
+Setting seeds and scipen
+
+```{r}
+set.seed(2025)
+options(scipen = 999)
+```
+
+# Data
+
+Upload data a create relevant variables
+
+```{r}
+data2 <- read.xlsx(
+  "gitignore/data/dataset_updated_4_2024.xlsx")
+
+data2 <- data2 %>%
+  mutate(
+    GPE_dep_log2 = log2(GPE_dep),
+    MPE_dep_log2 = log2(MPE_dep),
+    GPE_ind_log2 = log2(GPE_ind),
+    MPE_ind_log2 = log2(MPE_ind)
+  ) %>%
+  mutate(
+    GPL_BC_log2 = log2(GPL_BC),
+    MPL_BC_log2 = log2(MPL_BC)
+  ) %>%
+  mutate(CIT = CIT / 60) %>%
+  mutate(treatment_group = if_else(
+    infliximab == 1, "infiximab", "placebo"
+  ))
+
+summary(data2)
+
+skim(data2)
+```
+
+There are two variables that are expected to affect the outcomes but include many missing values. Look which variables are correlated with these variables (`perfusion_event` and `HLA_MM`) so these may be helpful for the imputation.
+
+```{r}
+safe_cor <- function(x, y) {
+  if (sd(x, na.rm = TRUE) == 0 || sd(y, na.rm = TRUE) == 0) {
+    NA_real_
+  } else {
+    cor(x, y, use = "pairwise.complete.obs", method = 'pearson')
+  }
+}
+
+df <- data2 %>%
+  select(where(is.numeric))
+
+res <- tibble(
+  variable       = names(df),
+  cor_perfusion  = map_dbl(variable, ~ safe_cor(df[[.x]], df$perfusion_event)),
+  cor_hla        = map_dbl(variable, ~ safe_cor(df[[.x]], df$HLA_MM)),
+  n_na           = map_int(variable, ~ sum(is.na(df[[.x]])))
+) %>%
+  mutate(max_abs_cor = pmax(abs(cor_perfusion), abs(cor_hla), na.rm = TRUE)) %>%
+  arrange(desc(max_abs_cor))
+
+kableExtra::kable(res %>% filter(n_na<10, max_abs_cor>0.1))
+
+
+```
+
+## Summary tables
+
+Who will be deleted?
+
+```{r}
+data2 %>% 
+  filter(is.na(GFR_MDRD) |
+         is.na(GPE_dep) |
+         is.na(MPE_dep) 
+         ) %>%  select(ID_subject)
+```
+
+
+### Demography
+
+```{r}
+#| label: tbl-sup_table_1
+#| tbl-cap: 'Demography stratified by treatment'
+
+data2 %>% 
+  filter(!is.na(GFR_MDRD),
+         !is.na(GPE_dep),
+         !is.na(MPE_dep)) %>% 
+  select(male_sex, rec_age, race_2, race_1, ethnicity, treatment_group, CKD_cause_2, RRT_preTx, RRT_months, RRT_type, male_sex_donor, age_donor, race_donor_2, race_donor_1, donor_cause_narrow, donor_cause_anoxia, donor_cause_CVA, donor_type, ATG, standard_triple, HLA_MM, KDPI, WIT, CIT, perfusion_event, perfusion_time, preformed_DSA) %>% 
+  tbl_summary(by = treatment_group, type = list(HLA_MM ~ "continuous")) %>% 
+  add_p() %>% 
+  add_overall()
+
+```
+
+### Demography stratified treatment and aCL IgG groups
+
+```{r}
+#| label: tbl-sup_table_1_alternative
+#| tbl-cap: 'Demography stratified by treatment and aCL IgG level (below and at/above median value'
+
+sum_data <- data2 %>%
+  filter(!is.na(GFR_MDRD),
+         !is.na(GPE_dep),
+         !is.na(MPE_dep)) %>% 
+  dplyr::select(
+    DGF, infection_any, GFR_MDRD,  BKV_event_2,
+    
+    GPL_BC,
+    MPL_BC,
+    GPE_dep,
+    GPE_ind,
+    MPE_dep,
+    MPE_ind,
+    
+    male_sex,
+    HLA_MM,
+    male_sex_donor,
+    KDPI,
+    perfusion_event,
+    CIT,
+    infliximab,
+    rec_age,
+    race_2, race_1, ethnicity, CKD_cause_2, RRT_preTx, RRT_months, RRT_type, age_donor, 
+    race_donor_2, race_donor_1, donor_cause_narrow, donor_cause_anoxia, donor_cause_CVA, 
+    donor_type, ATG, standard_triple, WIT, perfusion_event, perfusion_time, preformed_DSA) %>% 
+  
+  mutate(aCL_IgG_category = if_else(GPL_BC < median(data2$GPL_BC, na.rm =TRUE),
+                                    'low aCL IgG', 'high aCL'
+                                    ),
+         treatment = if_else(infliximab == 1, 'IFX', 'PCO')
+         ) %>% 
+  mutate(category = interaction(treatment, aCL_IgG_category)) 
+
+sum_data %>% select(-c(infliximab, aCL_IgG_category, GPL_BC:MPE_ind)) %>% 
+  gtsummary::tbl_summary(by = category,
+                         type = list(HLA_MM ~ "continuous")) %>% 
+  add_p() %>% 
+  add_overall()
+```
+
+### Outcomes by treatment arm
+
+```{r}
+#| label: tbl-sup_table_3
+#| tbl-cap: 'Post-transplant outcomes by treatment'
+
+sum_data %>% select(treatment, DGF:BKV_event_2) %>% 
+  gtsummary::tbl_summary(by = treatment) %>% 
+  add_p() %>% 
+  add_overall()
+```
+
+
+
+### Antigens
+
+#### In general
+
+```{r}
+data2 %>%
+  filter(
+    !is.na(GFR_MDRD),
+    !is.na(GPE_dep_log2),
+    !is.na(MPE_dep_log2)
+  ) %>%
+  select(
+    treatment_group,
+    GPL_BC, MPL_BC, MPE_ind, MPE_dep, GPE_ind, GPE_dep
+  ) %>%
+  tbl_summary(by = treatment_group) %>%
+  add_p() %>%
+  add_overall()
+```
+
+#### Only these with DGF
+
+```{r Antigens in DGF +}
+data2 %>% 
+  filter(!is.na(GFR_MDRD),
+         !is.na(GPE_dep_log2),
+         !is.na(MPE_dep_log2)) %>% 
+  filter(DGF == 1) %>% 
+  select(treatment_group, 
+         GPL_BC, MPL_BC, MPE_ind, MPE_dep, GPE_ind, GPE_dep) %>% 
+  
+  tbl_summary(by = treatment_group) %>% 
+  add_p() %>% 
+  add_overall()
+```
+
+#### Only these without DGF
+
+```{r Antigens in DGF -}
+data2 %>% 
+  filter(!is.na(GFR_MDRD),
+         !is.na(GPE_dep_log2),
+         !is.na(MPE_dep_log2)) %>% 
+  filter(DGF == 0) %>% 
+  select(treatment_group, 
+         GPL_BC, MPL_BC, MPE_ind, MPE_dep, GPE_ind, GPE_dep) %>% 
+  tbl_summary(by = treatment_group) %>% 
+  add_p() %>% 
+  add_overall()
+```
+
+## Antigens data distributions
+
+```{r distribution of antigens before vs after log2-transformation, fig.height=9, fig.width=7}
+
+data_hist <- data2 %>% 
+  filter(!is.na(GFR_MDRD),
+         !is.na(GPE_dep_log2),
+         !is.na(MPE_dep_log2)) %>% 
+  mutate(infliximab = if_else(infliximab == 1, 'IFX', 'PCO'))
+
+
+p1 <- data_hist %>% 
+  ggplot(aes(x = GPL_BC)) +
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p2 <- data_hist %>%
+  ggplot(aes(x = GPL_BC_log2))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p3 <- data_hist %>%
+  ggplot(aes(x = MPL_BC))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p4 <- data_hist %>%
+  ggplot(aes(x = MPL_BC_log2))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p5 <- data_hist %>%
+  ggplot(aes(x = MPE_ind))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p6 <- data_hist %>%
+  ggplot(aes(x = MPE_ind_log2))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p7 <- data_hist %>%
+  ggplot(aes(x = MPE_dep))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p8 <- data_hist %>%
+  ggplot(aes(x = MPE_dep_log2))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p9 <- data_hist %>%
+  ggplot(aes(x = GPE_ind))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p10 <- data_hist %>%
+  ggplot(aes(x = GPE_ind_log2))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p11 <- data_hist %>%
+  ggplot(aes(x = GPE_dep))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+p12 <- data_hist %>%
+  ggplot(aes(x = GPE_dep_log2))+
+  geom_histogram() +
+  facet_wrap(~ infliximab, nrow = 2)
+
+plot_grid(p1,p2,p3,p4, p5, p6, p7, p8, p9, p10, p11, p12, nrow = 3)
+```
+
+# Data - models-relevant
+
+## Define the model-relevant data
+
+```{r}
+data_model_priorImpute <- data2 %>%
+  dplyr::select(
+    
+    # outcomes 
+    DGF, infection_any, GFR_MDRD,  BKV_event_2,
+    
+    # antigens
+    GPL_BC_log2,
+    MPL_BC_log2,
+    GPE_dep_log2,
+    GPE_ind_log2,
+    MPE_dep_log2,
+    MPE_ind_log2,
+    
+    # other covariates
+    male_sex,
+    HLA_MM,
+    male_sex_donor,
+    KDPI,
+    perfusion_event,
+    CIT,
+    infliximab,
+    rec_age,
+    
+    # variables for imputation only
+    HLAMMGE3, 
+    BKV_viremia_time,
+    race_2,
+    race_donor_2,
+    age_donor,
+    CMV_IgG_rec,
+    de_novo_DSA,
+    donor_type 
+  ) %>% 
+  filter(!is.na(GFR_MDRD),
+         !is.na(GPE_dep_log2),
+         !is.na(MPE_dep_log2))
+
+data_model_priorImpute %>% summary()
+
+## Get mean values 
+mmale_sex <- mean(data_model_priorImpute$male_sex, na.rm = TRUE)
+mmale_sex_donor <- mean(data_model_priorImpute$male_sex_donor, na.rm = TRUE)
+mperfusion_event <- mean(data_model_priorImpute$perfusion_event, na.rm = TRUE)
+mrec_age <- mean(data_model_priorImpute$rec_age, na.rm = TRUE)
+mKDPI <- mean(data_model_priorImpute$KDPI, na.rm = TRUE)
+mCIT <- mean(data_model_priorImpute$CIT, na.rm = TRUE)
+mHLA_MM <- mean(data_model_priorImpute$HLA_MM, na.rm = TRUE)
+mDGF <- mean(data_model_priorImpute$DGF, na.rm = TRUE)
+```
+
+
+## Explore data
+
+```{r}
+skim(data_model_priorImpute)
+```
+
+## Variables correlations
+
+Is the missingness correlated with outcomes?
+
+```{r}
+df2_corr <- data_model_priorImpute %>% mutate(
+  NA_perfusion_event = if_else(is.na(perfusion_event), 1, 0),
+  NA_HLA_MM = if_else(is.na(HLA_MM), 1, 0)
+)
+
+m1 <- glm(NA_perfusion_event ~ DGF, family = 'binomial', data = df2_corr)
+summary(m1)
+
+m2 <- glm(NA_perfusion_event ~ infection_any, family = 'binomial', data = df2_corr)
+summary(m2)
+
+m3 <- glm(NA_perfusion_event ~ BKV_event_2, family = 'binomial', data = df2_corr)
+summary(m2)
+
+m4 <- glm(NA_perfusion_event ~ GFR_MDRD, family = 'binomial', data = df2_corr)
+summary(m4)
+```
+
+How much are variables inter-correlated?
+
+```{r, fig.height=12, fig.width=12}
+#| label: fig-sup_figure_1
+#| fig.cap: 'Spearman correlations between all variables, including transplant outcomes, natural antibody levels, and various clinical characteristics.' 
+
+corrplot(cor(df2_corr, use = "pairwise.complete.obs", method = 'spearman'),
+         method = 'square')
+
+path <- "gitignore/figures/sup_figure_1"
+
+if (!file.exists(path)) {
+  pdf(path, width = 12, height = 12) 
+  corrplot(cor(df2_corr, use = "pairwise.complete.obs", method = 'spearman'),
+         method = 'square')
+  dev.off() 
+}
+```
+
+## Multiple imputation
+
+```{r}
+set.seed(2025)
+
+init <- mice(data_model_priorImpute, maxit = 0)
+init$method["perfusion_event"] <- "logreg"
+
+data_imputed <- run(
+  expr = mice(
+    data_model_priorImpute,
+    method = init$method,
+    m = 80
+  ),
+  path = "gitignore/run/data_imputed"
+)
+
+## Get the 1st imputed dataset
+data_first <- complete(data_imputed, 'all')[1]$`1`
+```
+
+
+# Data points of nAB levels
+
+```{r fig.width=6, fig.height=10}
+#| label: fig-figure_1
+#| fig.cap: 'Distribution of natural antibody levels across groups defined by treatment (infliximab [IFX] vs. control [ctrl]) and key post-transplant outcomes: occurrence of peritransplant delayed graft function [DGF+ vs. DGF−; A to B] or post-transplant infection ["infected" vs. "non-infected"; C to F]. (**A**) Levels of anti-cardiolipin IgG. (**B**) Levels of anti-cardiolipin IgM. (**C**) Levels of co-factor-dependent anti-phosphatidylethanolamine IgG. (**D**) Levels of co-factor-independent anti-phosphatidylethanolamine IgG. (**E**) Levels of co-factor-dependent anti-phosphatidylethanolamine IgM. (**F**) Levels of co-factor-independent anti-phosphatidylethanolamine IgM.'
+
+
+plotac <- "figure_1"
+path <- "gitignore/figures"
+
+ cole <- c(
+   "#E89C20", "#803800",
+   "#4C60FF", "#001070"
+ )
+
+
+ data_model_priorImpute <- data_model_priorImpute %>%
+   mutate(
+     group = factor(if_else(infliximab == 1, "infliximab", "control")),
+     Group = case_when(
+       infliximab == 1 & DGF == 0 ~ "IFX_DGF-",
+       infliximab == 1 & DGF == 1 ~ "IFX_DGF+",
+       infliximab == 0 & DGF == 0 ~ "ctrl_DGF-",
+       infliximab == 0 & DGF == 1 ~ "ctrl_DGF+",
+     )
+   )
+
+ p1 <- data_model_priorImpute %>%
+   ggplot(aes(x = Group, y = GPL_BC_log2, color = Group)) +
+   geom_boxplot(outlier.shape = NA, fill = NA, width = 0.8) +
+   geom_beeswarm(alpha = 0.5, cex = 2.3, size = 1.4) +
+   scale_color_manual(values = cole) +
+   # theme(axis.text.x = element_blank()) +
+   labs(
+     y = expression(log[2] ~ "(aCL IgG [" * mu * "g/ml])"),
+     x = NULL
+   ) +
+   # scale_x_discrete(
+   #   labels = c("", "nevim", "n" ,'n')
+   #   ) +
+   theme(
+     axis.text.x = element_text(angle = 45, hjust = 1),
+     legend.position = "none"
+   )
+
+ p2 <- data_model_priorImpute %>%
+   ggplot(aes(x = Group, y = MPL_BC_log2, color = Group)) +
+   geom_boxplot(outlier.shape = NA, fill = NA, width = 0.8) +
+   geom_beeswarm(alpha = 0.5, cex = 2.3, size = 1.4) +
+   scale_color_manual(values = cole) +
+   # theme(axis.text.x = element_blank()) +
+   labs(
+     y = expression(log[2] ~ "(aCL IgM [" * mu * "g/ml])"),
+     x = NULL
+   ) +
+   # scale_x_discrete(
+   #   labels = c("", "nevim", "n" ,'n')
+   #   ) +
+   theme(
+     axis.text.x = element_text(angle = 45, hjust = 1),
+     legend.position = "none"
+   )
+
+
+ data_model_priorImpute <- data_model_priorImpute %>%
+   mutate(
+     group = factor(if_else(infliximab == 1, "infliximab", "control")),
+     Group = case_when(
+       infliximab == 1 & infection_any == 0 ~ "IFX_non-infected",
+       infliximab == 1 & infection_any == 1 ~ "IFX_infected",
+       infliximab == 0 & infection_any == 0 ~ "ctrl_non-infected",
+       infliximab == 0 & infection_any == 1 ~ "ctrl_infected",
+     )
+   )
+
+ p3 <- data_model_priorImpute %>%
+   ggplot(aes(x = Group, y = GPE_dep_log2, color = Group)) +
+   geom_boxplot(outlier.shape = NA, fill = NA, width = 0.8) +
+   geom_beeswarm(alpha = 0.5, cex = 2.3, size = 1.4) +
+   scale_color_manual(values = cole) +
+   # theme(axis.text.x = element_blank()) +
+   labs(
+     y = expression(log[2] ~ "(aPE IgG dep [OD])"),
+     x = NULL
+   ) +
+   # scale_x_discrete(
+   #   labels = c("", "nevim", "n" ,'n')
+   #   ) +
+   theme(
+     axis.text.x = element_text(angle = 45, hjust = 1),
+     legend.position = "none"
+   )
+
+ p4 <- data_model_priorImpute %>%
+   ggplot(aes(x = Group, y = GPE_ind_log2, color = Group)) +
+   geom_boxplot(outlier.shape = NA, fill = NA, width = 0.8) +
+   geom_beeswarm(alpha = 0.5, cex = 2.3, size = 1.4) +
+   scale_color_manual(values = cole) +
+   # theme(axis.text.x = element_blank()) +
+   labs(
+     y = expression(log[2] ~ "(aPE IgG ind [OD])"),
+     x = NULL
+   ) +
+   # scale_x_discrete(
+   #   labels = c("", "nevim", "n" ,'n')
+   #   ) +
+   theme(
+     axis.text.x = element_text(angle = 45, hjust = 1),
+     legend.position = "none"
+   )
+
+ p5 <- data_model_priorImpute %>%
+   ggplot(aes(x = Group, y = MPE_dep_log2, color = Group)) +
+   geom_boxplot(outlier.shape = NA, fill = NA, width = 0.8) +
+   geom_beeswarm(alpha = 0.5, cex = 2.3, size = 1.4) +
+   scale_color_manual(values = cole) +
+   # theme(axis.text.x = element_blank()) +
+   labs(
+     y = expression(log[2] ~ "(aPE IgM dep [OD])"),
+     x = NULL
+   ) +
+   # scale_x_discrete(
+   #   labels = c("", "nevim", "n" ,'n')
+   #   ) +
+   theme(
+     axis.text.x = element_text(angle = 45, hjust = 1),
+     legend.position = "none"
+   )
+
+ p6 <- data_model_priorImpute %>%
+   ggplot(aes(x = Group, y = MPE_ind_log2, color = Group)) +
+   geom_boxplot(outlier.shape = NA, fill = NA, width = 0.8) +
+   geom_beeswarm(alpha = 0.5, cex = 2.3, size = 1.4) +
+   scale_color_manual(values = cole) +
+   # theme(axis.text.x = element_blank()) +
+   labs(
+     y = expression(log[2] ~ "(aPE IgM ind [OD])"),
+     x = NULL
+   ) +
+   # scale_x_discrete(
+   #   labels = c("", "nevim", "n" ,'n')
+   #   ) +
+   theme(
+     axis.text.x = element_text(angle = 45, hjust = 1),
+     legend.position = "none"
+   )
+
+ if (!file.exists(paste0(path, "/", plotac, ".pdf"))) {
+   assign(
+     plotac,
+     cowplot::plot_grid(p1, p2, p3, p4, p5, p6,
+       labels = c("A", "B", "C", "D", "E", "F"),
+       ncol = 2, nrow = , rel_heights = c(1, 1.1, 1.1)
+     )
+   )
+
+   ggsave(
+     path = paste0(path),
+     filename = plotac,
+     device = "pdf",
+     width = 6,
+     height = 10
+   )
+ }
+
+ get(plotac)
+```
+
+# Unadjsuted ORs for DGF
+
+Definition of function
+
+```{r}
+univar_mod <- function(dat, 
+                       outcome, 
+                       predictors,
+                       family = "logistic", 
+                       level = 0.95,
+                       rounding = 2
+                       ) {
+  
+  N <- vector("double", length(predictors))
+  OR <- vector("double", length(predictors))
+  CI_L <- vector("double", length(predictors))
+  CI_U <- vector("double", length(predictors))
+  predictor <- vector("double", length(predictors))
+
+  for (i in 1:length(predictors)) {
+  
+    data <- dat %>% dplyr::select(outcome, 
+                                  all_of(unlist(strsplit(predictors[i], "\\*"))))
+    data <- na.omit(data)
+
+    N[i] <- nrow(data)
+
+    formula <- paste0(outcome, " ~ ", predictors[i])
+
+    if (family == "logistic") {
+       suppressMessages(suppressWarnings({
+      model <- glm(formula, data = data, family = "binomial"(link = "logit"))
+      OR[i] <- exp(coef(model)[length(coef(model))])
+      CI_L[i] <- exp(confint(model, level = level)[length(coef(model)), ])[1]
+      CI_U[i] <- exp(confint(model, level = level)[length(coef(model)), ])[2]
+
+      predictor[i] <- names(coef(model)[length(coef(model))])
+
+      result <- data.frame(
+        predictor, 
+        OR = paste0(round(OR, rounding), ' [',round(CI_L, rounding), ', ',
+                    round(CI_U, rounding),']'),
+        N
+      )
+       }))
+    } else if (family == "gaussian") {
+       suppressMessages(suppressWarnings({
+      model <- lm(formula, data = data)
+      OR[i] <- coef(model)[length(coef(model))]
+      CI_L[i] <- confint(model, level = level)[length(coef(model)), ][1]
+      CI_U[i] <- confint(model, level = level)[length(coef(model)), ][2]
+
+      predictor[i] <- names(coef(model)[length(coef(model))])
+
+      result <- data.frame(
+        predictor,
+        effect = paste0(round(OR, rounding), ' [',round(CI_L, rounding), ', ',
+                    round(CI_U, rounding),']'),
+        N
+      )
+       }))
+    } else {
+      stop("incorrect family specification pyco", call. = FALSE)
+    }
+  }
+  
+  return(result)
+}
+
+preds <- c(
+  "infliximab",
+  "GPL_BC_log2", "MPL_BC_log2",
+  "GPE_dep_log2", "GPE_ind_log2",
+  "MPE_dep_log2", "MPE_ind_log2",
+  "male_sex", "HLA_MM", "male_sex_donor", "KDPI",
+  "perfusion_event", "CIT", "rec_age", "DGF",
+  "infliximab*GPL_BC_log2", "infliximab*MPL_BC_log2",
+  "infliximab*GPE_dep_log2", "infliximab*GPE_ind_log2",
+  "infliximab*MPE_dep_log2", "infliximab*MPE_ind_log2"
+)
+
+preds_DGF <- c(
+  "infliximab",
+  "GPL_BC_log2", "MPL_BC_log2",
+  "GPE_dep_log2", "GPE_ind_log2",
+  "MPE_dep_log2", "MPE_ind_log2",
+  "male_sex", "HLA_MM", "male_sex_donor", "KDPI",
+  "perfusion_event", "CIT", "rec_age",
+  "infliximab*GPL_BC_log2", "infliximab*MPL_BC_log2",
+  "infliximab*GPE_dep_log2", "infliximab*GPE_ind_log2",
+  "infliximab*MPE_dep_log2", "infliximab*MPE_ind_log2"
+)
+```
+
+## DGF
+
+```{r}
+#| label: tbl-sup_table_4
+#| tbl-cap: 'Results from univariable logistic regression models assessing the effects of variables on delayed graft function (DGF) in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in DGF odds per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on DGF at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+
+kableExtra::kable(
+  univar_mod(dat = data_model_priorImpute,
+           outcome = 'DGF',
+           predictors = preds_DGF,
+           family = 'logistic',
+           rounding = 2
+           ) %>% rename(
+             `(R)OR` = `OR`
+           )
+  )
+```
+
+## GFR
+
+```{r}
+#| label: tbl-sup_table_5
+#| tbl-cap: 'Results from univariable linear models assessing the effects of variables on estimated glomerula filtration rate (eGFR) in patients with complete data for given predictor. `Effect` [95% confidennce interval] is shown and represents the estimated change in eGFR per one-unit increase in the predictor. For interaction terms, the effect quantifies the difference in the infliximab effect on eGFR at a given natural antibody (nAb) level vs its effect when the nAb level is halved. A 95% confidence interval including 0 suggests no significant modification of the infliximab effect by nAb levels. `N`: number of observations.'
+
+kableExtra::kable(
+  univar_mod(dat = data_model_priorImpute,
+           outcome = 'GFR_MDRD',
+           predictors = preds,
+           family = 'gaussian',
+           rounding = 1
+           ) 
+  )
+```
+
+## Infection
+
+```{r}
+#| label: tbl-sup_table_7
+#| tbl-cap: 'Results from univariable logistic regression models assessing the effects of variables on infection risk in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in odds of infection per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on infection at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+
+kableExtra::kable(
+  univar_mod(dat = data_model_priorImpute,
+           outcome = 'infection_any',
+           predictors = preds,
+           family = 'logistic'
+           )%>% rename(
+             `(R)OR` = `OR`
+           )
+)
+```
+
+## BKV
+
+```{r}
+#| label: tbl-sup_table_8
+#| tbl-cap: 'Results from univariable logistic regression models assessing the effects of variables on BKV infection risk in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in odds of BKV infection per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on BKV infection at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+
+kableExtra::kable(
+  univar_mod(dat = data_model_priorImpute,
+           outcome = 'BKV_event_2',
+           predictors = preds,
+           family = 'logistic',
+           rounding = 2
+           ) %>% rename(
+             `(R)OR` = `OR`)
+)
+```
+
+# DGF models
+
+## DGF by GPL_BC
+
+### Priors
+
+```{r}
+# function to get prior
+create_prior <- function(var, sigma, class = "b", coef = NULL) {
+  set_prior(paste0("normal(0, ", sigma, ")"), class = class, coef = coef)
+}
+
+scaling_unit <- 1
+```
+
+#### Main effects model
+
+```{r}
+priors_main <- c(
+  create_prior("GPL_BC_log2",
+    2 / sd(data_model_priorImpute$GPL_BC_log2, na.rm = TRUE),
+    coef = "GPL_BC_log2"
+  ),
+   create_prior("IHLA_MMM5",
+    2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"
+  ),
+  create_prior("IKDPIM50",
+    2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"
+  ),
+  create_prior("Irec_ageM50",
+    2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"
+),
+  create_prior("ICITM15",
+    2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"
+  ),
+  create_prior("male_sex",
+    4,
+    coef = "male_sex"
+  ),
+  create_prior("perfusion_event",
+    4,
+    coef = "perfusion_event"
+  ),
+  create_prior("male_sex_donor",
+    4,
+    coef = "male_sex_donor"
+  ),
+  create_prior("infliximab",
+    4,
+    coef = "infliximab"
+  ),
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$DGF)), ", 10)"),
+    class = "Intercept"
+  )
+)
+```
+
+
+#### Non-linear penalized interaction model
+
+```{r}
+priors_interaction_pnl <- c(
+  create_prior("Irec_ageM50",
+               2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+               coef = "Irec_ageM50"),  
+  create_prior("IHLA_MMM5",
+               2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+               coef = "IHLA_MMM5"),
+  create_prior("IKDPIM50",
+               2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+               coef = "IKDPIM50"),
+  create_prior("ICITM15",
+               2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+               coef = "ICITM15"),
+  create_prior("male_sex",
+               4,
+               coef = "male_sex"),
+  create_prior("perfusion_event",
+               4,
+               coef = "perfusion_event"),
+  create_prior("male_sex_donor",
+               4,
+               coef = "male_sex_donor"),
+
+  create_prior("infliximab",
+               4,
+               coef = "infliximab"),
+
+ set_prior("student_t(3, 0, 0.6)", class = "sds", 
+           coef = 's(GPL_BC_log2, bs = "ps", k = 5)'), 
+ 
+ set_prior("student_t(3, 0, 0.3)", class = "sds",  
+           coef = 's(GPL_BC_log2, by = infliximab, bs = "ps", k = 5)'), 
+ 
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$DGF)), ", 10)"),
+            class = "Intercept")
+)
+```
+
+### Models
+
+#### Main effects models
+
+```{r}
+#| label: tbl-unused_1
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgG (`GPL_BC_log2`), on delayed graft function (`DGF`), without interaction terms. The odds ratio (OR) represents the estimated change in the odds of DGF per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+
+model_dgf_GPL_BC_main <- run(
+  expr = brm_multiple(
+    DGF ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      infliximab +
+      GPL_BC_log2,
+    family = bernoulli(),
+    data = data_imputed,
+    prior = priors_main,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_dgf_GPL_BC_main",
+  reuse = TRUE
+)
+
+summary(model_dgf_GPL_BC_main, robust = TRUE)
+prior_summary(model_dgf_GPL_BC_main)
+
+tr <- round(exp(fixef(model_dgf_GPL_BC_main, robust = TRUE)[-1, c(1,3,4)]), 2)
+colnames(tr)[1] <- 'OR'
+kableExtra::kable(tr)
+```
+
+#### Non-linear interaction model
+
+```{r}
+#| label: tbl-unused_2
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between anti-cardiolipin IgG (`GPL_BC_log2`) and `infliximab` treatment on delayed graft function (DGF), while accounting for other covariates. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+
+model_dgf_GPL_BC_interaction_NL <- run(
+  expr = brm_multiple(
+    DGF ~
+    male_sex +
+    I(rec_age - 50) +
+    male_sex_donor +
+    I(KDPI - 50) +
+    I(CIT - 15) +
+    I(HLA_MM - 5) +
+    perfusion_event +
+    infliximab +
+    s(GPL_BC_log2, bs = 'ps', k = 5) +
+    s(GPL_BC_log2, by = infliximab, bs = 'ps', k = 5),
+    family = bernoulli(),
+    data = data_imputed,
+    prior = priors_interaction_pnl,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_dgf_GPL_BC_interaction_NL",
+  reuse = TRUE
+)
+
+summary(model_dgf_GPL_BC_interaction_NL, robust = TRUE)
+prior_summary(model_dgf_GPL_BC_interaction_NL)
+
+tr2 <- round(exp(fixef(model_dgf_GPL_BC_interaction_NL, 
+                       robust = TRUE)[-c(1,9:12), c(1,3,4)]), 2)
+
+antibody_seq <- quantile(data_model_priorImpute$GPL_BC_log2, 
+                         probs = c(0.05, 0.95))
+
+asl <- length(antibody_seq)
+quant_dif <- antibody_seq[2] - antibody_seq[1]
+
+data_prediction <- data.frame(
+  `male_sex` = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_dgf_GPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+## get odds ratio for infliximab effect across antibody values
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+names(prediction) <- c('p05', 'p95')
+
+infliximab_GPL_BC_log2_int <- quantile(
+  exp((log(prediction$p95) - log(prediction$p05))/scaling_unit), 
+         probs = c(0.5, 1/40, 39/40))
+
+tr2 <- rbind(tr2, round(infliximab_GPL_BC_log2_int, 2))
+row.names(tr2)[8] <- 'infliximab:GPL_BC_log2'
+colnames(tr2)[1] <- '(R)OR'
+kableExtra::kable(tr2)
+```
+
+
+
+### Visualisation 
+
+Extract posterior draws
+
+```{r}
+antibody_perc <- quantile(data_model_priorImpute$GPL_BC_log2,
+                           probs = c(0, 0.02, 0.05, 0.25, 0.5, 0.75, 0.95, 0.98, 1))
+
+antibody_seq <- seq(antibody_perc[1], 
+                      antibody_perc[length(antibody_perc)], 
+                      length.out = 101)
+
+## create prediction
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+prediction <- data.frame(
+  posterior_epred(
+    model_dgf_GPL_BC_interaction_NL,
+    newdata = data_prediction) %>% posterior_summary(
+      robust = TRUE
+      ) %>% data.frame() %>% select(-Est.Error),
+  group = factor(if_else(data_prediction$infliximab == 1, 'infliximab', 'control')), 
+  GPL_BC_log2 = data_prediction$GPL_BC_log2)
+```
+
+Figure A
+
+```{r, fig.width=4.5, fig.height=5}
+cole <- c('#CD7006', '#0028F0')
+
+fig_a <- prediction %>% 
+  mutate(group = factor(group, levels = c("infliximab", "control"))) %>% 
+  ggplot(aes(x = GPL_BC_log2, y = Estimate, col = group, fill = group)) + 
+  geom_line(aes(y = Estimate), linewidth = 1) + 
+  scale_y_continuous(limits = c(0, 1),
+                     breaks = c(seq(0, 1, by = 0.2))) +
+  
+  geom_ribbon(aes(ymin = `Q2.5`, ymax = `Q97.5`),
+               alpha = 0.4,  color = NA) +
+  
+  labs(x = expression(log[2]~"(aCL IgG ["*mu*"g/ml])"), y = "DGF risk") +
+  scale_color_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_fill_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  facet_grid(rows = vars(group)) +
+  
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "none") +
+  
+  geom_rug(
+    data = data_model_priorImpute %>% filter(DGF == 0),
+    aes(x = GPL_BC_log2),
+    sides = "b",
+    color = "black",
+    linewidth = 0.12,
+    inherit.aes = FALSE
+  ) +
+  geom_rug(
+    data = data_model_priorImpute %>% filter(DGF == 1),
+    aes(x = GPL_BC_log2),
+     sides = "t",
+    color = "black",
+    linewidth = 0.12,
+    inherit.aes = FALSE
+  ) + 
+  geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
+                            color = "grey50", size = 0.3)
+```
+
+Figure B
+
+```{r, fig.width=5, fig.height=4}
+
+antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq
+
+tr <-  posterior_epred(
+    model_dgf_GPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
+  (antibody_seq[2] - antibody_seq[1])
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
+  (antibody_seq[2] - antibody_seq[1])
+
+post_fix <- data.frame(
+  b_GPL_BC_log2 = tr_ctrl,
+  b_GPL_BC_log2_infliximab = tr_infliximab
+)
+
+tr <- post_fix %>% 
+  mutate(control = exp(b_GPL_BC_log2), 
+         infliximab = exp(b_GPL_BC_log2_infliximab)) %>% 
+  select(control, infliximab) %>% 
+  data.frame()
+
+CIS <- sapply(
+  tr, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(1)
+
+CIS
+
+xpos <- 10
+
+fig_b <- tr %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('control', 'infliximab'),
+               names_to = 'group') %>% 
+  ggplot(aes(x = value, y = group, fill = group)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha=0.5,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+    labs(x = "Effect of doubling aCL IgG on DGF risk (OR))", 
+         y = 'Treatment group') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Treatment group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  coord_cartesian(xlim = c(1/20, 20)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(1/16, 1/4, 1, 4 ,16),
+                     labels = c("1/16", "1/4", "1", "4", "16")) +
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+   
+  annotate("text",  x = xpos, y = 2.85 , 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85 , 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+  
+  annotate("text",  x = xpos, y = 2.6 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.6 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+Figure C
+
+```{r, fig.width=6, fig.height=5}
+
+cole <- c("#8B4789", "#8B5F77", "#8B7765", "#6F815C", "#548B54")
+xpos <- 240
+xseq <- c(1/64, 1/8, 1, 8, 64, 512)
+
+antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
+antibody_seq
+antibody_seq**2
+
+asl <- length(antibody_seq)
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_dgf_GPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+
+
+names(prediction) <- c('p05', 'p25', 'p50', 'p75', 'p95')
+
+CIS <- sapply(
+  prediction, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+fig_c <- prediction %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('p05', 'p25', 'p50', 'p75', 'p95'),
+               names_to = 'GPL_BC_percentile') %>% 
+  
+  ggplot(aes(y = GPL_BC_percentile, x = value, fill = GPL_BC_percentile)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha = 0.55,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+  labs(x = "Effect of infliximab on DGF risk (odds ratio)", 
+         y = 'Percentile of aCL IgG value') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Percentile of aCL IgG value",
+                       breaks = c('p05', 'p25', 'p50', 'p75', 'p95'),
+                       labels = c('p05', 'p25', 'p50', 'p75', 'p95')) +
+  
+  coord_cartesian(xlim = c(1/300, 1150)) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(xseq),
+                     labels = c("1/64", "1/8", "1", "8", "64", '512')) +
+  
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+  
+  
+  annotate("text",  x = xpos, y = 5.85 , 
+           label = paste0("Odds ratio: ", CIS[3,5]),
+           color = cole[5] ) +
+  
+  annotate("text",  x = xpos, y = 4.85, 
+           label = paste0("Odds ratio: ", CIS[3,4]),
+           color = cole[4] ) +
+   
+  annotate("text",  x = xpos, y = 3.85, 
+           label = paste0("Odds ratio: ", CIS[3,3]),
+           color = cole[3] ) +
+  
+  annotate("text",  x = xpos, y = 2.85, 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85, 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+
+  annotate("text",  x = xpos, y = 5.5 , 
+           label = paste0("95% CI: [", CIS[1,5], ", ", CIS[2,5], "]"),
+           color = cole[5] ) + 
+  
+  annotate("text",  x = xpos, y = 4.5 , 
+           label = paste0("95% CI: [", CIS[1,4], ", ", CIS[2,4], "]"),
+           color = cole[4] ) + 
+  
+  annotate("text",  x = xpos, y = 3.5 , 
+           label = paste0("95% CI: [", CIS[1,3], ", ", CIS[2,3], "]"),
+           color = cole[3] ) + 
+  
+  annotate("text",  x = xpos, y = 2.5 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) + 
+  
+  annotate("text",  x = xpos, y = 1.5 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+#### Figure merged
+
+```{r, fig.height=6, fig.width=9}
+#| label: fig-figure_2
+#| fig.cap: '**Anti-cardiolipin IgG modulates infliximab effect on delayed graft function.** (**A**) Predicted DGF risk by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regiond) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution for the average effect (odds ratio) of doubling anti-cardiolipin IgG on DGF risk. (**C**) Posterior distribution of the infliximab effect (odds ratio) on DGF risk across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
+
+plotac <- 'figure_2'
+path <- "gitignore/figures"
+
+
+fig <- cowplot::plot_grid(fig_b, fig_c,
+  rel_heights = c(0.7, 1),
+  labels = c("B", "C"),
+  ncol = 1
+)
+
+assign(
+  plotac,
+  cowplot::plot_grid(
+    fig_a, fig,
+    rel_widths = c(0.6, 1),
+    labels = c("A", "")
+  )
+)
+
+get(plotac)
+
+if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
+  ggsave(
+    path = paste0(path),
+    filename = plotac,
+    device = "pdf",
+    width = 9,
+    height = 6
+  )
+}
+```
+
+## DGF by MPL_BC
+
+### Priors
+
+#### Main effects model
+
+```{r}
+priors_main <- c(
+  create_prior("IMPL_BC_log2M2",
+    2 / sd(data_model_priorImpute$MPL_BC_log2, na.rm = TRUE),
+    coef = "IMPL_BC_log2M2"
+  ),
+   create_prior("IHLA_MMM5",
+    2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"
+  ),
+  create_prior("IKDPIM50",
+    2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"
+  ),
+  create_prior("Irec_ageM50",
+    2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"
+),
+  create_prior("ICITM15",
+    2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"
+  ),
+  create_prior("male_sex",
+    4,
+    coef = "male_sex"
+  ),
+  create_prior("perfusion_event",
+    4,
+    coef = "perfusion_event"
+  ),
+  create_prior("male_sex_donor",
+    4,
+    coef = "male_sex_donor"
+  ),
+  create_prior("infliximab",
+    4,
+    coef = "infliximab"
+  ),
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$DGF)), ", 10)"),
+    class = "Intercept"
+  )
+)
+```
+
+
+#### Non-linear penalized interaction model
+
+```{r}
+priors_interaction_pnl <- c(
+  create_prior("Irec_ageM50",
+               2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+               coef = "Irec_ageM50"),  
+  create_prior("IHLA_MMM5",
+               2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+               coef = "IHLA_MMM5"),
+  create_prior("IKDPIM50",
+               2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+               coef = "IKDPIM50"),
+  create_prior("ICITM15",
+               2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+               coef = "ICITM15"),
+  create_prior("male_sex",
+               4,
+               coef = "male_sex"),
+  create_prior("perfusion_event",
+               4,
+               coef = "perfusion_event"),
+  create_prior("male_sex_donor",
+               4,
+               coef = "male_sex_donor"),
+
+  create_prior("infliximab",
+               4,
+               coef = "infliximab"),
+  
+ set_prior("student_t(3, 0, 0.6)", class = "sds", 
+           coef = 's(I(MPL_BC_log2 - 2), bs = "ps", k = 5)'), 
+ 
+ set_prior("student_t(3, 0, 0.3)", class = "sds",  
+           coef = 's(I(MPL_BC_log2 - 2), by = infliximab, bs = "ps", k = 5)'), 
+ 
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$DGF)), ", 10)"),
+            class = "Intercept")
+)
+```
+
+### Models
+
+#### Main effects models
+
+```{r}
+#| label: tbl-unused_3
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgM (`MPL_BC_log2`), on delayed graft function (`DGF`), without interaction terms. The odds ratio (OR) represents the estimated change in the odds of DGF per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+
+set.seed(2025)
+model_dgf_MPL_BC_main <- run(
+  expr = brm_multiple(
+    DGF ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      infliximab +
+      I(MPL_BC_log2 - 2),
+    family = bernoulli(),
+    data = data_imputed,
+    prior = priors_main,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_dgf_MPL_BC_main",
+  reuse = TRUE
+)
+
+summary(model_dgf_MPL_BC_main, robust = TRUE)
+prior_summary(model_dgf_MPL_BC_main)
+
+tr <- round(exp(fixef(model_dgf_MPL_BC_main, robust = TRUE)[-1, c(1,3,4)]), 2)
+colnames(tr)[1] <- 'OR'
+kableExtra::kable(tr)
+```
+
+#### Non-linear interaction model
+
+```{r}
+#| label: tbl-unused_4
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between anti-cardiolipin IgM (`MPL_BC_log2`) and `infliximab` treatment on delayed graft function (DGF), while accounting for other covariates. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| 
+set.seed(2025)
+model_dgf_MPL_BC_interaction_NL <- run(
+  expr = brm_multiple(
+    DGF ~
+    male_sex +
+    I(rec_age - 50) +
+    male_sex_donor +
+    I(KDPI - 50) +
+    I(CIT - 15) +
+    I(HLA_MM - 5) +
+    perfusion_event +
+    infliximab +   
+    s(I(MPL_BC_log2-2), bs = 'ps', k = 5) +
+    s(I(MPL_BC_log2-2), by = infliximab, bs = 'ps', k = 5),
+    family = bernoulli(),
+    data = data_imputed,
+    prior = priors_interaction_pnl,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_dgf_MPL_BC_interaction_NL",
+  reuse = TRUE
+)
+
+summary(model_dgf_MPL_BC_interaction_NL, robust = TRUE)
+prior_summary(model_dgf_MPL_BC_interaction_NL)
+
+
+tr2 <- round(exp(fixef(model_dgf_MPL_BC_interaction_NL, robust = TRUE)[-c(1,9:12), c(1,3,4)]), 2)
+
+antibody_seq <- quantile(data_model_priorImpute$MPL_BC_log2, probs = c(0.05, 0.95))
+
+asl <- length(antibody_seq)
+quant_dif <- antibody_seq[2] - antibody_seq[1]
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `MPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_dgf_MPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+## get odds ratio for infliximab effect across antibody values
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+names(prediction) <- c('p05', 'p95')
+
+infliximab_MPL_BC_log2_int <- quantile(exp((log(prediction$p95) - log(prediction$p05))/scaling_unit), 
+         probs = c(0.5, 1/40, 39/40))
+
+tr2 <- rbind(tr2, round(infliximab_MPL_BC_log2_int, 2))
+row.names(tr2)[8] <- 'infliximab:MPL_BC_log2'
+colnames(tr2)[1] <- '(R)OR'
+kableExtra::kable(tr2)
+```
+
+### Visualisation - penalized non-linear effect
+
+Extract posterior draws
+
+```{r}
+antibody_perc <- quantile(data_model_priorImpute$MPL_BC_log2,
+                           probs = c(0, 0.02, 0.05, 0.25, 0.5, 0.75, 0.95, 0.98, 1))
+
+antibody_seq <- seq(antibody_perc[1], 
+                      antibody_perc[length(antibody_perc)], 
+                      length.out = 101)
+
+## create prediction
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `MPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+prediction <- data.frame(
+  posterior_epred(
+    model_dgf_MPL_BC_interaction_NL,
+    newdata = data_prediction) %>% posterior_summary(
+      robust = TRUE
+      ) %>% data.frame() %>% select(-Est.Error),
+  group = factor(if_else(data_prediction$infliximab == 1, 'infliximab', 'control')), 
+  MPL_BC_log2 = data_prediction$MPL_BC_log2)
+```
+
+Figure A
+
+```{r, fig.width=4.5, fig.height=5}
+cole <- c('#CD7006', '#0028F0')
+
+fig_a <- prediction %>% 
+  mutate(group = factor(group, levels = c("infliximab", "control"))) %>% 
+  ggplot(aes(x = MPL_BC_log2, y = Estimate, col = group, fill = group)) + 
+  geom_line(aes(y = Estimate), linewidth = 1) + 
+  scale_y_continuous(limits = c(0, 1),
+                     breaks = c(seq(0, 1, by = 0.2))) +
+  
+  geom_ribbon(aes(ymin = `Q2.5`, ymax = `Q97.5`),
+               alpha = 0.4,  color = NA) +
+  
+  labs(x = expression(log[2]~"(aCL IgM ["*mu*"g/ml])"), y = "DGF risk") +
+  scale_color_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_fill_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  facet_grid(rows = vars(group)) +
+  
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "none") +
+  
+  geom_rug(
+    data = data_model_priorImpute %>% filter(DGF == 0),
+    aes(x = MPL_BC_log2),
+    sides = "b",
+    color = "black",
+    size = 0.12,
+    inherit.aes = FALSE
+  ) +
+  geom_rug(
+    data = data_model_priorImpute %>% filter(DGF == 1),
+    aes(x = MPL_BC_log2),
+     sides = "t",
+    color = "black",
+    size = 0.12,
+    inherit.aes = FALSE
+  )  + 
+  geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
+                            color = "grey50", size = 0.3)
+```
+
+Figure B
+
+```{r, fig.width=5, fig.height=4}
+
+antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq
+
+tr <-  posterior_epred(
+    model_dgf_MPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
+  (antibody_seq[2] - antibody_seq[1])
+
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
+  (antibody_seq[2] - antibody_seq[1])
+
+post_fix <- data.frame(
+  b_MPL_BC_log2 = tr_ctrl,
+  b_MPL_BC_log2_infliximab = tr_infliximab
+)
+
+tr <- post_fix %>% 
+  mutate(control = exp(b_MPL_BC_log2), 
+         infliximab = exp(b_MPL_BC_log2_infliximab)) %>% 
+  select(control, infliximab) %>% 
+  data.frame()
+
+CIS <- sapply(
+  tr, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+xpos <- 10
+
+fig_b <- tr %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('control', 'infliximab'),
+               names_to = 'group') %>% 
+  ggplot(aes(x = value, y = group, fill = group)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha=0.5,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+    labs(x = "Effect of doubling aCL IgM on DGF risk (OR))", 
+         y = 'Treatment group') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Treatment group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  coord_cartesian(xlim = c(1/20, 20)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(1/16, 1/4, 1, 4 ,16),
+                     labels = c("1/16", "1/4", "1", "4", "16")) +
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+   
+  annotate("text",  x = xpos, y = 2.85 , 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85 , 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+  
+  annotate("text",  x = xpos, y = 2.6 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.6 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+Figure C
+
+```{r, fig.width=6, fig.height=5}
+
+cole <- c("#8B4789", "#8B5F77", "#8B7765", "#6F815C", "#548B54")
+xpos <- 240
+xseq <- c(1/64, 1/8, 1, 8, 64, 512)
+
+antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
+antibody_seq
+
+asl <- length(antibody_seq)
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `MPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_dgf_MPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+
+names(prediction) <- c('p05', 'p25', 'p50', 'p75', 'p95')
+
+CIS <- sapply(
+  prediction, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+fig_c <- prediction %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('p05', 'p25', 'p50', 'p75', 'p95'),
+               names_to = 'MPL_BC_percentile') %>% 
+  
+  ggplot(aes(y = MPL_BC_percentile, x = value, fill = MPL_BC_percentile)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha = 0.55,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+  labs(x = "Effect of infliximab on DGF risk (odds ratio)", 
+         y = 'Percentile of aCL IgM value') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Percentile of aCL IgG value",
+                       breaks = c('p05', 'p25', 'p50', 'p75', 'p95'),
+                       labels = c('p05', 'p25', 'p50', 'p75', 'p95')) +
+  
+  coord_cartesian(xlim = c(1/300, 1000)) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(xseq),
+                     labels = c("1/64", "1/8", "1", "8", "64", '512')) +
+  
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+  
+  
+  annotate("text",  x = xpos, y = 5.85 , 
+           label = paste0("Odds ratio: ", CIS[3,5]),
+           color = cole[5] ) +
+  
+  annotate("text",  x = xpos, y = 4.85, 
+           label = paste0("Odds ratio: ", CIS[3,4]),
+           color = cole[4] ) +
+   
+  annotate("text",  x = xpos, y = 3.85, 
+           label = paste0("Odds ratio: ", CIS[3,3]),
+           color = cole[3] ) +
+  
+  annotate("text",  x = xpos, y = 2.85, 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85, 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+
+  annotate("text",  x = xpos, y = 5.5 , 
+           label = paste0("95% CI: [", CIS[1,5], ", ", CIS[2,5], "]"),
+           color = cole[5] ) + 
+  
+  annotate("text",  x = xpos, y = 4.5 , 
+           label = paste0("95% CI: [", CIS[1,4], ", ", CIS[2,4], "]"),
+           color = cole[4] ) + 
+  
+  annotate("text",  x = xpos, y = 3.5 , 
+           label = paste0("95% CI: [", CIS[1,3], ", ", CIS[2,3], "]"),
+           color = cole[3] ) + 
+  
+  annotate("text",  x = xpos, y = 2.5 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) + 
+  
+  annotate("text",  x = xpos, y = 1.5 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+#### Figure merged
+
+```{r, fig.height=6, fig.width=9}
+#| label: fig-sup_figure_3
+#| fig.cap: '**Anti-cardiolipin IgM modulates infliximab effect on delayed graft function.** (**A**) Predicted DGF risk by anti-cardiolipin IgM for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regiond) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution for the average effect (odds ratio) of doubling anti-cardiolipin IgM on DGF risk. (**C**) Posterior distribution of the infliximab effect (odds ratio) on DGF risk across anti-cardiolipin IgM percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
+
+plotac <- 'sup_figure_3'
+path <- "gitignore/figures"
+
+
+fig <- cowplot::plot_grid(fig_b, fig_c,
+  rel_heights = c(0.7, 1),
+  labels = c("B", "C"),
+  ncol = 1
+)
+
+assign(
+  plotac,
+  cowplot::plot_grid(
+    fig_a, fig,
+    rel_widths = c(0.6, 1),
+    labels = c("A", "")
+  )
+)
+
+get(plotac)
+
+if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
+  ggsave(
+    path = paste0(path),
+    filename = plotac,
+    device = "pdf",
+    width = 9,
+    height = 6
+  )
+}
+```
+
+# Infection models
+
+## Infection by GPE_dep
+
+### Priors
+
+#### Main effects model
+
+```{r}
+priors_main <- c(
+  create_prior("IGPE_dep_log2P2",
+    2 / sd(data_model_priorImpute$GPE_dep_log2, na.rm = TRUE),
+    coef = "IGPE_dep_log2P2"
+  ),
+   create_prior("IHLA_MMM5",
+    2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"
+  ),
+  create_prior("IKDPIM50",
+    2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"
+  ),
+  create_prior("Irec_ageM50",
+    2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"
+),
+  create_prior("ICITM15",
+    2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"
+  ),
+  create_prior("male_sex",
+    4,
+    coef = "male_sex"
+  ),
+  create_prior("perfusion_event",
+    4,
+    coef = "perfusion_event"
+  ),
+  create_prior("male_sex_donor",
+    4,
+    coef = "male_sex_donor"
+  ),
+  create_prior("infliximab",
+    4,
+    coef = "infliximab"
+  ),
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$infection_any)), ", 10)"),
+    class = "Intercept"
+  )
+)
+```
+
+
+#### Non-linear penalized interaction model
+
+```{r}
+priors_interaction_pnl <- c(
+  create_prior("Irec_ageM50",
+               2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+               coef = "Irec_ageM50"),  
+  create_prior("IHLA_MMM5",
+               2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+               coef = "IHLA_MMM5"),
+  create_prior("IKDPIM50",
+               2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+               coef = "IKDPIM50"),
+  create_prior("ICITM15",
+               2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+               coef = "ICITM15"),
+  create_prior("male_sex",
+               4,
+               coef = "male_sex"),
+  create_prior("perfusion_event",
+               4,
+               coef = "perfusion_event"),
+  create_prior("male_sex_donor",
+               4,
+               coef = "male_sex_donor"),
+  
+  create_prior("infliximab",
+               4,
+               coef = "infliximab"),
+
+ set_prior("student_t(3, 0, 0.6)", class = "sds", 
+           coef = 's(I(GPE_dep_log2 + 2), bs = "ps", k = 5)'), 
+ 
+ set_prior("student_t(3, 0, 0.3)", class = "sds",  
+           coef = 's(I(GPE_dep_log2 + 2), by = infliximab, bs = "ps", k = 5)'), 
+ 
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$infection_any)), ", 10)"),
+            class = "Intercept")
+)
+```
+
+### Models
+
+#### Main effects models
+
+```{r}
+#| label: tbl-unused_5
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed co-factor-dependent phosphatidylethanolamine IgG (`GPE_dep_log2`), on `infection` risk, without interaction terms. The odds ratio (OR) represents the estimated change in the odds of infection per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+
+model_infection_any_GPE_dep_main <- run(
+  expr = brm_multiple(
+    infection_any ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      infliximab +
+      I(GPE_dep_log2 + 2),
+    family = bernoulli(),
+    data = data_imputed,
+    prior = priors_main,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_infection_any_GPE_dep_main",
+  reuse = TRUE
+)
+
+summary(model_infection_any_GPE_dep_main, robust = TRUE)
+prior_summary(model_infection_any_GPE_dep_main)
+
+tr <- round(exp(fixef(model_infection_any_GPE_dep_main, robust = TRUE)[-1, c(1,3,4)]), 2)
+colnames(tr)[1] <- 'OR'
+kableExtra::kable(tr)
+```
+
+#### Non-linear interaction model
+
+```{r}
+#| label: tbl-unused_6
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between co-factor-dependent phosphatidylethanolamine IgG (aPE-dep IgG, `GPE_dep_log2`) and `infliximab` treatment on `infection` risk, while accounting for other covariates. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of aPE-dep IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+model_infection_any_GPE_dep_interaction_NL <- run(
+  expr = brm_multiple(
+    infection_any ~
+    male_sex +
+    I(rec_age - 50) +
+    male_sex_donor +
+    I(KDPI - 50) +
+    I(CIT - 15) +
+    I(HLA_MM - 5) +
+    perfusion_event +
+    infliximab +
+    s(I(GPE_dep_log2+2), bs = 'ps', k = 5) +
+    s(I(GPE_dep_log2+2), by = infliximab, bs = 'ps', k = 5),
+    family = bernoulli(),
+    data = data_imputed,
+    prior = priors_interaction_pnl,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_infection_any_GPE_dep_interaction_NL",
+  reuse = TRUE
+)
+
+summary(model_infection_any_GPE_dep_interaction_NL, robust = TRUE)
+prior_summary(model_infection_any_GPE_dep_interaction_NL)
+
+tr2 <- round(exp(fixef(model_infection_any_GPE_dep_interaction_NL, 
+                       robust = TRUE)[-c(1,9:12), c(1,3,4)]), 3)
+
+antibody_seq <- quantile(data_model_priorImpute$GPE_dep_log2, 
+                         probs = c(0.05, 0.95))
+
+asl <- length(antibody_seq)
+quant_dif <- antibody_seq[2] - antibody_seq[1]
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPE_dep_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_infection_any_GPE_dep_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+## get odds ratio for infliximab effect across antibody values
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+names(prediction) <- c('p05', 'p95')
+
+infliximab_GPE_dep_log2_int <- quantile(
+  exp((log(prediction$p95) - log(prediction$p05))/scaling_unit), 
+         probs = c(0.5, 1/40, 39/40))
+
+tr2 <- rbind(tr2, round(infliximab_GPE_dep_log2_int, 3))
+row.names(tr2)[8] <- 'infliximab:GPE_dep_log2'
+colnames(tr2)[1] <- '(R)OR'
+kableExtra::kable(tr2)
+```
+
+### Visualisation - penalized non-linear effect
+
+Extract posterior draws
+
+```{r}
+antibody_perc <- quantile(data_model_priorImpute$GPE_dep_log2,
+                           probs = c(0, 0.02, 0.05, 0.25, 0.5, 0.75, 0.95, 0.98, 1))
+
+antibody_seq <- seq(antibody_perc[1], 
+                      antibody_perc[length(antibody_perc)], 
+                      length.out = 101)
+
+## create prediction
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPE_dep_log2` = c(antibody_seq, antibody_seq)
+  )
+
+prediction <- data.frame(
+  posterior_epred(
+    model_infection_any_GPE_dep_interaction_NL,
+    newdata = data_prediction) %>% posterior_summary(
+      robust = TRUE
+      ) %>% data.frame() %>% select(-Est.Error),
+  group = factor(if_else(data_prediction$infliximab == 1, 'infliximab', 'control')), 
+  GPE_dep_log2 = data_prediction$GPE_dep_log2)
+```
+
+Figure A
+
+```{r, fig.width=4.5, fig.height=5}
+cole <- c('#CD7006', '#0028F0')
+
+fig_a <- prediction %>% 
+  mutate(group = factor(group, levels = c("infliximab", "control"))) %>% 
+  ggplot(aes(x = GPE_dep_log2, y = Estimate, col = group, fill = group)) + 
+  geom_line(aes(y = Estimate), linewidth = 1) + 
+  scale_y_continuous(limits = c(0, 1),
+                     breaks = c(seq(0, 1, by = 0.2))) +
+  
+  geom_ribbon(aes(ymin = `Q2.5`, ymax = `Q97.5`),
+               alpha = 0.4,  color = NA) +
+  
+  labs(x = expression(log[2]~"(aPE IgG dep [OD])"), y = "Infection risk") +
+  scale_color_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_fill_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  facet_grid(rows = vars(group)) +
+  
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "none") +
+  
+  geom_rug(
+    data = data_model_priorImpute %>% filter(DGF == 0),
+    aes(x = GPE_dep_log2),
+    sides = "b",
+    color = "black",
+    size = 0.12,
+    inherit.aes = FALSE
+  ) +
+  geom_rug(
+    data = data_model_priorImpute %>% filter(DGF == 1),
+    aes(x = GPE_dep_log2),
+     sides = "t",
+    color = "black",
+    size = 0.12,
+    inherit.aes = FALSE
+  )  + 
+  geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
+                            color = "grey50", size = 0.3)
+```
+
+Figure B
+
+```{r, fig.width=5, fig.height=4}
+
+antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq
+
+tr <-  posterior_epred(
+    model_infection_any_GPE_dep_interaction_NL,
+    newdata = data_prediction)
+
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
+  (antibody_seq[2] - antibody_seq[1])
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
+  (antibody_seq[2] - antibody_seq[1])
+
+post_fix <- data.frame(
+  b_GPE_dep_log2 = tr_ctrl,
+  b_GPE_dep_log2_infliximab = tr_infliximab
+)
+
+tr <- post_fix %>% 
+  mutate(control = exp(b_GPE_dep_log2), 
+         infliximab = exp(b_GPE_dep_log2_infliximab)) %>% 
+  select(control, infliximab) %>% 
+  data.frame()
+
+CIS <- sapply(
+  tr, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+xpos <- 10
+
+fig_b <- tr %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('control', 'infliximab'),
+               names_to = 'group') %>% 
+  ggplot(aes(x = value, y = group, fill = group)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha=0.5,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+    labs(x = "Effect of doubling aPE IgG dep on infection risk (OR)", 
+         y = 'Treatment group') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Treatment group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  coord_cartesian(xlim = c(1/20, 20)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(1/16, 1/4, 1, 4 ,16),
+                     labels = c("1/16", "1/4", "1", "4", "16")) +
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+   
+  annotate("text",  x = xpos, y = 2.85 , 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85 , 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+  
+  annotate("text",  x = xpos, y = 2.6 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.6 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+Figure C
+
+```{r, fig.width=6, fig.height=5}
+
+cole <- c("#8B4789", "#8B5F77", "#8B7765", "#6F815C", "#548B54")
+xpos <- 240
+xseq <- c(1/64, 1/8, 1, 8, 64, 512)
+
+antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
+antibody_seq
+
+asl <- length(antibody_seq)
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPE_dep_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_infection_any_GPE_dep_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+
+
+names(prediction) <- c('p05', 'p25', 'p50', 'p75', 'p95')
+
+
+CIS <- sapply(
+  prediction, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% round(3)
+
+CIS
+
+fig_c <- prediction %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('p05', 'p25', 'p50', 'p75', 'p95'),
+               names_to = 'GPE_dep_percentile') %>% 
+  
+  ggplot(aes(y = GPE_dep_percentile, x = value, fill = GPE_dep_percentile)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha = 0.55,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+  labs(x = "Effect of infliximab on infection risk (odds ratio)", 
+         y = 'Percentile of aPE IgG dep value') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Percentile of aCL IgG value",
+                       breaks = c('p05', 'p25', 'p50', 'p75', 'p95'),
+                       labels = c('p05', 'p25', 'p50', 'p75', 'p95')) +
+  
+  coord_cartesian(xlim = c(1/300, 1000)) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(xseq),
+                     labels = c("1/64", "1/8", "1", "8", "64", '512')) +
+  
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+  
+  
+    annotate("text",  x = xpos, y = 5.85 , 
+           label = paste0("Odds ratio: ", round(CIS[3,5], 2)),
+           color = cole[5] ) +
+  
+  annotate("text",  x = xpos, y = 4.85, 
+           label = paste0("Odds ratio: ", round(CIS[3,4], 2)),
+           color = cole[4] ) +
+   
+  annotate("text",  x = xpos, y = 3.85, 
+           label = paste0("Odds ratio: ", round(CIS[3,3], 2)),
+           color = cole[3] ) +
+  
+  annotate("text",  x = xpos, y = 2.85, 
+           label = paste0("Odds ratio: ", round(CIS[3,2],2 )),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85, 
+           label = paste0("Odds ratio: ", round(CIS[3,1], 2)),
+           color = cole[1] ) +
+
+  annotate("text",  x = xpos, y = 5.5 , 
+           label = paste0("95% CI: [", round(CIS[1,5], 2), ", ", 
+                          round(CIS[2,5], 2), "]"),
+           color = cole[5] ) + 
+  
+  annotate("text",  x = xpos, y = 4.5 , 
+           label = paste0("95% CI: [", round(CIS[1,4], 2), ", ", 
+                          round(CIS[2,4], 2), "]"),
+           color = cole[4] ) + 
+  
+  annotate("text",  x = xpos, y = 3.5 , 
+           label = paste0("95% CI: [", round(CIS[1,3], 2), ", ", 
+                          round(CIS[2,3], 2), "]"),
+           color = cole[3] ) + 
+  
+  annotate("text",  x = xpos, y = 2.5 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", round(CIS[2,2], 2), "]"),
+           color = cole[2] ) + 
+  
+  annotate("text",  x = xpos, y = 1.5 , 
+           label = paste0("95% CI: [", round(CIS[1,1], 2), ", ", 
+                          round(CIS[2,1], 2), "]"),
+           color = cole[1] ) 
+```
+
+#### Figure merged
+
+```{r, fig.height=6, fig.width=9}
+#| label: fig-sup_figure_7
+#| fig.cap: '**Co-factor dependent anti-phosphatidylethanolamine IgG (aPE-dep IgG) modulates the effect of infliximab on infection risk** (**A**) Predicted infection risk by aPE-dep IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of aPE-dep IgG levels. (**B**) Posterior distribution for the average effect of doubling aPE-dep IgG on infection risk (odds ratio). (**C**) Posterior distribution of the effect of infliximab (odds ratio) on infection risk across aPE-dep IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
+
+plotac <- 'sup_figure_7'
+path <- "gitignore/figures"
+
+
+fig <- cowplot::plot_grid(fig_b, fig_c,
+  rel_heights = c(0.7, 1),
+  labels = c("B", "C"),
+  ncol = 1
+)
+
+assign(
+  plotac,
+  cowplot::plot_grid(
+    fig_a, fig,
+    rel_widths = c(0.6, 1),
+    labels = c("A", "")
+  )
+)
+
+get(plotac)
+
+if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
+  ggsave(
+    path = paste0(path),
+    filename = plotac,
+    device = "pdf",
+    width = 9,
+    height = 6
+  )
+}
+```
+
+## Infection by GPE_ind
+
+### Priors
+
+#### Main effects model
+
+```{r}
+priors_main <- c(
+  create_prior("IGPE_ind_log2P3",
+    2 / sd(data_model_priorImpute$GPE_ind_log2, na.rm = TRUE),
+    coef = "IGPE_ind_log2P3"
+  ),
+   create_prior("IHLA_MMM5",
+    2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"
+  ),
+  create_prior("IKDPIM50",
+    2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"
+  ),
+  create_prior("Irec_ageM50",
+    2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"
+),
+  create_prior("ICITM15",
+    2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"
+  ),
+  create_prior("male_sex",
+    4,
+    coef = "male_sex"
+  ),
+  create_prior("perfusion_event",
+    4,
+    coef = "perfusion_event"
+  ),
+  create_prior("male_sex_donor",
+    4,
+    coef = "male_sex_donor"
+  ),
+  create_prior("infliximab",
+    4,
+    coef = "infliximab"
+  ),
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$infection_any)), ", 10)"),
+    class = "Intercept"
+  )
+)
+```
+
+#### Non-linear penalized interaction model
+
+```{r}
+priors_interaction_pnl <- c(
+  create_prior("Irec_ageM50",
+               2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+               coef = "Irec_ageM50"),  
+  create_prior("IHLA_MMM5",
+               2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+               coef = "IHLA_MMM5"),
+  create_prior("IKDPIM50",
+               2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+               coef = "IKDPIM50"),
+  create_prior("ICITM15",
+               2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+               coef = "ICITM15"),
+  create_prior("male_sex",
+               4,
+               coef = "male_sex"),
+  create_prior("perfusion_event",
+               4,
+               coef = "perfusion_event"),
+  create_prior("male_sex_donor",
+               4,
+               coef = "male_sex_donor"),
+  
+  create_prior("infliximab",
+               4,
+               coef = "infliximab"),
+
+ set_prior("student_t(3, 0, 0.6)", class = "sds", 
+           coef = 's(I(GPE_ind_log2 + 3), bs = "ps", k = 5)'), 
+ 
+ set_prior("student_t(3, 0, 0.3)", class = "sds",  
+           coef = 's(I(GPE_ind_log2 + 3), by = infliximab, bs = "ps", k = 5)'), 
+ 
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$infection_any)), ", 10)"),
+            class = "Intercept")
+)
+```
+
+### Models
+
+#### Main effects models
+
+```{r}
+#| label: tbl-unused_7
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed co-factor-independent phosphatidylethanolamine IgG (`GPE_ind_log2`), on `infection` risk, without interaction terms. The odds ratio (OR) represents the estimated change in the odds of infection per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+model_infection_any_GPE_ind_main <- run(
+  expr = brm_multiple(
+    infection_any ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      infliximab +
+      I(GPE_ind_log2 + 3),
+    family = bernoulli(),
+    data = data_imputed,
+    prior = priors_main,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_infection_any_GPE_ind_main",
+  reuse = TRUE
+)
+
+summary(model_infection_any_GPE_ind_main, robust = TRUE)
+prior_summary(model_infection_any_GPE_ind_main)
+
+tr <- round(exp(fixef(model_infection_any_GPE_ind_main, robust = TRUE)[-1, c(1,3,4)]), 2)
+colnames(tr)[1] <- 'OR'
+kableExtra::kable(tr)
+```
+
+#### Non-linear interaction model
+
+```{r}
+#| label: tbl-unused_8
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between co-factor-independent phosphatidylethanolamine IgG (aPE-ind IgG, `GPE_ind_log2`) and `infliximab` treatment on `infection` risk, while accounting for other covariates. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of aPE-ind IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+model_infection_any_GPE_ind_interaction_NL <- run(
+  expr = brm_multiple(
+    infection_any ~
+    male_sex +
+    I(rec_age - 50) +
+    male_sex_donor +
+    I(KDPI - 50) +
+    I(CIT - 15) +
+    I(HLA_MM - 5) +
+    perfusion_event +
+    infliximab +
+    s(I(GPE_ind_log2+3), bs = 'ps', k = 5) +
+    s(I(GPE_ind_log2+3), by = infliximab, bs = 'ps', k = 5),
+    family = bernoulli(),
+    data = data_imputed,
+    prior = priors_interaction_pnl,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_infection_any_GPE_ind_interaction_NL",
+  reuse = TRUE
+)
+
+summary(model_infection_any_GPE_ind_interaction_NL, robust = TRUE)
+prior_summary(model_infection_any_GPE_ind_interaction_NL)
+
+tr2 <- round(exp(fixef(model_infection_any_GPE_ind_interaction_NL, 
+                       robust = TRUE)[-c(1,9:12), c(1,3,4)]), 2)
+
+antibody_seq <- quantile(data_model_priorImpute$GPE_ind_log2, 
+                         probs = c(0.05, 0.95))
+
+asl <- length(antibody_seq)
+quant_dif <- antibody_seq[2] - antibody_seq[1]
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPE_ind_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_infection_any_GPE_ind_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+## get odds ratio for infliximab effect across antibody values
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+names(prediction) <- c('p05', 'p95')
+
+infliximab_GPE_ind_log2_int <- quantile(
+  exp((log(prediction$p95) - log(prediction$p05))/scaling_unit), 
+         probs = c(0.5, 1/40, 39/40))
+
+tr2 <- rbind(tr2, round(infliximab_GPE_ind_log2_int, 4))
+row.names(tr2)[8] <- 'infliximab:GPE_ind_log2'
+colnames(tr2)[1] <- '(R)OR'
+kableExtra::kable(tr2)
+```
+
+### Visualisation - penalized non-linear effect
+
+Extract posterior draws
+
+```{r}
+antibody_perc <- quantile(data_model_priorImpute$GPE_ind_log2,
+                           probs = c(0, 0.02, 0.05, 0.25, 0.5, 0.75, 0.95, 0.98, 1))
+
+antibody_seq <- seq(antibody_perc[1], 
+                      antibody_perc[length(antibody_perc)], 
+                      length.out = 101)
+
+## create prediction
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPE_ind_log2` = c(antibody_seq, antibody_seq)
+  )
+
+prediction <- data.frame(
+  posterior_epred(
+    model_infection_any_GPE_ind_interaction_NL,
+    newdata = data_prediction) %>% posterior_summary(
+      robust = TRUE
+      ) %>% data.frame() %>% select(-Est.Error),
+  group = factor(if_else(data_prediction$infliximab == 1, 'infliximab', 'control')), 
+  GPE_ind_log2 = data_prediction$GPE_ind_log2)
+```
+
+Figure A
+
+```{r, fig.width=4.5, fig.height=5}
+cole <- c('#CD7006', '#0028F0')
+
+fig_a <- prediction %>% 
+  mutate(group = factor(group, levels = c("infliximab", "control"))) %>% 
+  ggplot(aes(x = GPE_ind_log2, y = Estimate, col = group, fill = group)) + 
+  geom_line(aes(y = Estimate), linewidth = 1) + 
+  scale_y_continuous(limits = c(0, 1),
+                     breaks = c(seq(0, 1, by = 0.2))) +
+  
+  geom_ribbon(aes(ymin = `Q2.5`, ymax = `Q97.5`),
+               alpha = 0.4,  color = NA) +
+  
+  labs(x = expression(log[2]~"(aPE IgG ind [OD])"), y = "Infection risk") +
+  scale_color_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_fill_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  facet_grid(rows = vars(group)) +
+  
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "none") +
+  
+  geom_rug(
+    data = data_model_priorImpute %>% filter(DGF == 0),
+    aes(x = GPE_ind_log2),
+    sides = "b",
+    color = "black",
+    size = 0.12,
+    inherit.aes = FALSE
+  ) +
+  geom_rug(
+    data = data_model_priorImpute %>% filter(DGF == 1),
+    aes(x = GPE_ind_log2),
+     sides = "t",
+    color = "black",
+    size = 0.12,
+    inherit.aes = FALSE
+  )  + 
+  geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
+                            color = "grey50", size = 0.3)
+```
+
+Figure B
+
+```{r, fig.width=5, fig.height=4}
+
+antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq
+
+tr <-  posterior_epred(
+    model_infection_any_GPE_ind_interaction_NL,
+    newdata = data_prediction)
+
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
+  (antibody_seq[2] - antibody_seq[1])
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
+  (antibody_seq[2] - antibody_seq[1])
+
+post_fix <- data.frame(
+  b_GPE_ind_log2 = tr_ctrl,
+  b_GPE_ind_log2_infliximab = tr_infliximab
+)
+
+tr <- post_fix %>% 
+  mutate(control = exp(b_GPE_ind_log2), 
+         infliximab = exp(b_GPE_ind_log2_infliximab)) %>% 
+  select(control, infliximab) %>% 
+  data.frame()
+
+CIS <- sapply(
+  tr, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+xpos <- 10
+
+fig_b <- tr %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('control', 'infliximab'),
+               names_to = 'group') %>% 
+  ggplot(aes(x = value, y = group, fill = group)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha=0.5,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+    labs(x = "Effect of doubling aPE IgG ind on infection risk (OR)", 
+         y = 'Treatment group') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Treatment group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  coord_cartesian(xlim = c(1/20, 20)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(1/16, 1/4, 1, 4 ,16),
+                     labels = c("1/16", "1/4", "1", "4", "16")) +
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+   
+  annotate("text",  x = xpos, y = 2.85 , 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85 , 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+  
+  annotate("text",  x = xpos, y = 2.6 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.6 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+Figure C
+
+```{r, fig.width=6, fig.height=5}
+
+cole <- c("#8B4789", "#8B5F77", "#8B7765", "#6F815C", "#548B54")
+xpos <- 240
+xseq <- c(1/64, 1/8, 1, 8, 64, 512)
+
+antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
+antibody_seq
+
+asl <- length(antibody_seq)
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPE_ind_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_infection_any_GPE_ind_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+
+
+names(prediction) <- c('p05', 'p25', 'p50', 'p75', 'p95')
+
+CIS <- sapply(
+  prediction, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+fig_c <- prediction %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('p05', 'p25', 'p50', 'p75', 'p95'),
+               names_to = 'GPE_ind_percentile') %>% 
+  
+  ggplot(aes(y = GPE_ind_percentile, x = value, fill = GPE_ind_percentile)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha = 0.55,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+  labs(x = "Effect of infliximab on infection risk (odds ratio)", 
+         y = 'Percentile of aPE IgG ind value') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Percentile of aCL IgG value",
+                       breaks = c('p05', 'p25', 'p50', 'p75', 'p95'),
+                       labels = c('p05', 'p25', 'p50', 'p75', 'p95')) +
+  
+  coord_cartesian(xlim = c(1/300, 1000)) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(xseq),
+                     labels = c("1/64", "1/8", "1", "8", "64", '512')) +
+  
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+  
+  
+  annotate("text",  x = xpos, y = 5.85 , 
+           label = paste0("Odds ratio: ", CIS[3,5]),
+           color = cole[5] ) +
+  
+  annotate("text",  x = xpos, y = 4.85, 
+           label = paste0("Odds ratio: ", CIS[3,4]),
+           color = cole[4] ) +
+   
+  annotate("text",  x = xpos, y = 3.85, 
+           label = paste0("Odds ratio: ", CIS[3,3]),
+           color = cole[3] ) +
+  
+  annotate("text",  x = xpos, y = 2.85, 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85, 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+
+  annotate("text",  x = xpos, y = 5.5 , 
+           label = paste0("95% CI: [", CIS[1,5], ", ", CIS[2,5], "]"),
+           color = cole[5] ) + 
+  
+  annotate("text",  x = xpos, y = 4.5 , 
+           label = paste0("95% CI: [", CIS[1,4], ", ", CIS[2,4], "]"),
+           color = cole[4] ) + 
+  
+  annotate("text",  x = xpos, y = 3.5 , 
+           label = paste0("95% CI: [", CIS[1,3], ", ", CIS[2,3], "]"),
+           color = cole[3] ) + 
+  
+  annotate("text",  x = xpos, y = 2.5 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) + 
+  
+  annotate("text",  x = xpos, y = 1.5 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+#### Figure merged
+
+```{r, fig.height=6, fig.width=9}
+#| label: fig-sup_figure_8
+#| fig.cap: '**Co-factor independent anti-phosphatidylethanolamine IgG (aPE-ind IgG) modulates the effect of infliximab on infection risk** (**A**) Predicted infection risk by aPE-dep IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of aPE-ind IgG levels. (**B**) Posterior distribution for the average effect of doubling aPE-ind IgG on infection risk (odds ratio). (**C**) Posterior distribution of the effect of infliximab (odds ratio) on infection risk across aPE-ind IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
+
+plotac <- 'sup_figure_8'
+path <- "gitignore/figures"
+
+
+fig <- cowplot::plot_grid(fig_b, fig_c,
+  rel_heights = c(0.7, 1),
+  labels = c("B", "C"),
+  ncol = 1
+)
+
+assign(
+  plotac,
+  cowplot::plot_grid(
+    fig_a, fig,
+    rel_widths = c(0.6, 1),
+    labels = c("A", "")
+  )
+)
+
+get(plotac)
+
+if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
+  ggsave(
+    path = paste0(path),
+    filename = plotac,
+    device = "pdf",
+    width = 9,
+    height = 6
+  )
+}
+```
+
+# GFR models
+
+## GFR_MDRD by GPL_BC
+
+### Priors
+
+```{r}
+
+GFR_sd <- sd(data_model_priorImpute$GFR_MDRD)
+GFR_sd
+```
+
+#### Main effects model
+
+```{r}
+priors_main <- c(
+  create_prior("GPL_BC_log2",
+    GFR_sd*(2*GFR_sd) / sd(data_model_priorImpute$GPL_BC_log2, na.rm = TRUE),
+    coef = "GPL_BC_log2"
+  ),
+   create_prior("IHLA_MMM5",
+    (2*GFR_sd) / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"
+  ),
+  create_prior("IKDPIM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"
+  ),
+  create_prior("Irec_ageM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"
+),
+  create_prior("ICITM15",
+    (2*GFR_sd) / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"
+  ),
+  create_prior("male_sex",
+    4*GFR_sd,
+    coef = "male_sex"
+  ),
+  create_prior("perfusion_event",
+    4*GFR_sd,
+    coef = "perfusion_event"
+  ),
+  create_prior("male_sex_donor",
+    4*GFR_sd,
+    coef = "male_sex_donor"
+  ),
+  create_prior("infliximab",
+    4*GFR_sd,
+    coef = "infliximab"
+  ),
+  set_prior(paste0("normal(", mean(data_model_priorImpute$GFR_MDRD), ", 200)"),
+    class = "Intercept"
+  )
+)
+```
+
+#### Non-linear penalized interaction model
+
+```{r}
+priors_interaction_pnl <- c(
+  create_prior("Irec_ageM50",
+               (2*GFR_sd) / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"),  
+  create_prior("IHLA_MMM5",
+               (2*GFR_sd) / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"),
+  create_prior("IKDPIM50",
+               (2*GFR_sd) / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"),
+  create_prior("ICITM15",
+               (2*GFR_sd) / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"),
+  create_prior("male_sex",
+    4*GFR_sd,
+    coef = "male_sex"),
+  create_prior("perfusion_event",
+    4*GFR_sd,
+    coef = "perfusion_event"),
+  create_prior("male_sex_donor",
+    4*GFR_sd,
+    coef = "male_sex_donor"),
+  
+  create_prior("infliximab",
+    4*GFR_sd,
+    coef = "infliximab"),
+
+ set_prior("student_t(3, 0, 12)", class = "sds", 
+           coef = 's(GPL_BC_log2, bs = "ps", k = 5)'), 
+ 
+ set_prior("student_t(3, 0, 6)", class = "sds",  
+           coef = 's(GPL_BC_log2, by = infliximab, bs = "ps", k = 5)'), 
+ 
+  set_prior(paste0("normal(", mean(data_model_priorImpute$GFR_MDRD), ", 200)"),
+            class = "Intercept")
+)
+```
+
+### Models
+
+#### Main effects models
+
+```{r}
+#| label: tbl-unused_9
+#| tbl-cap: 'Results from multivariable Bayesian robust regression model examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgG (`GPL_BC_log2`), on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), without interaction terms. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+model_GFR_MDRD_GPL_BC_main <- run(
+  expr = brm_multiple(
+    GFR_MDRD ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      infliximab +
+      GPL_BC_log2,
+    family = student(),
+    data = data_imputed,
+    prior = priors_main,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_GFR_MDRD_GPL_BC_main",
+  reuse = TRUE
+)
+
+summary(model_GFR_MDRD_GPL_BC_main, robust = TRUE)
+prior_summary(model_GFR_MDRD_GPL_BC_main)
+
+tr <- round(fixef(model_GFR_MDRD_GPL_BC_main, robust = TRUE)[-1, c(1,3,4)], 2)
+colnames(tr)[1] <- 'Estimate'
+kableExtra::kable(tr)
+```
+
+#### Non-linear interaction model
+
+```{r}
+#| label: tbl-unused_10
+#| tbl-cap: "Results from a multivariable Bayesian robust regression model incorporating a non-linear interaction between anti-cardiolipin IgG (`GPL_BC_log2`) and `infliximab` treatment on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), while accounting for other covariates. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. The last row (`infliximab:GPL_BC_log2`) reports the difference in infliximab's treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively." 
+
+model_GFR_MDRD_GPL_BC_interaction_NL <- run(
+  expr = brm_multiple(
+    GFR_MDRD ~
+    male_sex +
+    I(rec_age - 50) +
+    male_sex_donor +
+    I(KDPI - 50) +
+    I(CIT - 15) +
+    I(HLA_MM - 5) +
+    perfusion_event +
+    infliximab +
+    s(GPL_BC_log2, bs = 'ps', k = 5) +
+    s(GPL_BC_log2, by = infliximab, bs = 'ps', k = 5),
+    family = student(),
+    data = data_imputed,
+    prior = priors_interaction_pnl,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_GFR_MDRD_GPL_BC_interaction_NL",
+  reuse = TRUE
+)
+
+summary(model_GFR_MDRD_GPL_BC_interaction_NL, robust = TRUE)
+prior_summary(model_GFR_MDRD_GPL_BC_interaction_NL)
+
+tr2 <- round(fixef(model_GFR_MDRD_GPL_BC_interaction_NL, 
+                       robust = TRUE)[-c(1,9:12), c(1,3,4)], 2)
+
+antibody_seq <- quantile(data_model_priorImpute$GPL_BC_log2, 
+                         probs = c(0.05, 0.95))
+
+asl <- length(antibody_seq)
+quant_dif <- antibody_seq[2] - antibody_seq[1]
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_GPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+## get Estimate for infliximab effect across antibody values
+prediction <- (
+  prediction_infliximab-
+     prediction_ctrl
+  ) %>% data.frame()
+
+names(prediction) <- c('p05', 'p95')
+
+infliximab_GPL_BC_log2_int <- quantile(
+  (prediction$p95 - prediction$p05)/scaling_unit, 
+         probs = c(0.5, 1/40, 39/40))
+
+tr2 <- rbind(tr2, round(infliximab_GPL_BC_log2_int, 2))
+row.names(tr2)[8] <- 'infliximab:GPL_BC_log2'
+kableExtra::kable(tr2)
+```
+
+### Visualisation - penalized non-linear effect
+
+Extract posterior draws
+
+```{r}
+antibody_perc <- quantile(data_model_priorImpute$GPL_BC_log2,
+                           probs = c(0, 0.02, 0.05, 0.25, 0.5, 0.75, 0.95, 0.98, 1))
+
+antibody_seq <- seq(antibody_perc[1], 
+                      antibody_perc[length(antibody_perc)], 
+                      length.out = 101)
+
+## create prediction
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+prediction <- data.frame(
+  posterior_epred(
+    model_GFR_MDRD_GPL_BC_interaction_NL,
+    newdata = data_prediction) %>% posterior_summary(
+      robust = TRUE
+      ) %>% data.frame() %>% select(-Est.Error),
+  group = factor(if_else(data_prediction$infliximab == 1, 'infliximab', 'control')),
+  GPL_BC_log2 = data_prediction$GPL_BC_log2)
+```
+
+Figure A
+
+```{r, fig.width=4.5, fig.height=5}
+cole <- c('#CD7006', '#0028F0')
+
+fig_a <- prediction %>% 
+  mutate(group = factor(group, levels = c("infliximab", "control")), 
+         `Q2.5` = if_else(`Q2.5` < 0, 0, `Q2.5`)) %>% 
+  ggplot(aes(x = GPL_BC_log2, y = Estimate, col = group, fill = group)) + 
+  geom_line(aes(y = Estimate), linewidth = 1) + 
+  scale_y_continuous(limits = c(0, 125),
+                      breaks = c(seq(0, 125, by = 25))) +
+  
+  geom_ribbon(aes(ymin = `Q2.5`, ymax = `Q97.5`),
+               alpha = 0.4,  color = NA) +
+  
+  geom_point(data = data_model_priorImpute, 
+             aes(x = GPL_BC_log2, y = GFR_MDRD, col = group, fill = group)) +
+  
+  labs(x = expression(log[2]~"(aCL IgG ["*mu*"g/ml])"), 
+       y = "GFR (mL/min/1.73 m²)") +
+  
+  scale_color_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_fill_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  facet_grid(rows = vars(group)) +
+  
+  theme(axis.text=element_text(size = 10),
+        axis.title=element_text(size = 12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "none") + 
+  
+  geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
+                            color = "grey50", size = 0.3)
+```
+
+Figure B
+
+```{r, fig.width=5, fig.height=4}
+
+antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_GPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) /
+  (antibody_seq[2] - antibody_seq[1])
+tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])/
+  (antibody_seq[2] - antibody_seq[1])
+
+post_fix <- data.frame(
+  b_GPL_BC_log2 = tr_ctrl,
+  b_GPL_BC_log2_infliximab = tr_infliximab
+)
+
+tr <- post_fix %>% 
+  mutate(control = b_GPL_BC_log2, 
+         infliximab = b_GPL_BC_log2_infliximab) %>% 
+  select(control, infliximab) %>% 
+  data.frame()
+
+CIS <- sapply(
+  tr, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+xpos <- 20
+
+fig_b <- tr %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('control', 'infliximab'),
+               names_to = 'group') %>% 
+  ggplot(aes(x = value, y = group, fill = group)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha=0.5,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+    labs(x = "Effect of doubling aCL IgG on GFR (mL/min/1.73 m²)", 
+         y = 'Treatment group') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Treatment group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  coord_cartesian(xlim = c(-20, 26)) +
+  
+  geom_vline(xintercept = 0, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+   
+  annotate("text",  x = xpos, y = 2.85 , 
+           label = paste0("Estimate: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85 , 
+           label = paste0("Estimate: ", CIS[3,1]),
+           color = cole[1] ) +
+  
+  annotate("text",  x = xpos, y = 2.6 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.6 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+
+```
+
+Figure C
+
+```{r, fig.width=6, fig.height=5}
+
+cole <- c("#8B4789", "#8B5F77", "#8B7765", "#6F815C", "#548B54")
+xpos <- 30
+
+antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
+
+asl <- length(antibody_seq)
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_GPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+prediction <- (
+  prediction_infliximab-
+     prediction_ctrl
+  ) %>% data.frame()
+
+
+names(prediction) <- c('p05', 'p25', 'p50', 'p75', 'p95')
+
+CIS <- sapply(
+  prediction, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(1)
+
+CIS
+
+fig_c <- prediction %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('p05', 'p25', 'p50', 'p75', 'p95'),
+               names_to = 'GPL_BC_percentile') %>% 
+  
+  ggplot(aes(y = GPL_BC_percentile, x = value, fill = GPL_BC_percentile)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha = 0.55,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+  labs(x = "Effect of infliximab on GFR (mL/min/1.73 m²)", 
+         y = 'Percentile of aCL IgG value') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Percentile of aCL IgG value",
+                       breaks = c('p05', 'p25', 'p50', 'p75', 'p95'),
+                       labels = c('p05', 'p25', 'p50', 'p75', 'p95')) +
+  
+  coord_cartesian(xlim = c(-40, 40)) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  
+  
+  geom_vline(xintercept = 0, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+  
+  
+  annotate("text",  x = xpos, y = 5.85 , 
+           label = paste0("Estimate: ", CIS[3,5]),
+           color = cole[5] ) +
+  
+  annotate("text",  x = xpos, y = 4.85, 
+           label = paste0("Estimate: ", CIS[3,4]),
+           color = cole[4] ) +
+   
+  annotate("text",  x = xpos, y = 3.85, 
+           label = paste0("Estimate: ", CIS[3,3]),
+           color = cole[3] ) +
+  
+  annotate("text",  x = xpos, y = 2.85, 
+           label = paste0("Estimate: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85, 
+           label = paste0("Estimate: ", CIS[3,1]),
+           color = cole[1] ) +
+
+  annotate("text",  x = xpos, y = 5.5 , 
+           label = paste0("95% CI: [", CIS[1,5], ", ", CIS[2,5], "]"),
+           color = cole[5] ) + 
+  
+  annotate("text",  x = xpos, y = 4.5 , 
+           label = paste0("95% CI: [", CIS[1,4], ", ", CIS[2,4], "]"),
+           color = cole[4] ) + 
+  
+  annotate("text",  x = xpos, y = 3.5 , 
+           label = paste0("95% CI: [", CIS[1,3], ", ", CIS[2,3], "]"),
+           color = cole[3] ) + 
+  
+  annotate("text",  x = xpos, y = 2.5 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) + 
+  
+  annotate("text",  x = xpos, y = 1.5 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+#### Figure merged
+
+```{r, fig.height=6, fig.width=9}
+#| label: fig-sup_figure_4
+#| fig.cap: '**Anti-cardiolipin IgG modulates the effect of infliximab on  estimated glomerular filtration rate (eGFR).** (**A**) Predicted eGFR by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the average effect of doubling anti-cardiolipin IgG on eGFR. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian robust regression with B-splines.'
+
+plotac <- 'sup_figure_4'
+path <- "gitignore/figures"
+
+
+fig <- cowplot::plot_grid(fig_b, fig_c,
+  rel_heights = c(0.7, 1),
+  labels = c("B", "C"),
+  ncol = 1
+)
+
+assign(
+  plotac,
+  cowplot::plot_grid(
+    fig_a, fig,
+    rel_widths = c(0.6, 1),
+    labels = c("A", "")
+  )
+)
+
+get(plotac)
+
+if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
+  ggsave(
+    path = paste0(path),
+    filename = plotac,
+    device = "pdf",
+    width = 9,
+    height = 6
+  )
+}
+```
+
+## GFR_MDRD by MPL_BC
+
+### Priors
+
+#### Main effects model
+
+```{r}
+priors_main <- c(
+  create_prior("IMPL_BC_log2M2",
+    (2*GFR_sd) / sd(data_model_priorImpute$MPL_BC_log2, na.rm = TRUE),
+    coef = "IMPL_BC_log2M2"
+  ),
+   create_prior("IHLA_MMM5",
+    (2*GFR_sd) / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"
+  ),
+  create_prior("IKDPIM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"
+  ),
+  create_prior("Irec_ageM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"
+),
+  create_prior("ICITM15",
+    (2*GFR_sd) / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"
+  ),
+  create_prior("male_sex",
+    4*GFR_sd,
+    coef = "male_sex"
+  ),
+  create_prior("perfusion_event",
+    4*GFR_sd,
+    coef = "perfusion_event"
+  ),
+  create_prior("male_sex_donor",
+    4*GFR_sd,
+    coef = "male_sex_donor"
+  ),
+  create_prior("infliximab",
+    4*GFR_sd,
+    coef = "infliximab"
+  ),
+  set_prior(paste0("normal(", mean(data_model_priorImpute$GFR_MDRD), ", 200)"),
+    class = "Intercept"
+  )
+)
+```
+
+#### Non-linear penalized interaction model
+
+```{r}
+priors_interaction_pnl <- c(
+  create_prior("Irec_ageM50",
+               (2*GFR_sd) / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"),  
+  create_prior("IHLA_MMM5",
+               (2*GFR_sd) / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"),
+  create_prior("IKDPIM50",
+               (2*GFR_sd) / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"),
+  create_prior("ICITM15",
+               (2*GFR_sd) / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"),
+  create_prior("male_sex",
+    4*GFR_sd,
+    coef = "male_sex"),
+  create_prior("perfusion_event",
+    4*GFR_sd,
+    coef = "perfusion_event"),
+  create_prior("male_sex_donor",
+    4*GFR_sd,
+    coef = "male_sex_donor"),
+  
+  create_prior("infliximab",
+    4*GFR_sd,
+    coef = "infliximab"),
+
+ set_prior("student_t(3, 0, 12)", class = "sds", 
+           coef = 's(I(MPL_BC_log2 - 2), bs = "ps", k = 5)'), 
+ 
+ set_prior("student_t(3, 0, 6)", class = "sds",  
+           coef = 's(I(MPL_BC_log2 - 2), by = infliximab, bs = "ps", k = 5)'), 
+ 
+  set_prior(paste0("normal(", mean(data_model_priorImpute$GFR_MDRD), ", 200)"),
+            class = "Intercept")
+)
+```
+
+### Models
+
+#### Main effects models
+
+```{r}
+#| label: tbl-unused_11
+#| tbl-cap: 'Results from multivariable Bayesian robust regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgM (`MPL_BC_log2`), on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), without interaction terms. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+
+model_GFR_MDRD_MPL_BC_main <- run(
+  expr = brm_multiple(
+    GFR_MDRD ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      infliximab +
+      I(MPL_BC_log2 - 2),
+    family = student(),
+    data = data_imputed,
+    prior = priors_main,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_GFR_MDRD_MPL_BC_main",
+  reuse = TRUE
+)
+
+summary(model_GFR_MDRD_MPL_BC_main, robust = TRUE)
+prior_summary(model_GFR_MDRD_MPL_BC_main)
+
+tr <- round(fixef(model_GFR_MDRD_MPL_BC_main, robust = TRUE)[-1, c(1,3,4)], 2)
+colnames(tr)[1] <- 'Estimate'
+kableExtra::kable(tr)
+```
+
+#### Non-linear interaction model
+
+```{r}
+#| label: tbl-unused_12
+#| tbl-cap: "Results from a multivariable Bayesian robust regression model incorporating a non-linear interaction between anti-cardiolipin IgM (`MPL_BC_log2`) and `infliximab` treatment on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), while accounting for other covariates. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. The last row (`infliximab:MPL_BC_log2`) reports the difference in infliximab's treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgM, quantifying the interaction effect. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively." 
+
+model_GFR_MDRD_MPL_BC_interaction_NL <- run(
+  expr = brm_multiple(
+    GFR_MDRD ~
+    male_sex +
+    I(rec_age - 50) +
+    male_sex_donor +
+    I(KDPI - 50) +
+    I(CIT - 15) +
+    I(HLA_MM - 5) +
+    perfusion_event +
+    infliximab +
+    s(I(MPL_BC_log2-2), bs = 'ps', k = 5) +
+    s(I(MPL_BC_log2-2), by = infliximab, bs = 'ps', k = 5),
+    family = student(),
+    data = data_imputed,
+    prior = priors_interaction_pnl,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 2000, warmup = 1900,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_GFR_MDRD_MPL_BC_interaction_NL",
+  reuse = TRUE
+)
+
+summary(model_GFR_MDRD_MPL_BC_interaction_NL, robust = TRUE)
+prior_summary(model_GFR_MDRD_MPL_BC_interaction_NL)
+
+
+tr2 <- round(fixef(model_GFR_MDRD_MPL_BC_interaction_NL, 
+                   robust = TRUE)[-c(1,9:12), c(1,3,4)], 2)
+
+antibody_seq <- quantile(data_model_priorImpute$MPL_BC_log2, probs = c(0.05, 0.95))
+
+asl <- length(antibody_seq)
+quant_dif <- antibody_seq[2] - antibody_seq[1]
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `MPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_MPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+## get Estimate for infliximab effect across antibody values
+prediction <- (
+  prediction_infliximab-
+     prediction_ctrl
+  ) %>% data.frame()
+names(prediction) <- c('p05', 'p95')
+
+infliximab_MPL_BC_log2_int <- quantile((prediction$p95 - prediction$p05)/scaling_unit, 
+         probs = c(0.5, 1/40, 39/40))
+
+tr2 <- rbind(tr2, round(infliximab_MPL_BC_log2_int, 2))
+row.names(tr2)[8] <- 'infliximab:MPL_BC_log2'
+kableExtra::kable(tr2)
+```
+
+### Visualisation - penalized non-linear effect
+
+Extract posterior draws
+
+```{r}
+antibody_perc <- quantile(data_model_priorImpute$MPL_BC_log2,
+                           probs = c(0, 0.02, 0.05, 0.25, 0.5, 0.75, 0.95, 0.98, 1))
+
+antibody_seq <- seq(antibody_perc[1], 
+                      antibody_perc[length(antibody_perc)], 
+                      length.out = 101)
+
+## create prediction
+data_prediction <- data.frame(
+  male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `MPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+prediction <- data.frame(
+  posterior_epred(
+    model_GFR_MDRD_MPL_BC_interaction_NL,
+    newdata = data_prediction) %>% posterior_summary(
+      robust = TRUE
+      ) %>% data.frame() %>% select(-Est.Error),
+  group = factor(if_else(data_prediction$infliximab == 1, 'infliximab', 'control')), 
+  MPL_BC_log2 = data_prediction$MPL_BC_log2)
+```
+
+Figure A
+
+```{r, fig.width=4.5, fig.height=5}
+cole <- c('#CD7006', '#0028F0')
+
+fig_a <- prediction %>% 
+  mutate(group = factor(group, levels = c("infliximab", "control")), 
+         `Q2.5` = if_else(`Q2.5` < 0, 0, `Q2.5`)) %>% 
+  ggplot(aes(x = MPL_BC_log2, y = Estimate, col = group, fill = group)) + 
+  geom_line(aes(y = Estimate), linewidth = 1) + 
+  scale_y_continuous(limits = c(0, 125),
+                     breaks = c(seq(0, 125, by = 25))) +
+  
+  geom_ribbon(aes(ymin = `Q2.5`, ymax = `Q97.5`),
+               alpha = 0.4,  color = NA) +
+  
+  geom_point(data = data_model_priorImpute, 
+             aes(x = MPL_BC_log2, y = GFR_MDRD, col = group, fill = group)) +
+  
+  labs(x = expression(log[2]~"(aCL IgM ["*mu*"g/ml])"), y = "GFR (mL/min/1.73 m²)") +
+  scale_color_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_fill_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  facet_grid(rows = vars(group)) +
+  
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "none") +
+  
+  geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
+                            color = "grey50", size = 0.3)
+```
+
+Figure B
+
+```{r, fig.width=5, fig.height=4}
+
+antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_MPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) /
+  (antibody_seq[2] - antibody_seq[1])
+
+tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])/
+  (antibody_seq[2] - antibody_seq[1])
+
+post_fix <- data.frame(
+  b_MPL_BC_log2 = tr_ctrl,
+  b_MPL_BC_log2_infliximab = tr_infliximab
+)
+
+tr <- post_fix %>% 
+  mutate(control = (b_MPL_BC_log2), 
+         infliximab = (b_MPL_BC_log2_infliximab)) %>% 
+  select(control, infliximab) %>% 
+  data.frame()
+
+CIS <- sapply(
+  tr, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+xpos <- 15
+
+fig_b <- tr %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('control', 'infliximab'),
+               names_to = 'group') %>% 
+  ggplot(aes(x = value, y = group, fill = group)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha=0.5,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+    labs(x = "Effect of doubling aCL IgM on GFR (mL/min/1.73 m²) ", 
+         y = 'Treatment group') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Treatment group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  coord_cartesian(xlim = c(-20, 20)) +
+  
+                     
+                     
+  
+  geom_vline(xintercept = 0, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+   
+  annotate("text",  x = xpos, y = 2.85 , 
+           label = paste0("Estimate: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85 , 
+           label = paste0("Estimate: ", CIS[3,1]),
+           color = cole[1] ) +
+  
+  annotate("text",  x = xpos, y = 2.6 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.6 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+Figure C
+
+```{r, fig.width=6, fig.height=5}
+
+cole <- c("#8B4789", "#8B5F77", "#8B7765", "#6F815C", "#548B54")
+xpos <- 30
+xseq <- c(1/64, 1/8, 1, 8, 64, 512)
+
+antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
+antibody_seq
+
+asl <- length(antibody_seq)
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `MPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_MPL_BC_interaction_NL,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+prediction <- (
+  prediction_infliximab-
+     prediction_ctrl
+  ) %>% data.frame()
+
+names(prediction) <- c('p05', 'p25', 'p50', 'p75', 'p95')
+
+CIS <- sapply(
+  prediction, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(1)
+
+CIS
+
+fig_c <- prediction %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('p05', 'p25', 'p50', 'p75', 'p95'),
+               names_to = 'MPL_BC_percentile') %>% 
+  
+  ggplot(aes(y = MPL_BC_percentile, x = value, fill = MPL_BC_percentile)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha = 0.55,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+  labs(x = "Effect of infliximab on GFR (mL/min/1.73 m²)", 
+         y = 'Percentile of aCL IgM value') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Percentile of aCL IgG value",
+                       breaks = c('p05', 'p25', 'p50', 'p75', 'p95'),
+                       labels = c('p05', 'p25', 'p50', 'p75', 'p95')) +
+  
+  coord_cartesian(xlim = c(-40, 40)) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  
+  geom_vline(xintercept = 0, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+  
+  
+  annotate("text",  x = xpos, y = 5.85 , 
+           label = paste0("Estimate: ", CIS[3,5]),
+           color = cole[5] ) +
+  
+  annotate("text",  x = xpos, y = 4.85, 
+           label = paste0("Estimate: ", CIS[3,4]),
+           color = cole[4] ) +
+   
+  annotate("text",  x = xpos, y = 3.85, 
+           label = paste0("Estimate: ", CIS[3,3]),
+           color = cole[3] ) +
+  
+  annotate("text",  x = xpos, y = 2.85, 
+           label = paste0("Estimate: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85, 
+           label = paste0("Estimate: ", CIS[3,1]),
+           color = cole[1] ) +
+
+  annotate("text",  x = xpos, y = 5.5 , 
+           label = paste0("95% CI: [", CIS[1,5], ", ", CIS[2,5], "]"),
+           color = cole[5] ) + 
+  
+  annotate("text",  x = xpos, y = 4.5 , 
+           label = paste0("95% CI: [", CIS[1,4], ", ", CIS[2,4], "]"),
+           color = cole[4] ) + 
+  
+  annotate("text",  x = xpos, y = 3.5 , 
+           label = paste0("95% CI: [", CIS[1,3], ", ", CIS[2,3], "]"),
+           color = cole[3] ) + 
+  
+  annotate("text",  x = xpos, y = 2.5 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) + 
+  
+  annotate("text",  x = xpos, y = 1.5 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+#### Figure merged
+
+```{r, fig.height=6, fig.width=9}
+#| label: fig-sup_figure_5
+#| fig.cap: '**Anti-cardiolipin IgM modulates the effect of infliximab on  estimated glomerular filtration rate (eGFR).** (**A**) Predicted eGFR by anti-cardiolipin IgM for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the average effect of doubling anti-cardiolipin IgM on eGFR. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgM percentiles. Results are from a multivariable Bayesian robust regression with B-splines.'
+
+plotac <- 'sup_figure_5'
+path <- "gitignore/figures"
+
+
+fig <- cowplot::plot_grid(fig_b, fig_c,
+  rel_heights = c(0.7, 1),
+  labels = c("B", "C"),
+  ncol = 1
+)
+
+assign(
+  plotac,
+  cowplot::plot_grid(
+    fig_a, fig,
+    rel_widths = c(0.6, 1),
+    labels = c("A", "")
+  )
+)
+
+get(plotac)
+
+if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
+  ggsave(
+    path = paste0(path),
+    filename = plotac,
+    device = "pdf",
+    width = 9,
+    height = 6
+  )
+}
+```
+
+# Summarizing table
+
+```{r}
+#| label: tbl-table_1
+#| tbl-cap: 'Results from multivariable Bayesian logistic (**A**) and robust (**B**) regression models with B-splines, estimating the non-linear interaction between natural antibody (`antibody`) levels and infliximab (`IFX`) treatment on the specified `outcome`. The `antibody` include anti-cardiolipin IgG or IgM (aCL IgG or IgM) and co-factor (ind)dependent anti-phosphatidylethanolamine (aPE-dep IgG and aPE-ind IgG respectively). IFX treatment effects (odds ratio [`OR`] for logistic models, absolute effect [`eff`] for robust regression) are reported at the 5th, 25th, 50th, 75th, and 95th percentiles of nAb levels, each with [95% credible interval]. Interaction magnitudes are expressed as the ratio of odds ratios (`ROR`) for the IFX effect at the 95th vs. 5th percentile of the nAb level (`p95_per_p05_ROR`) in logistic models (A) and as the difference in treatment effects at the 95th minus 5th percentile (`p95_p05_DE`) in robust regression (B), both with [95% credible intervals]'
+
+data_results_table_OR <- data.frame(
+  
+  outcome = c('DGF', 'DGF', 'infecition', 'infection'),
+  
+  antibody = c('aCL IgG', 'aCL IgM', 'aPE-dep IgG', 'aPE-ind IgG'),
+  
+  IFX_OR_p05 = c('0.13 [0.03, 0.49]',
+                    '0.23 [0.05, 0.94]',
+                    '3.73 [1.15, 12.69]',
+                    '3.12 [1.11, 9.08]'
+                    ),
+  
+  IFX_OR_p25 = c('0.34 [0.13, 0.80]',
+                    '0.48 [0.19, 1.15]',
+                    '2.26 [1.005, 5.19]',
+                    '2.34 [1.01, 5.56]'
+                    ),
+  
+  IFX_OR_p50 = c('0.59 [0.27, 1.25]',
+                    '0.77 [0.37, 1.61]',
+                    '1.68 [0.82, 3.47]',
+                    '1.75 [0.85, 3.68]'
+                    ),
+  
+  IFX_OR_p75 = c('1.37 [0.60, 3.22]',
+                    '1.22 [0.52, 2.85]',
+                    '1.10 [0.49, 2.42]',
+                    '1.02 [0.45, 2.26]'
+                    ),
+  
+  IFX_OR_p95 = c('6.24 [1.38, 30.32]',
+                    '2.79 [0.66, 12.59]',
+                    '0.36 [0.07, 1.75]',
+                    '0.23 [0.03, 1.33]'
+                    ),
+  
+    p95_per_p05_ROR = c('46.6 [4.4, 610.0]',
+                     '12.8 [1.1, 166.6]',
+                     '0.097 [0.008, 0.995]',
+                     '0.08 [0.005, 0.75]'
+                     )
+)
+
+data_results_table_cont <- data.frame(
+  
+  outcome = c('eGFR', 'eGFR'),
+  
+  antibody = c('aCL IgG', 'aCL IgM'),
+  
+  IFX_eff_p05 = c('7.7 [-2.4, 17.9]',
+                    '7.7 [-3.1, 18.7]'),
+  
+  IFX_eff_p25 = c('2.0 [-4.8, 8.8]',
+                    '1.1 [-5.8, 8.2]'),
+  
+  IFX_eff_p50 = c('-1.7 [-7.7, 4.5]',
+                    '-3.3 [-9.5, 2.8]'),
+  
+  IFX_eff_p75 = c('-7.2 [-14.1, -0.3]',
+                    '-7.7 [-14.8, -0.5]'),
+  
+  IFX_eff_p95 = c('-17.4 [-30.0, -5.1]',
+                    '-16.0 [-28.6, -3.8]'),
+  
+  p95_p05_DE = c('-25.2 [-43.7, -6.8]',
+                    '-24.8 [-43.2, -4.6]')
+)
+
+kableExtra::kable(data_results_table_OR)
+kableExtra::kable(data_results_table_cont)
+
+```
+
+
+# GFR: Mediation and AB-subgroup analysis
+
+## GPL_BC subgroup, DGF mediation
+
+### Define the subgroups
+
+```{r}
+GPL_median <- median(data_model_priorImpute$GPL_BC_log2)
+GPL_median
+
+
+data_imputed_highGPL <- data.frame(subset(
+  data_first, 
+  subset = data_first$GPL_BC_log2 >= GPL_median
+))
+
+
+data_imputed_lowGPL <- subset(
+  data_first, 
+  subset = data_first$GPL_BC_log2 < GPL_median
+)
+```
+
+
+### Priors
+
+```{r}
+create_prior <- function(var, sigma, class = "b") {
+  set_prior(paste0("normal(0, ", sigma, ")"), class = class, coef = var)
+}
+
+GFR_sd <- sd(data_model_priorImpute$GFR_MDRD)
+GFR_sd
+
+priors_subset <- c(
+  
+  create_prior("Irec_ageM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$rec_age, na.rm = TRUE)
+  ),
+  create_prior("IHLA_MMM5",
+    (2*GFR_sd) / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE)
+  ),
+  create_prior("IKDPIM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$KDPI, na.rm = TRUE)
+  ),
+  create_prior("ICITM15",
+    (2*GFR_sd) / sd(data_model_priorImpute$CIT, na.rm = TRUE)
+  ),
+  create_prior("male_sex",
+    4*GFR_sd
+  ),
+  create_prior("perfusion_event",
+    4*GFR_sd
+  ),
+  create_prior("male_sex_donor",
+    4*GFR_sd
+  ),
+  create_prior("infliximab",
+    4*GFR_sd
+  ),
+
+  set_prior(paste0("normal(", mean(data_model_priorImpute$GFR_MDRD), ", 200)"),
+    class = "Intercept"
+  )
+)
+
+
+create_prior <- function(var, sigma, class = "b",  resp = 'GFR_MDRD') {
+  set_prior(paste0("normal(0, ", sigma, ")"), class = class, coef = var, resp = resp)
+}
+
+priors_mediation <- c(
+  
+  create_prior("Irec_ageM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$rec_age, na.rm = TRUE)
+  ),
+  
+  create_prior("Irec_ageM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    resp = 'DGF'
+  ),
+  
+  create_prior("IHLA_MMM5",
+    (2*GFR_sd) / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE)
+  ),
+  create_prior("IHLA_MMM5",
+    (2*GFR_sd) / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    resp = 'DGF'
+  ),
+  
+  
+  create_prior("IKDPIM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$KDPI, na.rm = TRUE)
+  ),
+  create_prior("IKDPIM50",
+    (2*GFR_sd) / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    resp = 'DGF'
+  ),
+  
+  create_prior("ICITM15",
+    (2*GFR_sd) / sd(data_model_priorImpute$CIT, na.rm = TRUE)
+  ),
+  create_prior("ICITM15",
+    (2*GFR_sd) / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    resp = 'DGF'
+  ),
+  
+  
+  create_prior("male_sex",
+    4*GFR_sd
+  ),
+  create_prior("male_sex",
+    4*GFR_sd,
+    resp = 'DGF'
+  ),
+  
+  
+  create_prior("perfusion_event",
+    4*GFR_sd
+  ),
+  create_prior("perfusion_event",
+    4*GFR_sd,
+    resp = 'DGF'
+  ),
+  
+  create_prior("male_sex_donor",
+    4*GFR_sd
+  ),
+  create_prior("male_sex_donor",
+    4*GFR_sd,
+    resp = 'DGF'
+  ),
+  
+  create_prior("infliximab",
+    4*GFR_sd
+  ),
+  create_prior("infliximab",
+    4*GFR_sd,
+    resp = 'DGF'
+  ),
+  
+  
+  create_prior("DGF",
+    4*GFR_sd
+  )
+)
+```
+
+### GPL subgroup models
+
+```{r}
+model_GFR_MDRD_GPLsubset_low <- run(
+  expr = brm(
+    GFR_MDRD ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event + 
+     # GPL_BC_log2 +
+      infliximab,
+    family = student(),
+    data = data_imputed_lowGPL,
+    prior = priors_subset,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 6000, warmup = 2000,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_GFR_MDRD_GPLsubset_low",
+  reuse = TRUE
+)
+
+summary(model_GFR_MDRD_GPLsubset_low)
+
+model_GFR_MDRD_GPLsubset_high <- run(
+  expr = brm(
+    GFR_MDRD ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      #GPL_BC_log2 +
+      infliximab,
+    family = student(),
+    data = data_imputed_highGPL,
+    prior = priors_subset,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 6000, warmup = 2000,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_GFR_MDRD_GPLsubset_high",
+  reuse = TRUE
+)
+
+summary(model_GFR_MDRD_GPLsubset_high)
+```
+
+### Mediation
+
+Prepare table
+
+```{r}
+# Model for the mediator DGF
+m1 <- bf(
+  DGF ~ scale(male_sex) +
+    scale(rec_age) +
+    scale(male_sex_donor) +
+    scale(KDPI) +
+    scale(CIT) +
+    scale(HLA_MM) +
+    scale(perfusion_event) +
+    infliximab,
+  family = bernoulli(link = "logit")
+)
+
+
+# Model for the outcome GFR
+m2 <- bf(
+  GFR_MDRD ~ scale(male_sex) +
+    scale(rec_age) +
+    scale(male_sex_donor) +
+    scale(KDPI) +
+    scale(CIT) +
+    scale(HLA_MM) +
+    scale(perfusion_event) +
+    infliximab +
+    DGF,
+  family = student()
+)
+
+## Joint model - Low GPL_BC
+model_GFR_GPL_mediate_low <- run(
+  expr = brm(
+  m1 + m2 + set_rescor(FALSE),
+  data = data_imputed_lowGPL,
+  priors_mediation,
+  backend = "cmdstanr",
+  seed = 2025,
+  cores = 4, chains = 4,
+  iter = 6000, warmup = 2000,
+  control = list(adapt_delta = 0.95), refresh = 0),
+  path = "gitignore/run/model_GFR_GPL_mediate_low",
+  reuse = TRUE
+)
+
+
+## Joint model - high GPL_BC
+model_GFR_GPL_mediate_high <- run(
+  expr = brm(
+  m1 + m2 + set_rescor(FALSE),
+  data = data_imputed_highGPL,
+  priors_mediation,
+  backend = "cmdstanr",
+  seed = 2025,
+  cores = 4, chains = 4,
+  iter = 6000, warmup = 2000,
+  control = list(adapt_delta = 0.95), refresh = 0),
+  path = "gitignore/run/model_GFR_GPL_mediate_high",
+  reuse = TRUE
+)
+
+
+
+post_fix_low <- as.data.frame(model_GFR_GPL_mediate_low) %>% 
+  
+  select(b_GFRMDRD_Intercept, b_GFRMDRD_infliximab, b_GFRMDRD_DGF,
+         b_DGF_Intercept, b_DGF_infliximab) %>% 
+  
+  mutate(predicted_DGF_ctrl = inv_logit(b_DGF_Intercept),
+         predicted_DGF_infx = inv_logit(b_DGF_Intercept + b_DGF_infliximab)) %>% 
+  
+  mutate(
+    indirect_pred_ctrl = b_GFRMDRD_Intercept + 
+      (b_GFRMDRD_infliximab * mean(data_imputed_lowGPL$infliximab) ) +
+      (b_GFRMDRD_DGF * predicted_DGF_ctrl),
+    
+    indirect_pred_infx = b_GFRMDRD_Intercept + 
+      (b_GFRMDRD_infliximab * mean(data_imputed_lowGPL$infliximab) ) +
+      (b_GFRMDRD_DGF * predicted_DGF_infx),
+      ) %>% 
+  
+  mutate(
+    `Direct Effect (ADE)`  = b_GFRMDRD_infliximab,
+    `Indirect Effect (ACME)` = indirect_pred_infx - indirect_pred_ctrl,
+    `Mediator Effect` = b_GFRMDRD_DGF,
+    `Total Effect` = (
+           (indirect_pred_infx - indirect_pred_ctrl) + b_GFRMDRD_infliximab
+           )
+         ) %>% 
+  select(`Direct Effect (ADE)`:`Total Effect`)
+
+med_eff_low <- sapply(
+  post_fix_low,
+  function(p) quantile(p, probs = c(0.5, 0.025, 0.975))
+  ) %>% t() 
+
+
+post_fix_high <- as.data.frame(model_GFR_GPL_mediate_high) %>% 
+  
+  select(b_GFRMDRD_Intercept, b_GFRMDRD_infliximab, b_GFRMDRD_DGF,
+         b_DGF_Intercept, b_DGF_infliximab) %>% 
+  
+  mutate(predicted_DGF_ctrl = inv_logit(b_DGF_Intercept),
+         predicted_DGF_infx = inv_logit(b_DGF_Intercept + b_DGF_infliximab)) %>% 
+  
+  mutate(
+    indirect_pred_ctrl = b_GFRMDRD_Intercept + 
+      (b_GFRMDRD_infliximab * mean(data_imputed_highGPL$infliximab) ) +
+      (b_GFRMDRD_DGF * predicted_DGF_ctrl),
+    
+    indirect_pred_infx = b_GFRMDRD_Intercept + 
+      (b_GFRMDRD_infliximab * mean(data_imputed_highGPL$infliximab) ) +
+      (b_GFRMDRD_DGF * predicted_DGF_infx),
+      ) %>% 
+  
+  mutate(
+    `Direct Effect (ADE)`  = b_GFRMDRD_infliximab,
+    `Indirect Effect (ACME)` = indirect_pred_infx - indirect_pred_ctrl,
+    `Mediator Effect` = b_GFRMDRD_DGF,
+    `Total Effect` = (
+           (indirect_pred_infx - indirect_pred_ctrl) + b_GFRMDRD_infliximab
+           )
+         ) %>% 
+  select(`Direct Effect (ADE)`:`Total Effect`)
+
+
+med_eff_high <- sapply(
+  post_fix_high,
+  function(p) quantile(p, probs = c(0.5, 0.025, 0.975))
+  ) %>% t()
+
+
+mediation_effect <- data.frame(
+  effect = rownames(med_eff_low),
+  `Low_aCL` = paste0(
+    round(c(med_eff_low[, 1]), 1), 
+    ' [', 
+    round(c(med_eff_low[, 2]), 1), 
+    ', ', 
+    round(c(med_eff_low[, 3]), 1),
+    ']'
+    ),
+  `High_aCL` = paste0(
+    round(c(med_eff_high[, 1]), 1), 
+    ' [', 
+    round(c(med_eff_high[, 2]), 1), 
+    ', ', 
+    round(c(med_eff_high[, 3]), 1),
+    ']'
+    )
+  )
+```
+
+Print table
+
+```{r}
+#| label: tbl-sup_table_6
+#| tbl-cap: 'Results from Bayesian mediation analyses assessing the direct and indirect effects of infliximab on estimated glomerular filtration rate (eGFR). The indirect effect operates through the impact of infliximab on delayed graft function (DGF) risk. Separate joint models were used for patients with anti-cardiolipin IgG (aCL IgG) below (**Low aCL**) and at/above the median (**High aCL**). The Average Direct Effect (`ADE` [95% credible interval]) estimates the direct effect of infliximab on eGFR, controlling for the indirect pathway via DGF and other covariates. The Average Causal Mediation Effect (`ACME` [95% credible interval]) quantifies the indirect effect via DGF. The `Mediator Effect` represents the effect of DGF on eGFR, adjusting for infliximab and other covariates. The `Total Effect` captures the overall impact of infliximab on eGFR, combining both direct and indirect pathways.'
+
+kableExtra::kable(mediation_effect)
+```
+
+
+# Models without large GPL_BC
+
+```{r}
+
+infl_max <- max(data_first[which(data_first$infliximab == 1), 'GPL_BC_log2']); infl_max
+ctrl_max <- max(data_first[which(data_first$infliximab == 0), 'GPL_BC_log2']); ctrl_max
+
+data_sens <- data_first %>% filter(GPL_BC_log2 <= infl_max) %>% 
+  mutate(group = factor(if_else(infliximab == 1, 'infliximab', 'control')))
+```
+
+## DGF by GPL_BC
+
+### Priors
+
+```{r}
+
+# function to get prior
+create_prior <- function(var, sigma, class = "b", coef = NULL) {
+  set_prior(paste0("normal(0, ", sigma, ")"), class = class, coef = coef)
+}
+
+
+priors_interaction_pnl <- c(
+  create_prior("Irec_ageM50",
+               2 / sd(data_sens$rec_age, na.rm = TRUE),
+               coef = "Irec_ageM50"),  
+  create_prior("IHLA_MMM5",
+               2 / sd(data_sens$HLA_MM, na.rm = TRUE),
+               coef = "IHLA_MMM5"),
+  create_prior("IKDPIM50",
+               2 / sd(data_sens$KDPI, na.rm = TRUE),
+               coef = "IKDPIM50"),
+  create_prior("ICITM15",
+               2 / sd(data_sens$CIT, na.rm = TRUE),
+               coef = "ICITM15"),
+  create_prior("male_sex",
+               4,
+               coef = "male_sex"),
+  create_prior("perfusion_event",
+               4,
+               coef = "perfusion_event"),
+  create_prior("male_sex_donor",
+               4,
+               coef = "male_sex_donor"),
+
+  create_prior("infliximab",
+               4,
+               coef = "infliximab"),
+
+ set_prior("student_t(3, 0, 0.6)", class = "sds", 
+           coef = 's(GPL_BC_log2, bs = "ps", k = 5)'), 
+ 
+ set_prior("student_t(3, 0, 0.3)", class = "sds",  
+           coef = 's(GPL_BC_log2, by = infliximab, bs = "ps", k = 5)'), 
+ 
+  set_prior(paste0("normal(", logit(mean(data_sens$DGF)), ", 10)"),
+            class = "Intercept")
+)
+```
+
+### Model
+
+```{r}
+#| label: tbl-unused_13
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between anti-cardiolipin IgG (`GPL_BC_log2`) and `infliximab` treatment on delayed graft function (`DGF`), while accounting for other covariates, **restricting the dataset to patients with anti-cardiolipin IgG levels within the range observed in the infliximab group**. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| 
+model_dgf_GPL_BC_interaction_NL_sens <- run(
+  expr = brm(
+    DGF ~
+    male_sex +
+    I(rec_age - 50) +
+    male_sex_donor +
+    I(KDPI - 50) +
+    I(CIT - 15) +
+    I(HLA_MM - 5) +
+    perfusion_event +
+    infliximab +
+    s(GPL_BC_log2, bs = 'ps', k = 5) +
+    s(GPL_BC_log2, by = infliximab, bs = 'ps', k = 5),
+    family = bernoulli(),
+    data = data_sens,
+    prior = priors_interaction_pnl,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 5000, warmup = 2000,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_dgf_GPL_BC_interaction_NL_sens",
+  reuse = TRUE
+)
+
+summary(model_dgf_GPL_BC_interaction_NL_sens, robust = TRUE)
+prior_summary(model_dgf_GPL_BC_interaction_NL_sens)
+
+tr2 <- round(exp(fixef(model_dgf_GPL_BC_interaction_NL_sens, 
+                       robust = TRUE)[-c(1,9:12), c(1,3,4)]), 2)
+
+antibody_seq <- quantile(data_sens$GPL_BC_log2, 
+                         probs = c(0.05, 0.95))
+
+asl <- length(antibody_seq)
+quant_dif <- antibody_seq[2] - antibody_seq[1]
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_dgf_GPL_BC_interaction_NL_sens,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+## get odds ratio for infliximab effect across antibody values
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+names(prediction) <- c('p05', 'p95')
+
+infliximab_GPL_BC_log2_int <- quantile(
+  exp((log(prediction$p95) - log(prediction$p05))/scaling_unit), 
+         probs = c(0.5, 1/40, 39/40))
+
+tr2 <- rbind(tr2, round(infliximab_GPL_BC_log2_int, 2))
+row.names(tr2)[8] <- 'infliximab:GPL_BC_log2'
+colnames(tr2)[1] <- '(R)OR'
+kableExtra::kable(tr2)
+```
+
+
+### Visualisation - penalized non-linear effect
+
+Extract posterior draws
+
+```{r}
+antibody_perc <- quantile(data_sens$GPL_BC_log2,
+                           probs = c(0, 0.02, 0.05, 0.25, 0.5, 0.75, 0.95, 0.98, 1))
+
+antibody_seq <- seq(antibody_perc[1], 
+                      antibody_perc[length(antibody_perc)], 
+                      length.out = 101)
+
+## create prediction
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+prediction <- data.frame(
+  posterior_epred(
+    model_dgf_GPL_BC_interaction_NL_sens,
+    newdata = data_prediction) %>% posterior_summary(
+      robust = TRUE
+      ) %>% data.frame() %>% select(-Est.Error),
+  group = factor(if_else(data_prediction$infliximab == 1, 'infliximab', 'control')), 
+  GPL_BC_log2 = data_prediction$GPL_BC_log2)
+```
+
+Figure A
+
+```{r, fig.width=4.5, fig.height=5}
+cole <- c('#CD7006', '#0028F0')
+
+fig_a <- prediction %>% 
+  mutate(group = factor(group, levels = c("infliximab", "control"))) %>% 
+  ggplot(aes(x = GPL_BC_log2, y = Estimate, col = group, fill = group)) + 
+  geom_line(aes(y = Estimate), linewidth = 1) + 
+  scale_y_continuous(limits = c(0, 1),
+                     breaks = c(seq(0, 1, by = 0.2))) +
+  
+  geom_ribbon(aes(ymin = `Q2.5`, ymax = `Q97.5`),
+               alpha = 0.4,  color = NA) +
+  
+  labs(x = expression(log[2]~"(aCL IgG ["*mu*"g/ml])"), y = "DGF risk") +
+  scale_color_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_fill_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  facet_grid(rows = vars(group)) +
+  
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "none") +
+  
+  geom_rug(
+    data = data_sens %>% filter(DGF == 0),
+    aes(x = GPL_BC_log2),
+    sides = "b",
+    color = "black",
+    size = 0.12,
+    inherit.aes = FALSE
+  ) +
+  geom_rug(
+    data = data_sens %>% filter(DGF == 1),
+    aes(x = GPL_BC_log2),
+     sides = "t",
+    color = "black",
+    linewidth = 0.12,
+    inherit.aes = FALSE
+  ) + 
+  geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
+                            color = "grey50", size = 0.3)
+```
+
+Figure B
+
+```{r, fig.width=5, fig.height=4}
+
+antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq
+
+tr <-  posterior_epred(
+    model_dgf_GPL_BC_interaction_NL_sens,
+    newdata = data_prediction)
+
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
+  (antibody_seq[2] - antibody_seq[1])
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
+  (antibody_seq[2] - antibody_seq[1])
+
+post_fix <- data.frame(
+  b_GPL_BC_log2 = tr_ctrl,
+  b_GPL_BC_log2_infliximab = tr_infliximab
+)
+
+tr <- post_fix %>% 
+  mutate(control = exp(b_GPL_BC_log2), 
+         infliximab = exp(b_GPL_BC_log2_infliximab)) %>% 
+  select(control, infliximab) %>% 
+  data.frame()
+
+CIS <- sapply(
+  tr, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(1)
+
+CIS
+
+xpos <- 10
+
+fig_b <- tr %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('control', 'infliximab'),
+               names_to = 'group') %>% 
+  ggplot(aes(x = value, y = group, fill = group)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha=0.5,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+    labs(x = "Effect of doubling aCL IgG on DGF risk (OR))", 
+         y = 'Treatment group') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Treatment group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  coord_cartesian(xlim = c(1/20, 20)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(1/16, 1/4, 1, 4 ,16),
+                     labels = c("1/16", "1/4", "1", "4", "16")) +
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+   
+  annotate("text",  x = xpos, y = 2.85 , 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85 , 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+  
+  annotate("text",  x = xpos, y = 2.6 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.6 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+
+```
+
+Figure C
+
+```{r, fig.width=6, fig.height=5}
+
+cole <- c("#8B4789", "#8B5F77", "#8B7765", "#6F815C", "#548B54")
+xpos <- 240
+xseq <- c(1/64, 1/8, 1, 8, 64, 512)
+
+antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
+antibody_seq
+
+asl <- length(antibody_seq)
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_dgf_GPL_BC_interaction_NL_sens,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+prediction <- (
+  (prediction_infliximab/(1-prediction_infliximab))/
+     (prediction_ctrl/(1-prediction_ctrl))
+  ) %>% data.frame()
+
+
+names(prediction) <- c('p05', 'p25', 'p50', 'p75', 'p95')
+
+CIS <- sapply(
+  prediction, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+fig_c <- prediction %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('p05', 'p25', 'p50', 'p75', 'p95'),
+               names_to = 'GPL_BC_percentile') %>% 
+  
+  ggplot(aes(y = GPL_BC_percentile, x = value, fill = GPL_BC_percentile)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha = 0.55,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+  labs(x = "Effect of infliximab on DGF risk (odds ratio)", 
+         y = 'Percentile of aCL IgG value') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Percentile of aCL IgG value",
+                       breaks = c('p05', 'p25', 'p50', 'p75', 'p95'),
+                       labels = c('p05', 'p25', 'p50', 'p75', 'p95')) +
+  
+  coord_cartesian(xlim = c(1/300, 1150)) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  scale_x_continuous(transform = 'log2',
+                     breaks = c(xseq),
+                     labels = c("1/64", "1/8", "1", "8", "64", '512')) +
+  
+  
+  geom_vline(xintercept = 1, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+  
+  
+  annotate("text",  x = xpos, y = 5.85 , 
+           label = paste0("Odds ratio: ", CIS[3,5]),
+           color = cole[5] ) +
+  
+  annotate("text",  x = xpos, y = 4.85, 
+           label = paste0("Odds ratio: ", CIS[3,4]),
+           color = cole[4] ) +
+   
+  annotate("text",  x = xpos, y = 3.85, 
+           label = paste0("Odds ratio: ", CIS[3,3]),
+           color = cole[3] ) +
+  
+  annotate("text",  x = xpos, y = 2.85, 
+           label = paste0("Odds ratio: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85, 
+           label = paste0("Odds ratio: ", CIS[3,1]),
+           color = cole[1] ) +
+
+  annotate("text",  x = xpos, y = 5.5 , 
+           label = paste0("95% CI: [", CIS[1,5], ", ", CIS[2,5], "]"),
+           color = cole[5] ) + 
+  
+  annotate("text",  x = xpos, y = 4.5 , 
+           label = paste0("95% CI: [", CIS[1,4], ", ", CIS[2,4], "]"),
+           color = cole[4] ) + 
+  
+  annotate("text",  x = xpos, y = 3.5 , 
+           label = paste0("95% CI: [", CIS[1,3], ", ", CIS[2,3], "]"),
+           color = cole[3] ) + 
+  
+  annotate("text",  x = xpos, y = 2.5 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) + 
+  
+  annotate("text",  x = xpos, y = 1.5 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+#### Figure merged
+
+```{r, fig.height=6, fig.width=9}
+#| label: fig-sup_figure_2
+#| fig.cap: 'Anti-cardiolipin IgG modulation of the effect of infliximab on delayed graft function (DGF) **after excluding patients with anti-cardiolipin IgG levels above the maximum in the IFX group.** (**A**) Predicted DGF risk by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles. (**B**) Posterior distribution of the average effect (odds ratio) of doubling anti-cardiolipin IgG on DGF risk. (**C**) Posterior distribution of the effect of infliximab (odds ratio) on DGF across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines after data restriction.'
+
+
+
+plotac <- "sup_figure_2"
+path <- "gitignore/figures"
+
+
+fig <- cowplot::plot_grid(fig_b, fig_c,
+  rel_heights = c(0.7, 1),
+  labels = c("B", "C"),
+  ncol = 1
+)
+
+assign(
+  plotac,
+  cowplot::plot_grid(
+    fig_a, fig,
+    rel_widths = c(0.6, 1),
+    labels = c("A", "")
+  )
+)
+
+get(plotac)
+
+if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
+  ggsave(
+    path = paste0(path),
+    filename = plotac,
+    device = "pdf",
+    width = 9,
+    height = 6
+  )
+}
+```
+
+## GFR by GPL_BC
+
+### Prior
+
+```{r}
+priors_interaction_pnl <- c(
+  create_prior("Irec_ageM50",
+               (2*GFR_sd) / sd(data_sens$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"),  
+  create_prior("IHLA_MMM5",
+               (2*GFR_sd) / sd(data_sens$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"),
+  create_prior("IKDPIM50",
+               (2*GFR_sd) / sd(data_sens$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"),
+  create_prior("ICITM15",
+               (2*GFR_sd) / sd(data_sens$CIT, na.rm = TRUE),
+    coef = "ICITM15"),
+  create_prior("male_sex",
+    4*GFR_sd,
+    coef = "male_sex"),
+  create_prior("perfusion_event",
+    4*GFR_sd,
+    coef = "perfusion_event"),
+  create_prior("male_sex_donor",
+    4*GFR_sd,
+    coef = "male_sex_donor"),
+  
+  create_prior("infliximab",
+    4*GFR_sd,
+    coef = "infliximab"),
+
+ set_prior("student_t(3, 0, 12)", class = "sds", 
+           coef = 's(GPL_BC_log2, bs = "ps", k = 5)'), 
+ 
+ set_prior("student_t(3, 0, 6)", class = "sds",  
+           coef = 's(GPL_BC_log2, by = infliximab, bs = "ps", k = 5)'), 
+ 
+  set_prior(paste0("normal(", mean(data_sens$GFR_MDRD), ", 200)"),
+            class = "Intercept")
+)
+```
+
+### Model
+
+```{r}
+#| label: tbl-unused_14
+#| tbl-cap: "Results from a multivariable Bayesian robust regression model incorporating a non-linear interaction between anti-cardiolipin IgG (`GPL_BC_log2`) and `infliximab` treatment on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), **after excluding patients with anti-cardiolipin IgG levels above the maximum in the IFX group**  and while accounting for other covariates. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. The last row (`infliximab:GPL_BC_log2`) reports the difference in infliximab's treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively." 
+#| 
+model_GFR_MDRD_GPL_BC_interaction_NL_sens <- run(
+  expr = brm(
+    GFR_MDRD ~
+    male_sex +
+    I(rec_age - 50) +
+    male_sex_donor +
+    I(KDPI - 50) +
+    I(CIT - 15) +
+    I(HLA_MM - 5) +
+    perfusion_event +
+    infliximab +
+    s(GPL_BC_log2, bs = 'ps', k = 5) +
+    s(GPL_BC_log2, by = infliximab, bs = 'ps', k = 5),
+    family = student(),
+    data = data_sens,
+    prior = priors_interaction_pnl,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 5000, warmup = 2000,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_GFR_MDRD_GPL_BC_interaction_NL_sens",
+  reuse = TRUE
+)
+
+summary(model_GFR_MDRD_GPL_BC_interaction_NL_sens, robust = TRUE)
+prior_summary(model_GFR_MDRD_GPL_BC_interaction_NL_sens)
+
+tr2 <- round(fixef(model_GFR_MDRD_GPL_BC_interaction_NL_sens, 
+                       robust = TRUE)[-c(1,9:12), c(1,3,4)], 2)
+
+antibody_seq <- quantile(data_sens$GPL_BC_log2, 
+                         probs = c(0.05, 0.95))
+
+asl <- length(antibody_seq)
+quant_dif <- antibody_seq[2] - antibody_seq[1]
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_GPL_BC_interaction_NL_sens,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+## get Estimate for infliximab effect across antibody values
+prediction <- (
+  prediction_infliximab-
+     prediction_ctrl
+  ) %>% data.frame()
+
+names(prediction) <- c('p05', 'p95')
+
+infliximab_GPL_BC_log2_int <- quantile(
+  (prediction$p95 - prediction$p05)/scaling_unit, 
+         probs = c(0.5, 1/40, 39/40))
+
+tr2 <- rbind(tr2, round(infliximab_GPL_BC_log2_int, 2))
+row.names(tr2)[8] <- 'infliximab:GPL_BC_log2'
+kableExtra::kable(tr2)
+```
+
+
+### Visualisation - penalized non-linear effect
+
+Extract posterior draws
+
+```{r}
+antibody_perc <- quantile(data_sens$GPL_BC_log2,
+                           probs = c(0, 0.02, 0.05, 0.25, 0.5, 0.75, 0.95, 0.98, 1))
+
+antibody_seq <- seq(antibody_perc[1], 
+                      antibody_perc[length(antibody_perc)], 
+                      length.out = 101)
+
+## create prediction
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+prediction <- data.frame(
+  posterior_epred(
+    model_GFR_MDRD_GPL_BC_interaction_NL_sens,
+    newdata = data_prediction) %>% posterior_summary(
+      robust = TRUE
+      ) %>% data.frame() %>% select(-Est.Error),
+  group = factor(if_else(data_prediction$infliximab == 1, 'infliximab', 'control')),
+  GPL_BC_log2 = data_prediction$GPL_BC_log2)
+```
+
+Figure A
+
+```{r, fig.width=4.5, fig.height=5}
+cole <- c('#CD7006', '#0028F0')
+
+fig_a <- prediction %>% 
+  mutate(group = factor(group, levels = c("infliximab", "control")), 
+         `Q2.5` = if_else(`Q2.5` < 0, 0, `Q2.5`)) %>% 
+  ggplot(aes(x = GPL_BC_log2, y = Estimate, col = group, fill = group)) + 
+  geom_line(aes(y = Estimate), linewidth = 1) + 
+  scale_y_continuous(limits = c(0, 125),
+                      breaks = c(seq(0, 125, by = 25))) +
+  
+  geom_ribbon(aes(ymin = `Q2.5`, ymax = `Q97.5`),
+               alpha = 0.4,  color = NA) +
+  
+  geom_point(data = data_sens, 
+             aes(x = GPL_BC_log2, y = GFR_MDRD, col = group, fill = group)) +
+  
+  labs(x = expression(log[2]~"(aCL IgG ["*mu*"g/ml])"), 
+       y = "GFR (mL/min/1.73 m²)") +
+  
+  scale_color_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_fill_manual(values = cole, 
+                       name = "group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  facet_grid(rows = vars(group)) +
+  
+  theme(axis.text=element_text(size = 10),
+        axis.title=element_text(size = 12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "none") + 
+  
+  geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
+                            color = "grey50", size = 0.3)
+```
+
+Figure B
+
+```{r, fig.width=5, fig.height=4}
+
+antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_GPL_BC_interaction_NL_sens,
+    newdata = data_prediction)
+
+tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) /
+  (antibody_seq[2] - antibody_seq[1])
+tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])/
+  (antibody_seq[2] - antibody_seq[1])
+
+post_fix <- data.frame(
+  b_GPL_BC_log2 = tr_ctrl,
+  b_GPL_BC_log2_infliximab = tr_infliximab
+)
+
+tr <- post_fix %>% 
+  mutate(control = b_GPL_BC_log2, 
+         infliximab = b_GPL_BC_log2_infliximab) %>% 
+  select(control, infliximab) %>% 
+  data.frame()
+
+CIS <- sapply(
+  tr, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(2)
+
+CIS
+
+xpos <- 20
+
+fig_b <- tr %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('control', 'infliximab'),
+               names_to = 'group') %>% 
+  ggplot(aes(x = value, y = group, fill = group)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha=0.5,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+    labs(x = "Effect of doubling aCL IgG on GFR (mL/min/1.73 m²) ", 
+         y = 'Treatment group') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Treatment group",
+                       breaks = c('control', 'infliximab'),
+                       labels = c('control', 'infliximab')) +
+  
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  coord_cartesian(xlim = c(-20, 26)) +
+  
+  geom_vline(xintercept = 0, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+   
+  annotate("text",  x = xpos, y = 2.85 , 
+           label = paste0("Estimate: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85 , 
+           label = paste0("Estimate: ", CIS[3,1]),
+           color = cole[1] ) +
+  
+  annotate("text",  x = xpos, y = 2.6 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.6 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+
+```
+
+Figure C
+
+```{r, fig.width=6, fig.height=5}
+
+cole <- c("#8B4789", "#8B5F77", "#8B7765", "#6F815C", "#548B54")
+xpos <- 30
+
+antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
+
+asl <- length(antibody_seq)
+
+data_prediction <- data.frame(
+    male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
+
+tr <-  posterior_epred(
+    model_GFR_MDRD_GPL_BC_interaction_NL_sens,
+    newdata = data_prediction)
+
+prediction_ctrl <- tr[, c(1:asl)]
+
+prediction_infliximab <- tr[, c((asl+1):(asl*2))]
+
+prediction <- (
+  prediction_infliximab-
+     prediction_ctrl
+  ) %>% data.frame()
+
+
+names(prediction) <- c('p05', 'p25', 'p50', 'p75', 'p95')
+
+CIS <- sapply(
+  prediction, 
+  function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
+  ) %>% 
+  round(1)
+
+CIS
+
+fig_c <- prediction %>% 
+  pivot_longer(values_to = 'value', 
+               cols = c('p05', 'p25', 'p50', 'p75', 'p95'),
+               names_to = 'GPL_BC_percentile') %>% 
+  
+  ggplot(aes(y = GPL_BC_percentile, x = value, fill = GPL_BC_percentile)) +
+  
+  stat_halfeye(.width = c(0.95), slab_alpha = 0.55,
+               linewidth = 5,
+               shape = 18,
+               point_size = 5,
+               normalize = "groups",
+               p_limits = c(1e-3, 1-1e-3)) +
+  
+  labs(x = "Effect of infliximab on GFR (mL/min/1.73 m²)", 
+         y = 'Percentile of aCL IgG value') +
+  
+  scale_fill_manual(values = cole, 
+                       name = "Percentile of aCL IgG value",
+                       breaks = c('p05', 'p25', 'p50', 'p75', 'p95'),
+                       labels = c('p05', 'p25', 'p50', 'p75', 'p95')) +
+  
+  coord_cartesian(xlim = c(-40, 40)) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  
+  
+  geom_vline(xintercept = 0, linetype = 2, 
+                color = "red", size = 0.6) +
+  
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12)) +
+  
+  theme(legend.position = "none") +
+  
+  
+  annotate("text",  x = xpos, y = 5.85 , 
+           label = paste0("Estimate: ", CIS[3,5]),
+           color = cole[5] ) +
+  
+  annotate("text",  x = xpos, y = 4.85, 
+           label = paste0("Estimate: ", CIS[3,4]),
+           color = cole[4] ) +
+   
+  annotate("text",  x = xpos, y = 3.85, 
+           label = paste0("Estimate: ", CIS[3,3]),
+           color = cole[3] ) +
+  
+  annotate("text",  x = xpos, y = 2.85, 
+           label = paste0("Estimate: ", CIS[3,2]),
+           color = cole[2] ) +    
+  
+  annotate("text",  x = xpos, y = 1.85, 
+           label = paste0("Estimate: ", CIS[3,1]),
+           color = cole[1] ) +
+
+  annotate("text",  x = xpos, y = 5.5 , 
+           label = paste0("95% CI: [", CIS[1,5], ", ", CIS[2,5], "]"),
+           color = cole[5] ) + 
+  
+  annotate("text",  x = xpos, y = 4.5 , 
+           label = paste0("95% CI: [", CIS[1,4], ", ", CIS[2,4], "]"),
+           color = cole[4] ) + 
+  
+  annotate("text",  x = xpos, y = 3.5 , 
+           label = paste0("95% CI: [", CIS[1,3], ", ", CIS[2,3], "]"),
+           color = cole[3] ) + 
+  
+  annotate("text",  x = xpos, y = 2.5 , 
+           label = paste0("95% CI: [", CIS[1,2], ", ", CIS[2,2], "]"),
+           color = cole[2] ) + 
+  
+  annotate("text",  x = xpos, y = 1.5 , 
+           label = paste0("95% CI: [", CIS[1,1], ", ", CIS[2,1], "]"),
+           color = cole[1] ) 
+```
+
+#### Figure merged
+
+```{r, fig.height=6, fig.width=9}
+#| label: fig-sup_figure_6
+#| fig.cap: '**Anti-cardiolipin IgG modulation of the infliximab effect on estimated glomerula filtration rate (eGFR) after excluding patients with anti-cardiolipin IgG levels above the maximum in the IFX group.** (**A**) Predicted eGFR by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the average effects of doubling anti-cardiolipin IgG on eGFR. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian robust regression with B-splines after data restriction.'
+
+plotac <- 'sup_figure_6'
+path <- "gitignore/figures"
+
+
+fig <- cowplot::plot_grid(fig_b, fig_c,
+  rel_heights = c(0.7, 1),
+  labels = c("B", "C"),
+  ncol = 1
+)
+
+assign(
+  plotac,
+  cowplot::plot_grid(
+    fig_a, fig,
+    rel_widths = c(0.6, 1),
+    labels = c("A", "")
+  )
+)
+
+get(plotac)
+
+if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
+  ggsave(
+    path = paste0(path),
+    filename = plotac,
+    device = "pdf",
+    width = 9,
+    height = 6
+  )
+}
+```
+
+# DGF Subgroup analysis by `GPL_BC`
+
+We will use data divided to patients with under- and above-median value of aCL IgG (`GPL_BC`)
+
+## Define priors
+
+```{r}
+priors_subset <- c(
+  
+  create_prior("GPL_BC_log2",
+    2 / sd(data_model_priorImpute$GPL_BC_log2, na.rm = TRUE),
+    coef = "GPL_BC_log2"
+  ),
+   create_prior("IHLA_MMM5",
+    2 / sd(data_model_priorImpute$HLA_MM, na.rm = TRUE),
+    coef = "IHLA_MMM5"
+  ),
+  create_prior("IKDPIM50",
+    2 / sd(data_model_priorImpute$KDPI, na.rm = TRUE),
+    coef = "IKDPIM50"
+  ),
+  create_prior("Irec_ageM50",
+    2 / sd(data_model_priorImpute$rec_age, na.rm = TRUE),
+    coef = "Irec_ageM50"
+),
+  create_prior("ICITM15",
+    2 / sd(data_model_priorImpute$CIT, na.rm = TRUE),
+    coef = "ICITM15"
+  ),
+  create_prior("male_sex",
+    4,
+    coef = "male_sex"
+  ),
+  create_prior("perfusion_event",
+    4,
+    coef = "perfusion_event"
+  ),
+  create_prior("male_sex_donor",
+    4,
+    coef = "male_sex_donor"
+  ),
+  create_prior("infliximab",
+    4,
+    coef = "infliximab"
+  ),
+  set_prior(paste0("normal(", logit(mean(data_model_priorImpute$DGF)), ", 10)"),
+    class = "Intercept"
+  )
+)
+```
+
+## Fit model for $<$ median aCL IgG level 
+
+```{r}
+#| label: tbl-unused_15
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgG (`GPL_BC_log2`), on delayed graft function (`DGF`), without interaction terms and **including only patients with anti-cardiolipin IgG level below median**. The odds ratio (OR) represents the estimated change in the odds of DGF per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+
+model_dgf_GPL_BC_lowGPLBC <- run(
+  expr = brm(
+    DGF ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      infliximab +
+      GPL_BC_log2,
+    family = bernoulli(),
+    data = data_imputed_lowGPL,
+    prior = priors_subset,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 4000, warmup = 2000,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_dgf_GPL_BC_lowGPLBC",
+  reuse = TRUE
+)
+
+summary(model_dgf_GPL_BC_lowGPLBC, robust = TRUE)
+prior_summary(model_dgf_GPL_BC_lowGPLBC)
+
+tr <- round(exp(fixef(model_dgf_GPL_BC_lowGPLBC, robust = TRUE)[-1, c(1,3,4)]), 2)
+colnames(tr)[1] <- 'OR'
+kableExtra::kable(tr)
+```
+
+## Fit model for aCL $\geq$ median 
+
+```{r}
+#| label: tbl-unused_16
+#| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgG (`GPL_BC_log2`), on delayed graft function (`DGF`), without interaction terms and **including only patients with anti-cardiolipin IgG level at/above median**. The odds ratio (OR) represents the estimated change in the odds of DGF per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+
+model_dgf_GPL_BC_highGPLBC <- run(
+  expr = brm(
+    DGF ~
+      male_sex +
+      I(rec_age - 50) +
+      male_sex_donor +
+      I(KDPI - 50) +
+      I(CIT - 15) +
+      I(HLA_MM - 5) +
+      perfusion_event +
+      infliximab +
+      GPL_BC_log2,
+    family = bernoulli(),
+    data = data_imputed_highGPL,
+    prior = priors_subset,
+    backend = "cmdstanr",
+    seed = 2025,
+    cores = 4, chains = 4,
+    iter = 4000, warmup = 2000,
+    control = list(adapt_delta = 0.95)
+  ),
+  path = "gitignore/run/model_dgf_GPL_BC_highGPLBC",
+  reuse = TRUE
+)
+
+summary(model_dgf_GPL_BC_highGPLBC, robust = TRUE)
+prior_summary(model_dgf_GPL_BC_highGPLBC)
+
+tr <- round(exp(fixef(model_dgf_GPL_BC_highGPLBC, robust = TRUE)[-1, c(1,3,4)]), 3)
+colnames(tr)[1] <- 'Odds ratio'
+kableExtra::kable(tr)
+```
+
+# Tables and Figures: list with links
+
+## Figures
+
+[Figure 1](#fig-figure_1): data distributions across groups
+
+[Supplementary Figure 1](#fig-sup_figure_1): Spearman correlations    
+
+[Figure 2](#fig-figure_2): DGF risk according to infliximab:aCL IgG non-linear interaction.     
+
+[Supplementary Figure 2](#fig-sup_figure_2): DGF risk according to infliximab:aCL IgG 
+non-linear interaction but **after excluding the patients with large aCL IgG values**  
+
+[Supplementary Figure 3](#fig-sup_figure_3): DGF risk according to infliximab:aCL IgM non-linear interaction    
+
+[Supplementary Figure 4](#fig-sup_figure_4): eGFR according to infliximab:aCL IgG non-linear interaction    
+
+[Supplementary Figure 5](#fig-sup_figure_5): eGFR according to infliximab:aCL IgM non-linear interaction    
+
+[Supplementary Figure 6](#fig-sup_figure_6): eGFRaccording to infliximab:aCL IgG 
+non-linear interaction but **after excluding the patients with large aCL IgG values** 
+
+[Supplementary Figure 7](#fig-sup_figure_7): infection risk according to infliximab:aPE-dep IgG non-linear interaction.     
+
+[Supplementary Figure 8](#fig-sup_figure_8): infection risk according to infliximab:aPE-ind IgG non-linear interaction.
+
+
+## Tables
+
+[Supplementary Table 1](#tbl-sup_table_1): demography stratified by treatment
+
+[Supplementary Table 1 - alternative](#tbl-sup_table_1_alternative): demography stratified by treatment and aCL IgG levls (below and at/above median)
+
+[Supplementary Table 3](#tbl-sup_table_3): post-transplant outcomes by treatment
+
+[Supplementary Table 4](#tbl-sup_table_4): unadjusted effect of different variables on 
+DGF   
+
+[Table 1](#tbl-table_1): IFX x nAb non-linear interaction effects based on Bayesian multivariable models   
+
+[Supplementary Table 5](#tbl-sup_table_5): unadjusted effect of different variables on eGFR   
+
+[Supplementary Table 6](#tbl-sup_table_6): mediation analysis
+
+[Supplementary Table 7](#tbl-sup_table_7): unadjusted effect of different variables on infection risk
+
+[Supplementary Table 8](#tbl-sup_table_8): unadjusted effect of different variables on BKV infection
+
+
+
+# Reproducibility
+
+```{r}
+sessionInfo()
+```
