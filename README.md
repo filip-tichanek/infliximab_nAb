@@ -9,9 +9,9 @@ Vojtech Petr<sup>1,2</sup>, Samuel L. Liu<sup>3</sup>, Filip Tichanek<sup>1</sup
 <sup>1</sup> Institute for Clinical and Experimental Medicine, Prague, Czech Republic     
 <sup>2</sup> Department of Medicine, University of Colorado School of Medicine, Anschutz Medical Campus, Aurora, CO, USA     
 <sup>3</sup> Feinberg Cardiovascular and Renal Research Institute, Northwestern University, Chicago, IL, USA      
-<sup>4</sup> Department of Medicine, Carver College of Medicine, University of Iowa, IA, USA 
-<sup>5</sup> Iowa City VA HCS, Iowa City, IA, USA
-<sup>6</sup> Departments of Medicine, Surgery and Biomedical Sciences, Cedars Sinai Medical Center, Los Angeles, CA, USA 
+<sup>4</sup> Department of Medicine, Carver College of Medicine, University of Iowa, IA, USA     
+<sup>5</sup> Iowa City VA HCS, Iowa City, IA, USA      
+<sup>6</sup> Departments of Medicine, Surgery and Biomedical Sciences, Cedars Sinai Medical Center, Los Angeles, CA, USA      
 <sup>#</sup> Co-senior authors, contributed equally
 
 ---------------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ BibTex citation for the original publication:
 
 Original [GitHub repository](https://github.com/filip-tichanek/infliximab_nAb): https://github.com/filip-tichanek/infliximab_nAb
 
-Statistical **reports** can be found on the [reports hub](https://filip-tichanek.github.io/infliximab_nAb/)
+Statistical **reports** can be found [here](https://filip-tichanek.github.io/infliximab_nAb/)
 
 ----------------------------------------------------------------------------------------------------
 
