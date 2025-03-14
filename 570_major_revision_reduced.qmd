@@ -101,12 +101,9 @@ body {
 
 ------------------------------------------------------------------------
 
+# Statistical modelling description
 
-# Manuscript text
-
-## Statistical analysis methods
-
-### Full version
+## Full version
 
 Analyses were performed in R (version 4.4.2) [@R] and GraphPad Prism (version 10.2.3). Continuous variables are reported as medians with interquartile ranges and categorical variables as counts and percentages. Group comparisons were conducted using the Mann–Whitney test, and correlations were assessed via Spearman’s rank correlation.  
 
@@ -143,7 +140,7 @@ Mediation analysis was performed using the 'bayestestR' package [@bayestest] to 
 
 Because the highest aCL IgG levels were only observed in the control group, we performed a sensitivity analysis by restricting the dataset to patients with aCL IgG levels within the range observed in the infliximab group.
 
-### Short version (manuscript)
+## Short version (manuscript)
 
 All analyses were conducted in R (version 4.4.2) and GraphPad Prism (version 10.2.3). Continuous variables are reported as medians with interquartile ranges, and categorical variables as percentages. Spearman’s rank correlation assessed associations.
 
@@ -154,47 +151,6 @@ Pre-specified covariates included donor and recipient sex, HLA mismatch count, K
 Bayesian mediation analysis (using 'bayestestR') was used to assess whether infliximab’s effect on eGFR is mediated through DGF, stratified by above- vs. below-median aCL IgG levels. A sensitivity analysis was performed by restricting the dataset to patients with aCL IgG levels within the range observed in the infliximab group.
 
 A full description of the statistical modeling methods, including prior specifications and posterior sampling details, is provided in the Supplementary Methods and online with the code (https://filip-tichanek.github.io/infliximab_nAb).
-
-
-## Results
-
-### Data Distributions and nAB levels correlations
-
-The distribution of antibody levels across different groups, defined by treatment group and either DGF (aCL) or infection (aPE), is shown in Figure 1. The figure indicates substantial variability in nAB levels and suggests differences across groups.
-
-No correlation was found between IgG levels of aCL and aPE (Supplementary Figure 1). In contrast, IgM antibodies exhibited strong positive correlations among each other, correlations between IgM and IgG of the same epitope (e.g., aCL IgG and aCL IgM) were weaker. Altogether, this suggests that IgG aCL and aPE antibodies serve different purposes and reflect distinct immune responses of individual subjects.
-
-### aCL level mediates infliximab effect on DGF risk
-
-Univariable logistic regression suggests that DGF risk may be associated with male recipient sex, HLA mismatch, cold ischemia time, and also infliximab:aCL IgG interaction (Supplementary Table 1), indicating that aCL may modulate the effect of infliximab on DGF risk.
-
-To further explore this possible modulation, we fit a multivariable Bayesian logistic model allowing a non-linear relationship between aCL and DGF risk separately for each treatment group (Table 1). The results are in line with the unadjusted findings: the effect of infliximab varies with aCL IgG level, with the odds ratio for infliximab estimated to be 47 times larger (95% CrI: 4.4 to 610) in patients at the 5th percentile of aCL IgG level (0.29 µg/ml) versus those at the 95th percentile (5.78 µg/ml). Specifically, infliximab is expected to reduce the odds of DGF by 87% for those at the 5th percentile (OR: 0.13, 95% CrI: 0.03 to 0.49, Figure 2), whereas at the 95th percentile (5.78 µg/ml), the odds ratio reverses direction (OR: 6.24, 95% CrI: 1.38 to 30.32).
-
-When we excluded patients in the control group with aCL levels higher than the maximum observed in the infliximab group, results remained consistent (Supplementary Figure 2). A similar pattern is observed for IgM, though the modulation effect is weaker (Supplementary Figure 3, Table 1). Subgroup analysis based on aCL IgG levels $< median$ or $\geq median$ also shows a similar pattern: infliximab reduces DGF risk at those with relatively low aCL IgG (OR: 0.21, 95% CrI: 0.06 to 0.64) but exhibits the opposite effect when aCL IgG $\geq median$ (OR: 2.9, 95% CrI: 1.01 to 8.7).
-
-In short, infliximab very likely reduces DGF risk when aCL is low but tends to increase it with relatively high aCL.
-
-### aCL mediates infliximab effect on eGFR
-
-Univariable linear models suggested that eGFR may be associated with low KDPI, absence of DGF, and absence of perfusion event, as well as with the `infliximab`:`aCL IgG` interaction (Supplementary Table 2).
-
-A subsequent Bayesian linear model shows a congruent result: infliximab is associated with a small negative to possibly large positive effect on eGFR for patients at the 5th percentile of aCL IgG (β: 7.7, 95% CrI: -2.4 to 17.9) but has likely negative effect at the 95th percentile (β: -17.4, 95% CrI: -30 to -5.1; Table 1; Supplementary Figure 2). Similar patterns emerge for aCL IgM (Supplementary Figure 4) and when excluding control patients whose aCL IgG exceeded the maximum level observed in the infliximab group (Supplementary Figure 5).
-
-In unadjusted analysis, DGF was a strong predictor of eGFR. Since infliximab reduces DGF risk at low aCL but worsens it at high aCL, we tested whether aCL might modulate infliximab’s effect on eGFR via DGF. In patients with aCL below the median, Bayesian mediation analysis showed a positive indirect effect of infliximab on eGFR through reduced DGF risk (ACME: 5.4, 95% CrI: 1.6 to 10.6) and no clear direct effect (ACD: 2.1, 95% CrI: -6.1 to 10.1; Supplementary Table 3). By contrast, for aCL ≥ median, infliximab had a direct negative effect on eGFR (ADE: -11.1, 95% CrI: -19.1 to -2.9) with possible contribution with indirect negative effect via incressing DGF risk (ACME: -2.3, 95% CrI: -6.6 to 0.3).
-
-In conclusion, infliximab may have positive indirect effect on eGFR via reducing DGF risk when aCL is low, but it likely decreases eGFR directly in patients with relatively high aCL.
-
-### aPE modulates infliximab effect on infection
-
-Univariable logistic regression showed that infection risk was associated with KDPI and, surprisingly, **negatively** associated with longer cold ischemia time. There was also an interaction between infliximab and aPE, particularly with co-factor independent aPE (though less clearly with co-factor dependent aPE; Supplementary Table 4).
-
-A Bayesian logistic model allowing a non-linear interaction between infliximab and co-factor independent aPE confirmed that infliximab likely increases infection risk at lower aPE levels (5th and 25th percentiles) but has an uncertain or possibly positive effect at higher levels (Supplementary Figure 6, Table 1). A similar pattern emerged for co-factor dependent aPE IgG (Supplementary Figure 7, Table 1). 
-
-Overall, these results suggest infliximab may raise infection risk, especially for patients with relatively low aPE levels.
-
-### Infliximab effects on BK viremia risk
-
-Univariable logistic regression suggested that BKV infection risk is generally increased with infliximab, and there was no indication of effect modification by nAB level (Supplementary Table 5).
 
 
 # Initiation
@@ -850,7 +806,7 @@ path <- "gitignore/figures"
  get(plotac)
 ```
 
-# Unadjsuted ORs for DGF
+# Unadjsuted effects
 
 Definition of function
 
