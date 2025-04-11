@@ -3,6 +3,7 @@ title: "Pretransplant natural antibody levels identify a subset of deceased dono
 subtitle: "Statistical report"
 format: 
   html:  
+    fig-numbering: false
     embed-resources: true
     keep-md: false
     toc: true
@@ -19,7 +20,6 @@ format:
       sidebar-width: 600px
       margin-width: 100px
 editor: source
-
 theme: darkly
 highlight-style: github-dark
 fontsize: 12 px
@@ -148,7 +148,7 @@ Unadjusted analyses used logistic regression for binary outcomes (DGF, infection
 
 Pre-specified covariates included donor and recipient sex, HLA mismatch count, KDPI, perfusion event, recipient age, and cold ischemia time. Posterior distributions were summarized by medians with 95% credible intervals (CrI). To evaluate infliximab treatment effects across different nAb levels, we obtained posterior distributions at the 5th, 25th, 50th, 75th, and 95th percentiles of these levels. To quantify how strongly nAb levels modulate the infliximab effect, we compared infliximab estimates at the 95th and 5th percentiles, reporting the ratio of odds ratios for binary outcomes and the difference in treatment effects for eGFR.
 
-Bayesian mediation analysis (using 'bayestestR') was used to assess whether infliximab’s effect on eGFR is mediated through DGF, stratified by above- vs. below-median aCL IgG levels. A sensitivity analysis was performed by restricting the dataset to patients with aCL IgG levels within the range observed in the infliximab group.
+Bayesian mediation analysis was used to assess whether infliximab’s effect on eGFR is mediated through DGF, stratified by above- vs. below-median aCL IgG levels. A sensitivity analysis was performed by restricting the dataset to patients with aCL IgG levels within the range observed in the infliximab group.
 
 A full description of the statistical modeling methods, including prior specifications and posterior sampling details, is provided in the Supplementary Methods and online with the code (https://filip-tichanek.github.io/infliximab_nAb).
 
@@ -314,6 +314,7 @@ data2 %>%
 ```{r}
 #| label: tbl-sup_table_1
 #| tbl-cap: 'Demography stratified by treatment'
+#| tbl-numbered: false
 
 data2 %>% 
   filter(!is.na(GFR_MDRD),
@@ -331,6 +332,7 @@ data2 %>%
 ```{r}
 #| label: tbl-sup_table_1_alternative
 #| tbl-cap: 'Demography stratified by treatment and aCL IgG level (below and at/above median value'
+#| tbl-numbered: false
 
 sum_data <- data2 %>%
   filter(!is.na(GFR_MDRD),
@@ -377,13 +379,13 @@ sum_data %>% select(-c(infliximab, aCL_IgG_category, GPL_BC:MPE_ind)) %>%
 ```{r}
 #| label: tbl-sup_table_3
 #| tbl-cap: 'Post-transplant outcomes by treatment'
+#| tbl-numbered: false
 
 sum_data %>% select(treatment, DGF:BKV_event_2) %>% 
   gtsummary::tbl_summary(by = treatment) %>% 
   add_p() %>% 
   add_overall()
 ```
-
 
 
 ### Antigens
@@ -644,7 +646,6 @@ data_first <- complete(data_imputed, 'all')[1]$`1`
 #| label: fig-figure_1
 #| fig.cap: 'Distribution of natural antibody levels across groups defined by treatment (infliximab [IFX] vs. control [ctrl]) and key post-transplant outcomes: occurrence of peritransplant delayed graft function [DGF+ vs. DGF−; A to B] or post-transplant infection ["infected" vs. "non-infected"; C to F]. (**A**) Levels of anti-cardiolipin IgG. (**B**) Levels of anti-cardiolipin IgM. (**C**) Levels of co-factor-dependent anti-phosphatidylethanolamine IgG. (**D**) Levels of co-factor-independent anti-phosphatidylethanolamine IgG. (**E**) Levels of co-factor-dependent anti-phosphatidylethanolamine IgM. (**F**) Levels of co-factor-independent anti-phosphatidylethanolamine IgM.'
 
-
 plotac <- "figure_1"
 path <- "gitignore/figures"
 
@@ -670,14 +671,10 @@ path <- "gitignore/figures"
    geom_boxplot(outlier.shape = NA, fill = NA, width = 0.8) +
    geom_beeswarm(alpha = 0.5, cex = 2.3, size = 1.4) +
    scale_color_manual(values = cole) +
-   # theme(axis.text.x = element_blank()) +
    labs(
      y = expression(log[2] ~ "(aCL IgG [" * mu * "g/ml])"),
      x = NULL
    ) +
-   # scale_x_discrete(
-   #   labels = c("", "nevim", "n" ,'n')
-   #   ) +
    theme(
      axis.text.x = element_text(angle = 45, hjust = 1),
      legend.position = "none"
@@ -688,14 +685,10 @@ path <- "gitignore/figures"
    geom_boxplot(outlier.shape = NA, fill = NA, width = 0.8) +
    geom_beeswarm(alpha = 0.5, cex = 2.3, size = 1.4) +
    scale_color_manual(values = cole) +
-   # theme(axis.text.x = element_blank()) +
    labs(
      y = expression(log[2] ~ "(aCL IgM [" * mu * "g/ml])"),
      x = NULL
    ) +
-   # scale_x_discrete(
-   #   labels = c("", "nevim", "n" ,'n')
-   #   ) +
    theme(
      axis.text.x = element_text(angle = 45, hjust = 1),
      legend.position = "none"
@@ -723,9 +716,6 @@ path <- "gitignore/figures"
      y = expression(log[2] ~ "(aPE IgG dep [OD])"),
      x = NULL
    ) +
-   # scale_x_discrete(
-   #   labels = c("", "nevim", "n" ,'n')
-   #   ) +
    theme(
      axis.text.x = element_text(angle = 45, hjust = 1),
      legend.position = "none"
@@ -741,9 +731,6 @@ path <- "gitignore/figures"
      y = expression(log[2] ~ "(aPE IgG ind [OD])"),
      x = NULL
    ) +
-   # scale_x_discrete(
-   #   labels = c("", "nevim", "n" ,'n')
-   #   ) +
    theme(
      axis.text.x = element_text(angle = 45, hjust = 1),
      legend.position = "none"
@@ -759,9 +746,6 @@ path <- "gitignore/figures"
      y = expression(log[2] ~ "(aPE IgM dep [OD])"),
      x = NULL
    ) +
-   # scale_x_discrete(
-   #   labels = c("", "nevim", "n" ,'n')
-   #   ) +
    theme(
      axis.text.x = element_text(angle = 45, hjust = 1),
      legend.position = "none"
@@ -777,9 +761,6 @@ path <- "gitignore/figures"
      y = expression(log[2] ~ "(aPE IgM ind [OD])"),
      x = NULL
    ) +
-   # scale_x_discrete(
-   #   labels = c("", "nevim", "n" ,'n')
-   #   ) +
    theme(
      axis.text.x = element_text(angle = 45, hjust = 1),
      legend.position = "none"
@@ -868,7 +849,7 @@ univar_mod <- function(dat,
       )
        }))
     } else {
-      stop("incorrect family specification pyco", call. = FALSE)
+      stop("incorrect family specification", call. = FALSE) 
     }
   }
   
@@ -903,8 +884,9 @@ preds_DGF <- c(
 ## DGF
 
 ```{r}
-#| label: tbl-sup_table_4
-#| tbl-cap: 'Results from univariable logistic regression models assessing the effects of variables on delayed graft function (DGF) in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in DGF odds per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on DGF at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+#| label: tbl-sup_table_5
+#| tbl-cap: '***Supplementary Table 5***: Results from unadjusted logistic regression models assessing the effects of variables on delayed graft function (DGF) in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in DGF odds per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on DGF at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+#| tbl-numbered: false
 
 kableExtra::kable(
   univar_mod(dat = data_model_priorImpute,
@@ -921,8 +903,9 @@ kableExtra::kable(
 ## GFR
 
 ```{r}
-#| label: tbl-sup_table_5
-#| tbl-cap: 'Results from univariable linear models assessing the effects of variables on estimated glomerula filtration rate (eGFR) in patients with complete data for given predictor. `Effect` [95% confidennce interval] is shown and represents the estimated change in eGFR per one-unit increase in the predictor. For interaction terms, the effect quantifies the difference in the infliximab effect on eGFR at a given natural antibody (nAb) level vs its effect when the nAb level is halved. A 95% confidence interval including 0 suggests no significant modification of the infliximab effect by nAb levels. `N`: number of observations.'
+#| label: tbl-sup_table_6
+#| tbl-cap: '***Supplementary Table 6***: Results from unadjusted linear models assessing the effects of variables on estimated glomerula filtration rate (eGFR) in patients with complete data for given predictor. `Effect` [95% confidennce interval] is shown and represents the estimated change in eGFR per one-unit increase in the predictor. For interaction terms, the effect quantifies the difference in the infliximab effect on eGFR at a given natural antibody (nAb) level vs its effect when the nAb level is halved. A 95% confidence interval including 0 suggests no significant modification of the infliximab effect by nAb levels. `N`: number of observations.'
+#| tbl-numbered: false
 
 kableExtra::kable(
   univar_mod(dat = data_model_priorImpute,
@@ -937,8 +920,9 @@ kableExtra::kable(
 ## Infection
 
 ```{r}
-#| label: tbl-sup_table_7
-#| tbl-cap: 'Results from univariable logistic regression models assessing the effects of variables on infection risk in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in odds of infection per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on infection at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+#| label: tbl-sup_table_9
+#| tbl-cap: '***Supplementary Table 9***: Results from unadjusted logistic regression models assessing the effects of variables on infection risk in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in odds of infection per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on infection at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+#| tbl-numbered: false
 
 kableExtra::kable(
   univar_mod(dat = data_model_priorImpute,
@@ -954,8 +938,9 @@ kableExtra::kable(
 ## BKV
 
 ```{r}
-#| label: tbl-sup_table_8
-#| tbl-cap: 'Results from univariable logistic regression models assessing the effects of variables on BKV infection risk in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in odds of BKV infection per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on BKV infection at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+#| label: tbl-sup_table_10
+#| tbl-cap: '***Supplementary Table 10***: Results from unadjusted logistic regression models assessing the effects of variables on BKV infection risk in patients with complete data for given predictor. The odds ratio (OR) represents the estimated change in odds of BKV infection per one-unit increase in the predictor. For interaction terms, the ratio of odds ratios (ROR) quantifies the ratio of the infliximab effect (OR) on BKV infection at a given natural antibody (nAb) level to its effect when the nAb level is halved. A 95% confidence interval including 1 suggests no significant modification of the infliximab effect by nAb levels. `(R)OR`: odds ratio (for main effects) or ratio of odds ratios (for interactions) [95% confidence interval]. `N`: number of observations.'
+#| tbl-numbered: false
 
 kableExtra::kable(
   univar_mod(dat = data_model_priorImpute,
@@ -1078,6 +1063,7 @@ priors_interaction_pnl <- c(
 ```{r}
 #| label: tbl-unused_1
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgG (`GPL_BC_log2`), on delayed graft function (`DGF`), without interaction terms. The odds ratio (OR) represents the estimated change in the odds of DGF per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
 
 model_dgf_GPL_BC_main <- run(
   expr = brm_multiple(
@@ -1117,6 +1103,7 @@ kableExtra::kable(tr)
 ```{r}
 #| label: tbl-unused_2
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between anti-cardiolipin IgG (`GPL_BC_log2`) and `infliximab` treatment on delayed graft function (DGF), while accounting for other covariates. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
 
 model_dgf_GPL_BC_interaction_NL <- run(
   expr = brm_multiple(
@@ -1257,8 +1244,8 @@ fig_a <- prediction %>%
   
   facet_grid(rows = vars(group)) +
   
-  theme(axis.text=element_text(size=10),
-        axis.title=element_text(size=12),
+  theme(axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12),
         strip.text.x = element_text(size = 12),
         legend.position = "none") +
   
@@ -1279,24 +1266,34 @@ fig_a <- prediction %>%
     inherit.aes = FALSE
   ) + 
   geom_vline(xintercept = antibody_perc[3:7], linetype = 2, 
-                            color = "grey50", size = 0.3)
+                            color = "grey50", linewidth = 0.3)
 ```
 
 Figure B
 
 ```{r, fig.width=5, fig.height=4}
 
-antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq <- antibody_perc[c(3, 7)]
 antibody_seq
+
+data_prediction <- data.frame(
+   male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
 
 tr <-  posterior_epred(
     model_dgf_GPL_BC_interaction_NL,
     newdata = data_prediction)
 
-tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
-  (antibody_seq[2] - antibody_seq[1])
-tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
-  (antibody_seq[2] - antibody_seq[1])
+tr_ctrl <- (logit(tr[, c(ncol(tr)/2)]) - logit(tr[, c(1)])) 
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))
 
 post_fix <- data.frame(
   b_GPL_BC_log2 = tr_ctrl,
@@ -1317,7 +1314,7 @@ CIS <- sapply(
 
 CIS
 
-xpos <- 10
+xpos <- 323
 
 fig_b <- tr %>% 
   pivot_longer(values_to = 'value', 
@@ -1332,7 +1329,7 @@ fig_b <- tr %>%
                normalize = "groups",
                p_limits = c(1e-3, 1-1e-3)) +
   
-    labs(x = "Effect of doubling aCL IgG on DGF risk (OR))", 
+    labs(x = 'Effect (OR) of aCL IgG increase (p05 to p95) on DGF', 
          y = 'Treatment group') +
   
   scale_fill_manual(values = cole, 
@@ -1341,10 +1338,10 @@ fig_b <- tr %>%
                        labels = c('control', 'infliximab')) +
   
   scale_y_discrete(expand = expansion(add = 0.1)) +
-  coord_cartesian(xlim = c(1/20, 20)) +
+  coord_cartesian(xlim = c(1/600, 1800)) +
   scale_x_continuous(transform = 'log2',
-                     breaks = c(1/16, 1/4, 1, 4 ,16),
-                     labels = c("1/16", "1/4", "1", "4", "16")) +
+                     breaks = c(1/512, 1/64, 1/8, 1, 8, 64, 512),
+                     labels = c("1/512", "1/64", "1/8", "1", "8", "64", "512")) +
   
   geom_vline(xintercept = 1, linetype = 2, 
                 color = "red", size = 0.6) +
@@ -1381,7 +1378,7 @@ xseq <- c(1/64, 1/8, 1, 8, 64, 512)
 
 antibody_seq <- antibody_perc[c(3, 4, 5, 6, 7)]
 antibody_seq
-antibody_seq**2
+2**antibody_seq
 
 asl <- length(antibody_seq)
 
@@ -1504,7 +1501,7 @@ fig_c <- prediction %>%
 
 ```{r, fig.height=6, fig.width=9}
 #| label: fig-figure_2
-#| fig.cap: '**Anti-cardiolipin IgG modulates infliximab effect on delayed graft function.** (**A**) Predicted DGF risk by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regiond) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution for the average effect (odds ratio) of doubling anti-cardiolipin IgG on DGF risk. (**C**) Posterior distribution of the infliximab effect (odds ratio) on DGF risk across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
+#| fig.cap: '**Anti-cardiolipin IgG modulates infliximab effect on delayed graft function.** (**A**) Predicted DGF risk by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups, with covariates held at their sample means. Shaded regions represent 95% credible intervals; dashed lines indicate the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the estimated odds ratio comparing DGF odds at the 95th vs. 5th percentile of anti-cardiolipin IgG. (**C**) Posterior distribution of the infliximab effect (odds ratio) on DGF risk across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
 
 plotac <- 'figure_2'
 path <- "gitignore/figures"
@@ -1637,6 +1634,7 @@ priors_interaction_pnl <- c(
 ```{r}
 #| label: tbl-unused_3
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgM (`MPL_BC_log2`), on delayed graft function (`DGF`), without interaction terms. The odds ratio (OR) represents the estimated change in the odds of DGF per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
 
 set.seed(2025)
 model_dgf_MPL_BC_main <- run(
@@ -1677,7 +1675,8 @@ kableExtra::kable(tr)
 ```{r}
 #| label: tbl-unused_4
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between anti-cardiolipin IgM (`MPL_BC_log2`) and `infliximab` treatment on delayed graft function (DGF), while accounting for other covariates. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
-#| 
+#| tbl-numbered: false
+ 
 set.seed(2025)
 model_dgf_MPL_BC_interaction_NL <- run(
   expr = brm_multiple(
@@ -1843,18 +1842,28 @@ Figure B
 
 ```{r, fig.width=5, fig.height=4}
 
-antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq <- antibody_perc[c(3, 7)]
 antibody_seq
+
+data_prediction <- data.frame(
+   male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `MPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
 
 tr <-  posterior_epred(
     model_dgf_MPL_BC_interaction_NL,
     newdata = data_prediction)
 
-tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
-  (antibody_seq[2] - antibody_seq[1])
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)]))
 
-tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
-  (antibody_seq[2] - antibody_seq[1])
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))
 
 post_fix <- data.frame(
   b_MPL_BC_log2 = tr_ctrl,
@@ -1871,11 +1880,11 @@ CIS <- sapply(
   tr, 
   function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
   ) %>% 
-  round(2)
+  round(1)
 
 CIS
 
-xpos <- 10
+xpos <- 323
 
 fig_b <- tr %>% 
   pivot_longer(values_to = 'value', 
@@ -1890,7 +1899,7 @@ fig_b <- tr %>%
                normalize = "groups",
                p_limits = c(1e-3, 1-1e-3)) +
   
-    labs(x = "Effect of doubling aCL IgM on DGF risk (OR))", 
+    labs(x = "Effect (OR) of aCL IgM (p05 to p95) on DGF", 
          y = 'Treatment group') +
   
   scale_fill_manual(values = cole, 
@@ -1899,10 +1908,10 @@ fig_b <- tr %>%
                        labels = c('control', 'infliximab')) +
   
   scale_y_discrete(expand = expansion(add = 0.1)) +
-  coord_cartesian(xlim = c(1/20, 20)) +
+  coord_cartesian(xlim = c(1/600, 1800)) +
   scale_x_continuous(transform = 'log2',
-                     breaks = c(1/16, 1/4, 1, 4 ,16),
-                     labels = c("1/16", "1/4", "1", "4", "16")) +
+                     breaks = c(1/512, 1/64, 1/8, 1, 8, 64, 512),
+                     labels = c("1/512", "1/64", "1/8", "1", "8", "64", "512")) +
   
   geom_vline(xintercept = 1, linetype = 2, 
                 color = "red", size = 0.6) +
@@ -2060,11 +2069,10 @@ fig_c <- prediction %>%
 
 ```{r, fig.height=6, fig.width=9}
 #| label: fig-sup_figure_3
-#| fig.cap: '**Anti-cardiolipin IgM modulates infliximab effect on delayed graft function.** (**A**) Predicted DGF risk by anti-cardiolipin IgM for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regiond) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution for the average effect (odds ratio) of doubling anti-cardiolipin IgM on DGF risk. (**C**) Posterior distribution of the infliximab effect (odds ratio) on DGF risk across anti-cardiolipin IgM percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
+#| fig.cap: '**Anti-cardiolipin IgM modulates infliximab effect on delayed graft function.** (**A**) Predicted DGF risk by anti-cardiolipin IgM for infliximab (upper) and control (lower) groups, with covariates held at their sample means. Shaded regions represent 95% credible intervals; dashed lines indicate the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the estimated odds ratio comparing DGF odds at the 95th vs. 5th percentile of anti-cardiolipin IgM. (**C**) Posterior distribution of the infliximab effect (odds ratio) on DGF risk across anti-cardiolipin IgM percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
 
 plotac <- 'sup_figure_3'
 path <- "gitignore/figures"
-
 
 fig <- cowplot::plot_grid(fig_b, fig_c,
   rel_heights = c(0.7, 1),
@@ -2195,6 +2203,7 @@ priors_interaction_pnl <- c(
 ```{r}
 #| label: tbl-unused_5
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed co-factor-dependent phosphatidylethanolamine IgG (`GPE_dep_log2`), on `infection` risk, without interaction terms. The odds ratio (OR) represents the estimated change in the odds of infection per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
 
 model_infection_any_GPE_dep_main <- run(
   expr = brm_multiple(
@@ -2234,6 +2243,8 @@ kableExtra::kable(tr)
 ```{r}
 #| label: tbl-unused_6
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between co-factor-dependent phosphatidylethanolamine IgG (aPE-dep IgG, `GPE_dep_log2`) and `infliximab` treatment on `infection` risk, while accounting for other covariates. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of aPE-dep IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
+
 model_infection_any_GPE_dep_interaction_NL <- run(
   expr = brm_multiple(
     infection_any ~
@@ -2400,17 +2411,27 @@ Figure B
 
 ```{r, fig.width=5, fig.height=4}
 
-antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq <- antibody_perc[c(3, 7)]
 antibody_seq
+
+data_prediction <- data.frame(
+   male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPE_dep_log2` = c(antibody_seq, antibody_seq)
+  )
 
 tr <-  posterior_epred(
     model_infection_any_GPE_dep_interaction_NL,
     newdata = data_prediction)
 
-tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
-  (antibody_seq[2] - antibody_seq[1])
-tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
-  (antibody_seq[2] - antibody_seq[1])
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) 
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))
 
 post_fix <- data.frame(
   b_GPE_dep_log2 = tr_ctrl,
@@ -2431,7 +2452,7 @@ CIS <- sapply(
 
 CIS
 
-xpos <- 10
+xpos <- 323
 
 fig_b <- tr %>% 
   pivot_longer(values_to = 'value', 
@@ -2446,7 +2467,7 @@ fig_b <- tr %>%
                normalize = "groups",
                p_limits = c(1e-3, 1-1e-3)) +
   
-    labs(x = "Effect of doubling aPE IgG dep on infection risk (OR)", 
+    labs(x = 'Effect (OR) of aPE IgG dep increase (p05 to p95) on infection', 
          y = 'Treatment group') +
   
   scale_fill_manual(values = cole, 
@@ -2455,10 +2476,10 @@ fig_b <- tr %>%
                        labels = c('control', 'infliximab')) +
   
   scale_y_discrete(expand = expansion(add = 0.1)) +
-  coord_cartesian(xlim = c(1/20, 20)) +
+  coord_cartesian(xlim = c(1/600, 1800)) +
   scale_x_continuous(transform = 'log2',
-                     breaks = c(1/16, 1/4, 1, 4 ,16),
-                     labels = c("1/16", "1/4", "1", "4", "16")) +
+                     breaks = c(1/512, 1/64, 1/8, 1, 8, 64, 512),
+                     labels = c("1/512", "1/64", "1/8", "1", "8", "64", "512")) +
   
   geom_vline(xintercept = 1, linetype = 2, 
                 color = "red", size = 0.6) +
@@ -2620,12 +2641,11 @@ fig_c <- prediction %>%
 #### Figure merged
 
 ```{r, fig.height=6, fig.width=9}
-#| label: fig-sup_figure_7
-#| fig.cap: '**Co-factor dependent anti-phosphatidylethanolamine IgG (aPE-dep IgG) modulates the effect of infliximab on infection risk** (**A**) Predicted infection risk by aPE-dep IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of aPE-dep IgG levels. (**B**) Posterior distribution for the average effect of doubling aPE-dep IgG on infection risk (odds ratio). (**C**) Posterior distribution of the effect of infliximab (odds ratio) on infection risk across aPE-dep IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
+#| label: fig-sup_figure_8
+#| fig.cap: '**Co-factor dependent anti-phosphatidylethanolamine IgG (aPE-dep IgG) modulates the effect of infliximab on infection risk** (**A**) Predicted infection risk by aPE-dep IgG for infliximab (upper) and control (lower) groups, with covariates held at their sample means. Shaded regions represent 95% credible intervals; dashed lines indicate the 5th, 25th, 50th, 75th, and 95th percentiles of aPE-dep IgG levels. (**B**) Posterior distribution of the estimated odds ratio comparing infection odds at the 95th vs. 5th percentile of aPE-dep IgG. (**C**) Posterior distribution of the effect of infliximab (odds ratio) on infection risk across aPE-dep IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
 
-plotac <- 'sup_figure_7'
+plotac <- 'sup_figure_8'
 path <- "gitignore/figures"
-
 
 fig <- cowplot::plot_grid(fig_b, fig_c,
   rel_heights = c(0.7, 1),
@@ -2753,6 +2773,8 @@ priors_interaction_pnl <- c(
 ```{r}
 #| label: tbl-unused_7
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed co-factor-independent phosphatidylethanolamine IgG (`GPE_ind_log2`), on `infection` risk, without interaction terms. The odds ratio (OR) represents the estimated change in the odds of infection per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
+
 model_infection_any_GPE_ind_main <- run(
   expr = brm_multiple(
     infection_any ~
@@ -2791,6 +2813,8 @@ kableExtra::kable(tr)
 ```{r}
 #| label: tbl-unused_8
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between co-factor-independent phosphatidylethanolamine IgG (aPE-ind IgG, `GPE_ind_log2`) and `infliximab` treatment on `infection` risk, while accounting for other covariates. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of aPE-ind IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
+
 model_infection_any_GPE_ind_interaction_NL <- run(
   expr = brm_multiple(
     infection_any ~
@@ -2957,17 +2981,27 @@ Figure B
 
 ```{r, fig.width=5, fig.height=4}
 
-antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq <- antibody_perc[c(3, 7)]
 antibody_seq
+
+data_prediction <- data.frame(
+   male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPE_ind_log2` = c(antibody_seq, antibody_seq)
+  )
 
 tr <-  posterior_epred(
     model_infection_any_GPE_ind_interaction_NL,
     newdata = data_prediction)
 
-tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
-  (antibody_seq[2] - antibody_seq[1])
-tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
-  (antibody_seq[2] - antibody_seq[1])
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) 
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))
 
 post_fix <- data.frame(
   b_GPE_ind_log2 = tr_ctrl,
@@ -2988,7 +3022,7 @@ CIS <- sapply(
 
 CIS
 
-xpos <- 10
+xpos <- 323
 
 fig_b <- tr %>% 
   pivot_longer(values_to = 'value', 
@@ -3003,7 +3037,7 @@ fig_b <- tr %>%
                normalize = "groups",
                p_limits = c(1e-3, 1-1e-3)) +
   
-    labs(x = "Effect of doubling aPE IgG ind on infection risk (OR)", 
+    labs(x = 'Effect (OR) of aPE IgG ind increase (p05 to p95) on infection', 
          y = 'Treatment group') +
   
   scale_fill_manual(values = cole, 
@@ -3012,10 +3046,10 @@ fig_b <- tr %>%
                        labels = c('control', 'infliximab')) +
   
   scale_y_discrete(expand = expansion(add = 0.1)) +
-  coord_cartesian(xlim = c(1/20, 20)) +
+  coord_cartesian(xlim = c(1/600, 1800)) +
   scale_x_continuous(transform = 'log2',
-                     breaks = c(1/16, 1/4, 1, 4 ,16),
-                     labels = c("1/16", "1/4", "1", "4", "16")) +
+                     breaks = c(1/512, 1/64, 1/8, 1, 8, 64, 512),
+                     labels = c("1/512", "1/64", "1/8", "1", "8", "64", "512")) +
   
   geom_vline(xintercept = 1, linetype = 2, 
                 color = "red", size = 0.6) +
@@ -3173,10 +3207,10 @@ fig_c <- prediction %>%
 #### Figure merged
 
 ```{r, fig.height=6, fig.width=9}
-#| label: fig-sup_figure_8
-#| fig.cap: '**Co-factor independent anti-phosphatidylethanolamine IgG (aPE-ind IgG) modulates the effect of infliximab on infection risk** (**A**) Predicted infection risk by aPE-dep IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of aPE-ind IgG levels. (**B**) Posterior distribution for the average effect of doubling aPE-ind IgG on infection risk (odds ratio). (**C**) Posterior distribution of the effect of infliximab (odds ratio) on infection risk across aPE-ind IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
+#| label: fig-sup_figure_7
+#| fig.cap: '**Co-factor independent anti-phosphatidylethanolamine IgG (aPE-ind IgG) modulates the effect of infliximab on infection risk** (**A**) Predicted infection risk by aPE-dep IgG for infliximab (upper) and control (lower) groups, with covariates held at their sample means. Shaded regions represent 95% credible intervals; dashed lines indicate the 5th, 25th, 50th, 75th, and 95th percentiles of aPE-ind IgG levels. (**B**) Posterior distribution of the estimated odds ratio comparing infection odds at the 95th vs. 5th percentile of aPE-ind IgG. (**C**) Posterior distribution of the effect of infliximab (odds ratio) on infection risk across aPE-ind IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines.'
 
-plotac <- 'sup_figure_8'
+plotac <- 'sup_figure_7'
 path <- "gitignore/figures"
 
 
@@ -3314,6 +3348,8 @@ priors_interaction_pnl <- c(
 ```{r}
 #| label: tbl-unused_9
 #| tbl-cap: 'Results from multivariable Bayesian robust regression model examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgG (`GPL_BC_log2`), on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), without interaction terms. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
+
 model_GFR_MDRD_GPL_BC_main <- run(
   expr = brm_multiple(
     GFR_MDRD ~
@@ -3352,6 +3388,7 @@ kableExtra::kable(tr)
 ```{r}
 #| label: tbl-unused_10
 #| tbl-cap: "Results from a multivariable Bayesian robust regression model incorporating a non-linear interaction between anti-cardiolipin IgG (`GPL_BC_log2`) and `infliximab` treatment on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), while accounting for other covariates. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. The last row (`infliximab:GPL_BC_log2`) reports the difference in infliximab's treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively." 
+#| tbl-numbered: false
 
 model_GFR_MDRD_GPL_BC_interaction_NL <- run(
   expr = brm_multiple(
@@ -3509,17 +3546,27 @@ Figure B
 
 ```{r, fig.width=5, fig.height=4}
 
-antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq <- antibody_perc[c(3, 7)]
 antibody_seq
+
+data_prediction <- data.frame(
+   male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
 
 tr <-  posterior_epred(
     model_GFR_MDRD_GPL_BC_interaction_NL,
     newdata = data_prediction)
 
-tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) /
-  (antibody_seq[2] - antibody_seq[1])
-tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])/
-  (antibody_seq[2] - antibody_seq[1])
+tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) 
+tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])
 
 post_fix <- data.frame(
   b_GPL_BC_log2 = tr_ctrl,
@@ -3536,11 +3583,11 @@ CIS <- sapply(
   tr, 
   function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
   ) %>% 
-  round(2)
+  round(1)
 
 CIS
 
-xpos <- 20
+xpos <- 39.2
 
 fig_b <- tr %>% 
   pivot_longer(values_to = 'value', 
@@ -3555,7 +3602,7 @@ fig_b <- tr %>%
                normalize = "groups",
                p_limits = c(1e-3, 1-1e-3)) +
   
-    labs(x = "Effect of doubling aCL IgG on GFR (mL/min/1.73 m²)", 
+    labs(x = 'Effect of aCL IgG increase (p05 to p95) on eGFR',
          y = 'Treatment group') +
   
   scale_fill_manual(values = cole, 
@@ -3564,7 +3611,7 @@ fig_b <- tr %>%
                        labels = c('control', 'infliximab')) +
   
   scale_y_discrete(expand = expansion(add = 0.1)) +
-  coord_cartesian(xlim = c(-20, 26)) +
+  coord_cartesian(xlim = c(-50, 52)) +
   
   geom_vline(xintercept = 0, linetype = 2, 
                 color = "red", size = 0.6) +
@@ -3719,7 +3766,7 @@ fig_c <- prediction %>%
 
 ```{r, fig.height=6, fig.width=9}
 #| label: fig-sup_figure_4
-#| fig.cap: '**Anti-cardiolipin IgG modulates the effect of infliximab on  estimated glomerular filtration rate (eGFR).** (**A**) Predicted eGFR by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the average effect of doubling anti-cardiolipin IgG on eGFR. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian robust regression with B-splines.'
+#| fig.cap: '**Anti-cardiolipin IgG modulates the effect of infliximab on estimated two-year glomerular filtration rate (eGFR).** (**A**) Predicted eGFR by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups, with covariates held at their sample means. Shaded regions represent 95% credible intervals; dashed lines indicate the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the estimated change in eGFR when anti-cardiolipin IgG increases from the 5th to the 95th sample percentile. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian robust regression with B-splines.'
 
 plotac <- 'sup_figure_4'
 path <- "gitignore/figures"
@@ -3851,6 +3898,7 @@ priors_interaction_pnl <- c(
 ```{r}
 #| label: tbl-unused_11
 #| tbl-cap: 'Results from multivariable Bayesian robust regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgM (`MPL_BC_log2`), on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), without interaction terms. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
 
 model_GFR_MDRD_MPL_BC_main <- run(
   expr = brm_multiple(
@@ -3890,6 +3938,8 @@ kableExtra::kable(tr)
 ```{r}
 #| label: tbl-unused_12
 #| tbl-cap: "Results from a multivariable Bayesian robust regression model incorporating a non-linear interaction between anti-cardiolipin IgM (`MPL_BC_log2`) and `infliximab` treatment on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), while accounting for other covariates. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. The last row (`infliximab:MPL_BC_log2`) reports the difference in infliximab's treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgM, quantifying the interaction effect. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively." 
+#| tbl-numbered: false
+
 
 model_GFR_MDRD_MPL_BC_interaction_NL <- run(
   expr = brm_multiple(
@@ -4043,18 +4093,28 @@ Figure B
 
 ```{r, fig.width=5, fig.height=4}
 
-antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq <- antibody_perc[c(3, 7)]
 antibody_seq
+
+data_prediction <- data.frame(
+   male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `MPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
 
 tr <-  posterior_epred(
     model_GFR_MDRD_MPL_BC_interaction_NL,
     newdata = data_prediction)
 
-tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) /
-  (antibody_seq[2] - antibody_seq[1])
+tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) 
 
-tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])/
-  (antibody_seq[2] - antibody_seq[1])
+tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])
 
 post_fix <- data.frame(
   b_MPL_BC_log2 = tr_ctrl,
@@ -4071,11 +4131,11 @@ CIS <- sapply(
   tr, 
   function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
   ) %>% 
-  round(2)
+  round(1)
 
 CIS
 
-xpos <- 15
+xpos <- 39.2
 
 fig_b <- tr %>% 
   pivot_longer(values_to = 'value', 
@@ -4090,7 +4150,7 @@ fig_b <- tr %>%
                normalize = "groups",
                p_limits = c(1e-3, 1-1e-3)) +
   
-    labs(x = "Effect of doubling aCL IgM on GFR (mL/min/1.73 m²) ", 
+    labs(x = 'Effect of aCL IgM increase (p05 to p95) on eGFR', 
          y = 'Treatment group') +
   
   scale_fill_manual(values = cole, 
@@ -4099,10 +4159,7 @@ fig_b <- tr %>%
                        labels = c('control', 'infliximab')) +
   
   scale_y_discrete(expand = expansion(add = 0.1)) +
-  coord_cartesian(xlim = c(-20, 20)) +
-  
-                     
-                     
+  coord_cartesian(xlim = c(-50, 52)) +
   
   geom_vline(xintercept = 0, linetype = 2, 
                 color = "red", size = 0.6) +
@@ -4256,7 +4313,7 @@ fig_c <- prediction %>%
 
 ```{r, fig.height=6, fig.width=9}
 #| label: fig-sup_figure_5
-#| fig.cap: '**Anti-cardiolipin IgM modulates the effect of infliximab on  estimated glomerular filtration rate (eGFR).** (**A**) Predicted eGFR by anti-cardiolipin IgM for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the average effect of doubling anti-cardiolipin IgM on eGFR. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgM percentiles. Results are from a multivariable Bayesian robust regression with B-splines.'
+#| fig.cap: '**Anti-cardiolipin IgM modulates the effect of infliximab on estimated two-year glomerular filtration rate (eGFR).** (**A**) Predicted eGFR by anti-cardiolipin IgM for infliximab (upper) and control (lower) groups, with covariates held at their sample means. Shaded regions represent 95% credible intervals; dashed lines indicate the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the estimated change in eGFR when anti-cardiolipin IgM increases from the 5th to the 95th sample percentile. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgM percentiles. Results are from a multivariable Bayesian robust regression with B-splines.'
 
 plotac <- 'sup_figure_5'
 path <- "gitignore/figures"
@@ -4293,40 +4350,42 @@ if (file.exists(paste0(path, "/", plotac, ".pdf")) == FALSE) {
 # Summarizing table
 
 ```{r}
-#| label: tbl-table_1
-#| tbl-cap: 'Results from multivariable Bayesian logistic (**A**) and robust (**B**) regression models with B-splines, estimating the non-linear interaction between natural antibody (`antibody`) levels and infliximab (`IFX`) treatment on the specified `outcome`. The `antibody` include anti-cardiolipin IgG or IgM (aCL IgG or IgM) and co-factor (ind)dependent anti-phosphatidylethanolamine (aPE-dep IgG and aPE-ind IgG respectively). IFX treatment effects (odds ratio [`OR`] for logistic models, absolute effect [`eff`] for robust regression) are reported at the 5th, 25th, 50th, 75th, and 95th percentiles of nAb levels, each with [95% credible interval]. Interaction magnitudes are expressed as the ratio of odds ratios (`ROR`) for the IFX effect at the 95th vs. 5th percentile of the nAb level (`p95_per_p05_ROR`) in logistic models (A) and as the difference in treatment effects at the 95th minus 5th percentile (`p95_p05_DE`) in robust regression (B), both with [95% credible intervals]'
+#| label: tbl-table_1_2
+#| tbl-cap: '***Tables 1 and 2***: Results from multivariable Bayesian logistic (**A**) and robust (**B**) regression models with B-splines, estimating the non-linear interaction between natural antibody (`antibody`) levels and infliximab (`IFX`) treatment on the specified `outcome`. The `antibody` include anti-cardiolipin IgG or IgM (aCL IgG or IgM) and co-factor (ind)dependent anti-phosphatidylethanolamine (aPE-dep IgG and aPE-ind IgG respectively). IFX treatment effects (odds ratio [`OR`, infliximab vs. placebo] for logistic models, absolute effect [`eff`, infliximab minus placebo] for robust regression) are reported at the 5th, 25th, 50th, 75th, and 95th sample percentiles of nAb levels, each with [95% credible interval]. Interaction magnitudes are expressed as the ratio of odds ratios (`ROR`) for the IFX effect at the 95th vs. 5th percentile of the nAb level (`p95_per_p05_ROR`) in logistic models (A) and as the difference in treatment effects at the 95th minus 5th percentile (`p95_p05_DE`) in robust regression (B), both with [95% credible intervals]'
+#| tbl-numbered: false
+
 
 data_results_table_OR <- data.frame(
   
-  outcome = c('DGF', 'DGF', 'infecition', 'infection'),
+  outcome = c('DGF', 'DGF', 'infection', 'infection'),
   
   antibody = c('aCL IgG', 'aCL IgM', 'aPE-dep IgG', 'aPE-ind IgG'),
   
-  IFX_OR_p05 = c('0.13 [0.03, 0.49]',
+  `OR_p05` = c('0.13 [0.03, 0.49]',
                     '0.23 [0.05, 0.94]',
                     '3.73 [1.15, 12.69]',
                     '3.12 [1.11, 9.08]'
                     ),
   
-  IFX_OR_p25 = c('0.34 [0.13, 0.80]',
+  OR_p25 = c('0.34 [0.13, 0.80]',
                     '0.48 [0.19, 1.15]',
                     '2.26 [1.005, 5.19]',
                     '2.34 [1.01, 5.56]'
                     ),
   
-  IFX_OR_p50 = c('0.59 [0.27, 1.25]',
+  OR_p50 = c('0.59 [0.27, 1.25]',
                     '0.77 [0.37, 1.61]',
                     '1.68 [0.82, 3.47]',
                     '1.75 [0.85, 3.68]'
                     ),
   
-  IFX_OR_p75 = c('1.37 [0.60, 3.22]',
+  OR_p75 = c('1.37 [0.60, 3.22]',
                     '1.22 [0.52, 2.85]',
                     '1.10 [0.49, 2.42]',
                     '1.02 [0.45, 2.26]'
                     ),
   
-  IFX_OR_p95 = c('6.24 [1.38, 30.32]',
+  OR_p95 = c('6.24 [1.38, 30.32]',
                     '2.79 [0.66, 12.59]',
                     '0.36 [0.07, 1.75]',
                     '0.23 [0.03, 1.33]'
@@ -4345,19 +4404,19 @@ data_results_table_cont <- data.frame(
   
   antibody = c('aCL IgG', 'aCL IgM'),
   
-  IFX_eff_p05 = c('7.7 [-2.4, 17.9]',
+  eff_p05 = c('7.7 [-2.4, 17.9]',
                     '7.7 [-3.1, 18.7]'),
   
-  IFX_eff_p25 = c('2.0 [-4.8, 8.8]',
+  eff_p25 = c('2.0 [-4.8, 8.8]',
                     '1.1 [-5.8, 8.2]'),
   
-  IFX_eff_p50 = c('-1.7 [-7.7, 4.5]',
+  eff_p50 = c('-1.7 [-7.7, 4.5]',
                     '-3.3 [-9.5, 2.8]'),
   
-  IFX_eff_p75 = c('-7.2 [-14.1, -0.3]',
+  eff_p75 = c('-7.2 [-14.1, -0.3]',
                     '-7.7 [-14.8, -0.5]'),
   
-  IFX_eff_p95 = c('-17.4 [-30.0, -5.1]',
+  eff_p95 = c('-17.4 [-30.0, -5.1]',
                     '-16.0 [-28.6, -3.8]'),
   
   p95_p05_DE = c('-25.2 [-43.7, -6.8]',
@@ -4735,8 +4794,9 @@ mediation_effect <- data.frame(
 Print table
 
 ```{r}
-#| label: tbl-sup_table_6
-#| tbl-cap: 'Results from Bayesian mediation analyses assessing the direct and indirect effects of infliximab on estimated glomerular filtration rate (eGFR). The indirect effect operates through the impact of infliximab on delayed graft function (DGF) risk. Separate joint models were used for patients with anti-cardiolipin IgG (aCL IgG) below (**Low aCL**) and at/above the median (**High aCL**). The Average Direct Effect (`ADE` [95% credible interval]) estimates the direct effect of infliximab on eGFR, controlling for the indirect pathway via DGF and other covariates. The Average Causal Mediation Effect (`ACME` [95% credible interval]) quantifies the indirect effect via DGF. The `Mediator Effect` represents the effect of DGF on eGFR, adjusting for infliximab and other covariates. The `Total Effect` captures the overall impact of infliximab on eGFR, combining both direct and indirect pathways.'
+#| label: tbl-sup_table_7
+#| tbl-cap: '***Supplementary Table 7***: Results from Bayesian mediation analyses assessing the direct and indirect effects of infliximab on estimated glomerular filtration rate (eGFR). The indirect effect operates through the impact of infliximab on delayed graft function (DGF) risk. Separate joint models were used for patients with anti-cardiolipin IgG (aCL IgG) below (**Low aCL**) and at/above the median (**High aCL**). The Average Direct Effect (`ADE` [95% credible interval]) estimates the direct effect of infliximab on eGFR, controlling for the indirect pathway via DGF and other covariates. The Average Causal Mediation Effect (`ACME` [95% credible interval]) quantifies the indirect effect via DGF. The `Mediator Effect` represents the effect of DGF on eGFR, adjusting for infliximab and other covariates. The `Total Effect` captures the overall impact of infliximab on eGFR, combining both direct and indirect pathways.'
+#| tbl-numbered: false
 
 kableExtra::kable(mediation_effect)
 ```
@@ -4808,7 +4868,8 @@ priors_interaction_pnl <- c(
 ```{r}
 #| label: tbl-unused_13
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models incorporating a non-linear interaction between anti-cardiolipin IgG (`GPL_BC_log2`) and `infliximab` treatment on delayed graft function (`DGF`), while accounting for other covariates, **restricting the dataset to patients with anti-cardiolipin IgG levels within the range observed in the infliximab group**. Effects are presented as odds ratios (`OR`), with the last row reporting the ratio of odds ratios (`ROR`). The ROR represents the estimated ratio of infliximab’s treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect.`Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
-#| 
+#| tbl-numbered: false
+
 model_dgf_GPL_BC_interaction_NL_sens <- run(
   expr = brm(
     DGF ~
@@ -4976,17 +5037,27 @@ Figure B
 
 ```{r, fig.width=5, fig.height=4}
 
-antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq <- antibody_perc[c(3, 7)]
 antibody_seq
+
+data_prediction <- data.frame(
+   male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
 
 tr <-  posterior_epred(
     model_dgf_GPL_BC_interaction_NL_sens,
     newdata = data_prediction)
 
-tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)])) /
-  (antibody_seq[2] - antibody_seq[1])
-tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))/
-  (antibody_seq[2] - antibody_seq[1])
+tr_ctrl <- (logit(tr[,c(ncol(tr)/2)]) - logit(tr[,c(1)]))
+tr_infliximab <- (logit(tr[,c(ncol(tr))]) - logit(tr[,c(ncol(tr)/2)+1]))
 
 post_fix <- data.frame(
   b_GPL_BC_log2 = tr_ctrl,
@@ -5003,11 +5074,11 @@ CIS <- sapply(
   tr, 
   function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
   ) %>% 
-  round(1)
+  round(2)
 
 CIS
 
-xpos <- 10
+xpos <- 323
 
 fig_b <- tr %>% 
   pivot_longer(values_to = 'value', 
@@ -5022,7 +5093,7 @@ fig_b <- tr %>%
                normalize = "groups",
                p_limits = c(1e-3, 1-1e-3)) +
   
-    labs(x = "Effect of doubling aCL IgG on DGF risk (OR))", 
+    labs(x = 'Effect (OR) of aCL IgG increase (p05 to p95) on DGF', 
          y = 'Treatment group') +
   
   scale_fill_manual(values = cole, 
@@ -5031,10 +5102,10 @@ fig_b <- tr %>%
                        labels = c('control', 'infliximab')) +
   
   scale_y_discrete(expand = expansion(add = 0.1)) +
-  coord_cartesian(xlim = c(1/20, 20)) +
+  coord_cartesian(xlim = c(1/600, 1800)) +
   scale_x_continuous(transform = 'log2',
-                     breaks = c(1/16, 1/4, 1, 4 ,16),
-                     labels = c("1/16", "1/4", "1", "4", "16")) +
+                     breaks = c(1/512, 1/64, 1/8, 1, 8, 64, 512),
+                     labels = c("1/512", "1/64", "1/8", "1", "8", "64", "512")) +
   
   geom_vline(xintercept = 1, linetype = 2, 
                 color = "red", size = 0.6) +
@@ -5194,9 +5265,7 @@ fig_c <- prediction %>%
 
 ```{r, fig.height=6, fig.width=9}
 #| label: fig-sup_figure_2
-#| fig.cap: 'Anti-cardiolipin IgG modulation of the effect of infliximab on delayed graft function (DGF) **after excluding patients with anti-cardiolipin IgG levels above the maximum in the IFX group.** (**A**) Predicted DGF risk by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles. (**B**) Posterior distribution of the average effect (odds ratio) of doubling anti-cardiolipin IgG on DGF risk. (**C**) Posterior distribution of the effect of infliximab (odds ratio) on DGF across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines after data restriction.'
-
-
+#| fig.cap: 'Anti-cardiolipin IgG modulation of the effect of infliximab on delayed graft function (DGF) **after excluding patients with anti-cardiolipin IgG levels above the maximum in the IFX group.** (**A**) Predicted DGF risk by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups, with covariates held at their sample means. Shaded regions represent 95% credible intervals; dashed lines indicate the 5th, 25th, 50th, 75th, and 95th percentiles. (**B**) Posterior distribution of the estimated odds ratio comparing DGF odds at the 95th vs. 5th percentile of anti-cardiolipin IgG. (**C**) Posterior distribution of the effect of infliximab (odds ratio) on DGF across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian logistic model with B-splines after data restriction.'
 
 plotac <- "sup_figure_2"
 path <- "gitignore/figures"
@@ -5278,7 +5347,8 @@ priors_interaction_pnl <- c(
 ```{r}
 #| label: tbl-unused_14
 #| tbl-cap: "Results from a multivariable Bayesian robust regression model incorporating a non-linear interaction between anti-cardiolipin IgG (`GPL_BC_log2`) and `infliximab` treatment on estimated glomerular filtration rate (eGFR, `GFR_MDRD`), **after excluding patients with anti-cardiolipin IgG levels above the maximum in the IFX group**  and while accounting for other covariates. `Estimate` represents the estimated change in eGFR per one-unit increase in the predictor. The last row (`infliximab:GPL_BC_log2`) reports the difference in infliximab's treatment effect at the 95th versus the 5th percentile of anti-cardiolipin IgG, quantifying the interaction effect. `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively." 
-#| 
+#| tbl-numbered: false
+
 model_GFR_MDRD_GPL_BC_interaction_NL_sens <- run(
   expr = brm(
     GFR_MDRD ~
@@ -5436,17 +5506,27 @@ Figure B
 
 ```{r, fig.width=5, fig.height=4}
 
-antibody_seq <- antibody_perc[c(1, 9)]
+antibody_seq <- antibody_perc[c(3, 7)]
 antibody_seq
+
+data_prediction <- data.frame(
+   male_sex = rep(mmale_sex, 2*length(antibody_seq)),
+  `male_sex_donor` = rep(mmale_sex_donor, 2*length(antibody_seq)),
+  `perfusion_event` = rep(mperfusion_event, 2*length(antibody_seq)),
+  `infliximab` = c(rep(0, length(antibody_seq)), rep(1, length(antibody_seq))),
+  `rec_age` = rep(mrec_age, 2*length(antibody_seq)),
+  `KDPI` = rep(mKDPI, 2*length(antibody_seq)),
+  `CIT` = rep(mCIT, 2*length(antibody_seq)),
+  `HLA_MM` = rep(mHLA_MM, 2*length(antibody_seq)),
+  `GPL_BC_log2` = c(antibody_seq, antibody_seq)
+  )
 
 tr <-  posterior_epred(
     model_GFR_MDRD_GPL_BC_interaction_NL_sens,
     newdata = data_prediction)
 
-tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) /
-  (antibody_seq[2] - antibody_seq[1])
-tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])/
-  (antibody_seq[2] - antibody_seq[1])
+tr_ctrl <- (tr[,c(ncol(tr)/2)] - tr[,c(1)]) 
+tr_infliximab <- (tr[,c(ncol(tr))] - tr[,c(ncol(tr)/2)+1])
 
 post_fix <- data.frame(
   b_GPL_BC_log2 = tr_ctrl,
@@ -5463,11 +5543,11 @@ CIS <- sapply(
   tr, 
   function(p) quantile(p, probs = c(1/40, 39/40, 0.5, 1e-3, 1-1e-3))
   ) %>% 
-  round(2)
+  round(1)
 
 CIS
 
-xpos <- 20
+xpos <- 39.2
 
 fig_b <- tr %>% 
   pivot_longer(values_to = 'value', 
@@ -5482,7 +5562,7 @@ fig_b <- tr %>%
                normalize = "groups",
                p_limits = c(1e-3, 1-1e-3)) +
   
-    labs(x = "Effect of doubling aCL IgG on GFR (mL/min/1.73 m²) ", 
+    labs(x = 'Effect of aCL IgG increase (p05 to p95) on eGFR', 
          y = 'Treatment group') +
   
   scale_fill_manual(values = cole, 
@@ -5491,7 +5571,7 @@ fig_b <- tr %>%
                        labels = c('control', 'infliximab')) +
   
   scale_y_discrete(expand = expansion(add = 0.1)) +
-  coord_cartesian(xlim = c(-20, 26)) +
+  coord_cartesian(xlim = c(-50, 52)) +
   
   geom_vline(xintercept = 0, linetype = 2, 
                 color = "red", size = 0.6) +
@@ -5646,7 +5726,7 @@ fig_c <- prediction %>%
 
 ```{r, fig.height=6, fig.width=9}
 #| label: fig-sup_figure_6
-#| fig.cap: '**Anti-cardiolipin IgG modulation of the infliximab effect on estimated glomerula filtration rate (eGFR) after excluding patients with anti-cardiolipin IgG levels above the maximum in the IFX group.** (**A**) Predicted eGFR by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups with 95% credible intervals (shaded regions) and dashed lines at the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the average effects of doubling anti-cardiolipin IgG on eGFR. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian robust regression with B-splines after data restriction.'
+#| fig.cap: '**Anti-cardiolipin IgG modulation of the infliximab effect on estimated glomerula filtration rate (eGFR) after excluding patients with anti-cardiolipin IgG levels above the maximum in the IFX group.** (**A**) Predicted eGFR by anti-cardiolipin IgG for infliximab (upper) and control (lower) groups, with covariates held at their sample means. Shaded regions represent 95% credible intervals; dashed lines indicate the 5th, 25th, 50th, 75th, and 95th percentiles of cardiolipin levels. (**B**) Posterior distribution of the estimated change in eGFR when anti-cardiolipin IgG increases from the 5th to the 95th sample percentile. (**C**) Posterior distribution of the effect of infliximab on eGFR across anti-cardiolipin IgG percentiles. Results are from a multivariable Bayesian robust regression with B-splines after data restriction.'
 
 plotac <- 'sup_figure_6'
 path <- "gitignore/figures"
@@ -5736,6 +5816,7 @@ priors_subset <- c(
 ```{r}
 #| label: tbl-unused_15
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgG (`GPL_BC_log2`), on delayed graft function (`DGF`), without interaction terms and **including only patients with anti-cardiolipin IgG level below median**. The odds ratio (OR) represents the estimated change in the odds of DGF per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
 
 model_dgf_GPL_BC_lowGPLBC <- run(
   expr = brm(
@@ -5775,6 +5856,7 @@ kableExtra::kable(tr)
 ```{r}
 #| label: tbl-unused_16
 #| tbl-cap: 'Results from multivariable Bayesian logistic regression models examining the main effects of predictors, including `infliximab` treatment and log2-transformed anti-cardiolipin IgG (`GPL_BC_log2`), on delayed graft function (`DGF`), without interaction terms and **including only patients with anti-cardiolipin IgG level at/above median**. The odds ratio (OR) represents the estimated change in the odds of DGF per one-unit increase in the predictor. `OR`: odds ratio; `Q2.5` and `Q97.5`: lower and upper bounds of the 95% credible interval, respectively.'
+#| tbl-numbered: false
 
 model_dgf_GPL_BC_highGPLBC <- run(
   expr = brm(
@@ -5831,9 +5913,9 @@ non-linear interaction but **after excluding the patients with large aCL IgG val
 [Supplementary Figure 6](#fig-sup_figure_6): eGFRaccording to infliximab:aCL IgG 
 non-linear interaction but **after excluding the patients with large aCL IgG values** 
 
-[Supplementary Figure 7](#fig-sup_figure_7): infection risk according to infliximab:aPE-dep IgG non-linear interaction.     
+[Supplementary Figure 7](#fig-sup_figure_7): infection risk according to infliximab:aPE-ind IgG non-linear interaction.     
 
-[Supplementary Figure 8](#fig-sup_figure_8): infection risk according to infliximab:aPE-ind IgG non-linear interaction.
+[Supplementary Figure 8](#fig-sup_figure_8): infection risk according to infliximab:aPE-dep IgG non-linear interaction.
 
 
 ## Tables
@@ -5844,18 +5926,18 @@ non-linear interaction but **after excluding the patients with large aCL IgG val
 
 [Supplementary Table 3](#tbl-sup_table_3): post-transplant outcomes by treatment
 
-[Supplementary Table 4](#tbl-sup_table_4): unadjusted effect of different variables on 
+[Supplementary Table 5](#tbl-sup_table_5): unadjusted effect of different variables on 
 DGF   
 
-[Table 1](#tbl-table_1): IFX x nAb non-linear interaction effects based on Bayesian multivariable models   
+[Table 1 and 2](#tbl-table_1_2): IFX x nAb non-linear interaction effects based on Bayesian multivariable models (include both Tables 1 and 2)
 
-[Supplementary Table 5](#tbl-sup_table_5): unadjusted effect of different variables on eGFR   
+[Supplementary Table 6](#tbl-sup_table_6): unadjusted effect of different variables on eGFR   
 
-[Supplementary Table 6](#tbl-sup_table_6): mediation analysis
+[Supplementary Table 7](#tbl-sup_table_7): mediation analysis
 
-[Supplementary Table 7](#tbl-sup_table_7): unadjusted effect of different variables on infection risk
+[Supplementary Table 9](#tbl-sup_table_9): unadjusted effect of different variables on infection risk
 
-[Supplementary Table 8](#tbl-sup_table_8): unadjusted effect of different variables on BKV infection
+[Supplementary Table 10](#tbl-sup_table_10): unadjusted effect of different variables on BKV infection
 
 
 
