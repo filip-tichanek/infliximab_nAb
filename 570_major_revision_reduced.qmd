@@ -34,7 +34,7 @@ bibliography: references.bib
 **Authors and affiliations**
 
 <div style="font-size: larger;">
-Vojtech Petr<sup>1,2</sup>, Samuel L. Liu<sup>3</sup>, Filip Tichanek<sup>1</sup>, Felix Poppelaars<sup>2</sup>, Brandon Renner<sup>2</sup>, Jennifer Laskowski<sup>2</sup>, Shrey Purohit<sup>2</sup>, Ming Zhao<sup>3</sup>, Diana Jalal<sup>4,5</sup>, Peter S. Heeger<sup>6,#</sup>, Joshua M. Thurman<sup>3,#</sup>
+[Vojtech Petr](https://orcid.org/0000-0002-6024-0562)<sup>1,2</sup>, [Filip Tichanek](https://orcid.org/my-orcid?orcid=0000-0003-4139-1979)<sup>1</sup>, [Samuel L. Liu](https://orcid.org/0009-0004-4035-4185)<sup>3</sup>, [Felix Poppelaars](https://orcid.org/0000-0002-5173-8078)<sup>2</sup>, [Brandon Renner](https://orcid.org/0009-0005-5460-3282)<sup>2</sup>, [Jennifer Laskowski](https://orcid.org/0000-0001-5069-3982)<sup>2</sup>, [Shrey Purohit](https://orcid.org/0000-0003-1239-3895)<sup>2</sup>, [Ming Zhao](https://orcid.org/0000-0001-7956-2409)<sup>3</sup>, [Diana Jalal](https://orcid.org/0000-0002-1975-8650)<sup>4,5</sup>, [Peter S. Heeger](https://orcid.org/0000-0003-4673-6913)<sup>6,#</sup>, [Joshua M. Thurman](https://orcid.org/0000-0002-3476-9956)<sup>3,#</sup>
 </div>
 
 <br>
@@ -63,13 +63,7 @@ BibTex citation for the original publication:
 
 Original [GitHub repository](https://github.com/filip-tichanek/infliximab_nAb): https://github.com/filip-tichanek/infliximab_nAb
 
-Statistical **reports** can be found [here](https://filip-tichanek.github.io/infliximab_nAb/)
-
-----------------------------------------------------------------------------------------------------
-
-
-
-
+---------------------------------------------------------------------------------------------------
 
 
 ```{r setup, echo=FALSE}
@@ -136,7 +130,7 @@ Treatment-specific spline: $df = 3, \mu = 0, \sigma = 0.3$
 
 Posterior estimates for infliximab effects were obtained at the 5th, 25th, 50th, 75th, and 95th percentiles of nAb levels. We quantified the modulation of infliximab treatment by comparing the posterior distributions of the treatment effect at the 5th and 95th percentiles of nAb levels. For each posterior sample, we computed the ratio of odds ratios (OR at 95th percentile / OR at 5th percentile) in logistic models and the difference in treatment effects ($\beta_{\text{infliximab}}|\text{nAbs}=95^\text{th}$ – $\beta_{\text{infliximab}}|\text{nAbs}=5^\text{th}$) in robust regression for eGFR. 
 
-Mediation analysis was performed using the 'bayestestR' package [@bayestest] to assess whether infliximab affected eGFR and whether this effect was mediated through DGF. Analyses were conducted separately for individuals with below- and above-median aCL IgG levels.
+Mediation analysis was performed to assess whether infliximab affected eGFR and whether this effect was mediated through DGF. Analyses were conducted separately for individuals with below- and above-median aCL IgG levels.
 
 Because the highest aCL IgG levels were only observed in the control group, we performed a sensitivity analysis by restricting the dataset to patients with aCL IgG levels within the range observed in the infliximab group.
 
