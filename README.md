@@ -1,7 +1,7 @@
 **Authors and affiliations**
 
 <div style="font-size: larger;">
-Vojtech Petr<sup>1,2</sup>, Samuel L. Liu<sup>3</sup>, Filip Tichanek<sup>1</sup>, Felix Poppelaars<sup>2</sup>, Brandon Renner<sup>2</sup>, Jennifer Laskowski<sup>2</sup>, Shrey Purohit<sup>2</sup>, Ming Zhao<sup>3</sup>, Diana Jalal<sup>4,5</sup>, Peter S. Heeger<sup>6,#</sup>, Joshua M. Thurman<sup>3,#</sup>
+Vojtech Petr<sup>1,2</sup>, Filip Tichanek<sup>1</sup>, Samuel L. Liu<sup>3</sup>, Felix Poppelaars<sup>2</sup>, Brandon Renner<sup>2</sup>, Jennifer Laskowski<sup>2</sup>, Shrey Purohit<sup>2</sup>, Ming Zhao<sup>3</sup>, Diana Jalal<sup>4,5</sup>, Peter S. Heeger<sup>6,#</sup>, Joshua M. Thurman<sup>3,#</sup>
 </div>
 
 <br>
@@ -16,21 +16,19 @@ Vojtech Petr<sup>1,2</sup>, Samuel L. Liu<sup>3</sup>, Filip Tichanek<sup>1</sup
 
 ---------------------------------------------------------------------------------------------------
 
-This is a statistical report of the study titled ***Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction*** accepted in the [*American Journal of Transplantation*](https://www.amjtransplant.org/).
+This is a statistical report of the study titled ***Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction*** currently *under review* in the [*American Journal of Transplantation*](https://www.amjtransplant.org/) journal.
 
 When using this code or data, cite the original publication:
 
-> TO BE ADDED
+> Petr, Vojtech, Filip Tichanek, Samuel L. Liu, Felix Poppelaars, Brandon Renner, Jennifer Laskowski, Shrey Purohit, Ming Zhao, Diana Jalal, Peter S. Heeger, Joshua M. Thurman  (2025): *Pretransplant Natural Antibody Levels Identify a Subset of Deceased Donor Kidney Transplant Recipients That Benefit from Infliximab Induction*. **American Journal of Transplantation**. https://doi.org/https://doi.org/10.1016/j.ajt.2025.06.003.
 
-BibTex citation for the original publication:
-
-> TO BE ADDED
+BibTeX entry is provided in a [CITATION.bib](https://github.com/filip-tichanek/infliximab_nAb/blob/main/CITATION.bib) file
 
 ---------------------------------------------------------------------------------------------------
 
 Original [GitHub repository](https://github.com/filip-tichanek/infliximab_nAb): https://github.com/filip-tichanek/infliximab_nAb
 
-Statistical **report** can be found [here](https://filip-tichanek.github.io/infliximab_nAb/)
+Statistical **reports** can be found [here](https://filip-tichanek.github.io/infliximab_nAb/)
 
 ----------------------------------------------------------------------------------------------------
 
