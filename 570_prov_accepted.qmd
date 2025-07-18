@@ -1,5 +1,5 @@
 ---
-title: "Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction "
+title: "Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction"
 subtitle: "Statistical report"
 format: 
   html:  
@@ -27,43 +27,42 @@ fontcolor: "#C4C4C4"
 code-block-bg: "#2D2D31"
 monobackgroundcolor: "#3B3B3B"
 bibliography: references.bib
+csl: elsevier-with-titles.csl
 ---
 
 ------------------------------------------------------------------------
 
 **Authors and affiliations**
 
-<div style="font-size: larger;">
+::: {style="font-size: larger;"}
 [Vojtech Petr](https://orcid.org/0000-0002-6024-0562)<sup>1,2</sup>, [Filip Tichanek](https://orcid.org/my-orcid?orcid=0000-0003-4139-1979)<sup>1</sup>, [Samuel L. Liu](https://orcid.org/0009-0004-4035-4185)<sup>3</sup>, [Felix Poppelaars](https://orcid.org/0000-0002-5173-8078)<sup>2</sup>, [Brandon Renner](https://orcid.org/0009-0005-5460-3282)<sup>2</sup>, [Jennifer Laskowski](https://orcid.org/0000-0001-5069-3982)<sup>2</sup>, [Shrey Purohit](https://orcid.org/0000-0003-1239-3895)<sup>2</sup>, [Ming Zhao](https://orcid.org/0000-0001-7956-2409)<sup>3</sup>, [Diana Jalal](https://orcid.org/0000-0002-1975-8650)<sup>4,5</sup>, [Peter S. Heeger](https://orcid.org/0000-0003-4673-6913)<sup>6,#</sup>, [Joshua M. Thurman](https://orcid.org/0000-0002-3476-9956)<sup>2,#</sup>
-</div>
+:::
 
 <br>
 
-<sup>1</sup> Institute for Clinical and Experimental Medicine, Prague, Czech Republic     
-<sup>2</sup> Department of Medicine, University of Colorado School of Medicine, Anschutz Medical Campus, Aurora, CO, USA     
-<sup>3</sup> Feinberg Cardiovascular and Renal Research Institute, Northwestern University, Chicago, IL, USA      
-<sup>4</sup> Department of Medicine, Carver College of Medicine, University of Iowa, IA, USA     
-<sup>5</sup> Iowa City VA HCS, Iowa City, IA, USA      
-<sup>6</sup> Departments of Medicine, Surgery and Biomedical Sciences, Cedars Sinai Medical Center, Los Angeles, CA, USA      
-<sup>#</sup> Co-senior authors, contributed equally
+<sup>1</sup> Institute for Clinical and Experimental Medicine, Prague, Czech Republic\
+<sup>2</sup> Department of Medicine, University of Colorado School of Medicine, Anschutz Medical Campus, Aurora, CO, USA\
+<sup>3</sup> Feinberg Cardiovascular and Renal Research Institute, Northwestern University, Chicago, IL, USA\
+<sup>4</sup> Department of Medicine, Carver College of Medicine, University of Iowa, IA, USA\
+<sup>5</sup> Iowa City VA HCS, Iowa City, IA, USA\
+<sup>6</sup> Departments of Medicine, Surgery and Biomedical Sciences, Cedars Sinai Medical Center, Los Angeles, CA, USA\
+<sup>\#</sup> Co-senior authors, contributed equally
 
----------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
-
-This is a statistical report of the [study](https://doi.org/10.1016/j.ajt.2025.06.003) titled ***Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction*** that has been published in the *American Journal of Transplantation*.
+This is a statistical report of the [study](https://doi.org/10.1016/j.ajt.2025.06.003) titled ***Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction*** that has been published in the *American Journal of Transplantation*[@petr2025].
 
 When using this code or data, cite the original publication:
 
-> Petr, Vojtech, Filip Tichanek, Samuel L. Liu, Felix Poppelaars, Brandon Renner, Jennifer Laskowski, Shrey Purohit, Ming Zhao, Diana Jalal, Peter S. Heeger, Joshua M. Thurman  (2025). Pretransplant Natural Antibody Levels Identify a Subset of Deceased Donor Kidney Transplant Recipients That Benefit from Infliximab Induction. *American Journal of Transplantation*. https://doi.org/https://doi.org/10.1016/j.ajt.2025.06.003.
+> V. Petr, F. Tichanek, S.L. Liu, F. Poppelaars, B. Renner, J. Laskowski, S. Purohit, M. Zhao, D. Jalal, P.S. Heeger, J.M. Thurman, Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction, American Journal of Transplantation (2025). https://doi.org/10.1016/j.ajt.2025.06.003.
 
 BibTeX entry is provided in a [CITATION.bib](https://github.com/filip-tichanek/infliximab_nAb/blob/main/CITATION.bib) file
 
----------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 Original [GitHub repository](https://github.com/filip-tichanek/infliximab_nAb): https://github.com/filip-tichanek/infliximab_nAb
 
----------------------------------------------------------------------------------------------------
-
+------------------------------------------------------------------------
 
 ```{r setup, echo=FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
@@ -98,36 +97,35 @@ body {
 
 ## Full version
 
-Analyses were performed in R (version 4.4.3) [@R] and GraphPad Prism (version 10.2.3). Continuous variables are reported as medians with interquartile ranges and categorical variables as counts and percentages. Group comparisons were conducted using the Mann–Whitney test, and correlations were assessed via Spearman’s rank correlation.  
+Analyses were performed in R (version 4.4.3) [@R] and GraphPad Prism (version 10.2.3). Continuous variables are reported as medians with interquartile ranges and categorical variables as counts and percentages. Group comparisons were conducted using the Mann–Whitney test, and correlations were assessed via Spearman’s rank correlation.
 
-Unadjusted effects of covariates (including nAb and their interaction with infliximab) were estimated using complete-case logistic regression for binary outcomes (DGF, infection, and BKV infection) and linear models for eGFR.  
+Unadjusted effects of covariates (including nAb and their interaction with infliximab) were estimated using complete-case logistic regression for binary outcomes (DGF, infection, and BKV infection) and linear models for eGFR.
 
-For outcome–nAb combinations where the 95% confidence interval of the interaction term did not include the null effect, we fit multivariable Bayesian models with a non-linear interaction between log$_2$-transformed nAb levels and infliximab using penalized B-splines with 5 knots (separately for each treatment group). Logistic Bayesian regression was used for binary outcomes, while Bayesian robust regression (Student’s t-distribution) was used for eGFR. Covariates were prespecified based on their well-documented association with kidney transplant outcomes and included donor and recipient sex, HLA mismatch count, KDPI, perfusion event, recipient age, and cold ischemia time. 
+For outcome–nAb combinations where the 95% confidence interval of the interaction term did not include the null effect, we fit multivariable Bayesian models with a non-linear interaction between log$_2$-transformed nAb levels and infliximab using penalized B-splines with 5 knots (separately for each treatment group). Logistic Bayesian regression was used for binary outcomes, while Bayesian robust regression (Student’s t-distribution) was used for eGFR. Covariates were prespecified based on their well-documented association with kidney transplant outcomes and included donor and recipient sex, HLA mismatch count, KDPI, perfusion event, recipient age, and cold ischemia time.
 
 Missing data (35 for HLA mismatch, 21 for perfusion event, 3 for cold ischemia time) were handled via multiple imputation (80 datasets) using the 'mice' package [@mice]. Binary variables were imputed via logistic regression, and numeric variables via predictive mean matching. Bayesian models were run using the 'brms' package [@brms] with Hamiltonian Monte Carlo sampling (4 chains, 2000 iterations including 1900 warm-ups per each of 80 imputed datasets, yielding 32,000 post-warmup samples). Posterior distributions were summarized by the median (point estimate) and the 2.5th and 97.5th percentiles (95% credible interval, 95% CrI).
 
-Priors for fixed effects were Gaussian, centered at 0 ($\mu = 0$), with $\sigma$ defined as follows: 
+Priors for fixed effects were Gaussian, centered at 0 ($\mu = 0$), with $\sigma$ defined as follows:
 
-In logistic model (binary outcomes):  
+In logistic model (binary outcomes):
 
-$\sigma = 4$ for binary predictors   
+$\sigma = 4$ for binary predictors
 
-$\sigma = \frac{2}{\text{SD}(\text{predictor})}$ for numeric predictors  
+$\sigma = \frac{2}{\text{SD}(\text{predictor})}$ for numeric predictors
 
-For robust regression (eGFR):    
+For robust regression (eGFR):
 
-$\sigma = 4 \times \text{SD}(\text{eGFR})$ for binary predictors   
+$\sigma = 4 \times \text{SD}(\text{eGFR})$ for binary predictors
 
-$\sigma = \frac{2 \times \text{SD}(\text{eGFR})}{\text{SD}(\text{predictor})}$ for numeric predictors     
+$\sigma = \frac{2 \times \text{SD}(\text{eGFR})}{\text{SD}(\text{predictor})}$ for numeric predictors
 
+Non-linear effects used Student’s t priors:
 
-Non-linear effects used Student’s t priors:    
+Baseline spline: $df = 3, \mu = 0, \sigma = 0.6$
 
-Baseline spline: $df = 3, \mu = 0, \sigma = 0.6$    
+Treatment-specific spline: $df = 3, \mu = 0, \sigma = 0.3$
 
-Treatment-specific spline: $df = 3, \mu = 0, \sigma = 0.3$    
-
-Posterior estimates for infliximab effects were obtained at the 5th, 25th, 50th, 75th, and 95th percentiles of nAb levels. We quantified the modulation of infliximab treatment by comparing the posterior distributions of the treatment effect at the 5th and 95th percentiles of nAb levels. For each posterior sample, we computed the ratio of odds ratios (OR at 95th percentile / OR at 5th percentile) in logistic models and the difference in treatment effects ($\beta_{\text{infliximab}}|\text{nAbs}=95^\text{th}$ – $\beta_{\text{infliximab}}|\text{nAbs}=5^\text{th}$) in robust regression for eGFR. 
+Posterior estimates for infliximab effects were obtained at the 5th, 25th, 50th, 75th, and 95th percentiles of nAb levels. We quantified the modulation of infliximab treatment by comparing the posterior distributions of the treatment effect at the 5th and 95th percentiles of nAb levels. For each posterior sample, we computed the ratio of odds ratios (OR at 95th percentile / OR at 5th percentile) in logistic models and the difference in treatment effects ($\beta_{\text{infliximab}}|\text{nAbs}=95^\text{th}$ – $\beta_{\text{infliximab}}|\text{nAbs}=5^\text{th}$) in robust regression for eGFR.
 
 Mediation analysis was performed to assess whether infliximab affected eGFR and whether this effect was mediated through DGF. Analyses were conducted separately for individuals with below- and above-median aCL IgG levels.
 
@@ -146,7 +144,6 @@ Pre-specified covariates included donor and recipient sex, HLA mismatch count, K
 Bayesian mediation analysis was used to assess whether infliximab’s effect on eGFR is mediated through DGF, stratified by above- vs. below-median aCL IgG levels. A sensitivity analysis was performed by restricting the dataset to patients with aCL IgG levels within the range observed in the infliximab group.
 
 A full description of the statistical modeling methods, including prior specifications and posterior sampling details, is provided in the Supplementary Methods and online with the code (https://filip-tichanek.github.io/infliximab_nAb).
-
 
 # Initiation
 
@@ -263,7 +260,6 @@ data3 <- data3 %>%
 
 There are two variables that are expected to affect the outcomes but include many missing values. Look which variables are correlated with these variables (`perfusion_event` and `HLA_MM`) so these may be helpful for the imputation.
 
-
 ```{r}
 safe_cor <- function(x, y) {
   if (sd(x, na.rm = TRUE) == 0 || sd(y, na.rm = TRUE) == 0) {
@@ -289,7 +285,6 @@ kableExtra::kable(res %>% filter(n_na<10, max_abs_cor>0.1))
 
 
 ```
-
 
 ## Summary tables
 
@@ -534,7 +529,6 @@ plot_grid(p1,p2,p3,p4, p5, p6, p7, p8, p9, p10, p11, p12, nrow = 3)
 
 Note that eGFR based on the central measurement (`GFR_MDRD`) will be used for imputation, as it shows stronger correlations with variables containing missing values than either the combined local and central eGFR (`GFR_MDRD_2`) or the combined version with values set to 10 in cases of graft failure within the 2-year follow-up (`GFR_MDRD_3`)
 
-
 ```{r}
 data_model_priorImpute <- data3 %>%
   dplyr::select(
@@ -713,7 +707,6 @@ plot(data_first$GFR_MDRD ~ factor(data_first$graft_failure))
 plot(data_first$GFR_MDRD_2 ~ factor(data_first$graft_failure))
 plot(data_first$GFR_MDRD_3 ~ factor(data_first$graft_failure))
 ```
-
 
 # Data points of nAB levels
 
@@ -1089,7 +1082,6 @@ priors_main <- c(
 )
 ```
 
-
 #### Non-linear penalized interaction model
 
 ```{r}
@@ -1254,9 +1246,7 @@ colnames(tr2)[1] <- '(R)OR'
 kableExtra::kable(tr2)
 ```
 
-
-
-### Visualisation 
+### Visualisation
 
 Extract posterior draws
 
@@ -1659,7 +1649,6 @@ priors_main <- c(
   )
 )
 ```
-
 
 #### Non-linear penalized interaction model
 
@@ -2228,7 +2217,6 @@ priors_main <- c(
   )
 )
 ```
-
 
 #### Non-linear penalized interaction model
 
@@ -3319,7 +3307,7 @@ if (file.exists(paste0(path, "/", plotac)) == FALSE) {
 
 # GFR models
 
-## by GPL_BC 
+## by GPL_BC
 
 ### Priors
 
@@ -4433,7 +4421,7 @@ if (file.exists(paste0(path, "/", plotac)) == FALSE) {
 }
 ```
 
-## by MPL_BC 
+## by MPL_BC
 
 ```{r}
 
@@ -5080,7 +5068,6 @@ data_results_table_cont <- data.frame(
 kableExtra::kable(data_results_table_cont)
 ```
 
-
 # GFR: Mediation and AB-subgroup analysis
 
 ## Define the subgroups
@@ -5101,7 +5088,6 @@ data_imputed_lowGPL <- subset(
   subset = data_first$GPL_BC_log2 < GPL_median
 )
 ```
-
 
 ### Priors
 
@@ -5592,7 +5578,6 @@ colnames(tr2)[1] <- '(R)OR'
 kableExtra::kable(tr2)
 ```
 
-
 ### Visualisation - penalized non-linear effect
 
 Extract posterior draws
@@ -5947,8 +5932,7 @@ if (file.exists(paste0(path, "/", plotac)) == FALSE) {
 }
 ```
 
-
-## GFR by GPL_BC 
+## GFR by GPL_BC
 
 ### Prior
 
@@ -6074,7 +6058,6 @@ tr2 <- rbind(tr2, round(infliximab_GPL_BC_log2_int, 2))
 row.names(tr2)[8] <- 'infliximab:GPL_BC_log2'
 kableExtra::kable(tr2)
 ```
-
 
 ### Visualisation - penalized non-linear effect
 
@@ -6412,7 +6395,6 @@ if (file.exists(paste0(path, "/", plotac)) == FALSE) {
 }
 ```
 
-
 # DGF Subgroup analysis by `GPL_BC`
 
 We will use data divided to patients with under- and above-median value of aCL IgG (`GPL_BC`)
@@ -6464,7 +6446,7 @@ priors_subset <- c(
 )
 ```
 
-## Fit model for $<$ median aCL IgG level 
+## Fit model for $<$ median aCL IgG level
 
 ```{r}
 #| label: tbl-unused_17
@@ -6504,7 +6486,7 @@ colnames(tr)[1] <- 'OR'
 kableExtra::kable(tr)
 ```
 
-## Fit model for aCL $\geq$ median 
+## Fit model for aCL $\geq$ median
 
 ```{r}
 #| label: tbl-unused_18
@@ -6543,7 +6525,6 @@ tr <- round(exp(fixef(model_dgf_GPL_BC_highGPLBC, robust = TRUE)[-1, c(1,3,4)]),
 colnames(tr)[1] <- 'Odds ratio'
 kableExtra::kable(tr)
 ```
-
 
 # Models eGFR with at least 480 days of FU with graft functioning
 
@@ -7027,39 +7008,33 @@ if (file.exists(paste0(path, "/", plotac)) == FALSE) {
 }
 ```
 
-
 # Tables and Figures: list with links
 
 ## Figures
 
 [Figure 1](#fig-figure_1): data distributions across groups
 
-[Supplementary Figure 1](#fig-sup_figure_1): Spearman correlations    
+[Supplementary Figure 1](#fig-sup_figure_1): Spearman correlations
 
-[Figure 2](#fig-figure_2): DGF risk according to infliximab:aCL IgG non-linear interaction.     
+[Figure 2](#fig-figure_2): DGF risk according to infliximab:aCL IgG non-linear interaction.
 
-[Supplementary Figure 2](#fig-sup_figure_2): DGF risk according to infliximab:aCL IgG 
-non-linear interaction but **after excluding the patients with large aCL IgG values**  
+[Supplementary Figure 2](#fig-sup_figure_2): DGF risk according to infliximab:aCL IgG non-linear interaction but **after excluding the patients with large aCL IgG values**
 
-[Supplementary Figure 3](#fig-sup_figure_3): DGF risk according to infliximab:aCL IgM non-linear interaction    
+[Supplementary Figure 3](#fig-sup_figure_3): DGF risk according to infliximab:aCL IgM non-linear interaction
 
-[Supplementary Figure 4](#fig-sup_figure_4): eGFR according to infliximab:aCL IgG non-linear interaction    
+[Supplementary Figure 4](#fig-sup_figure_4): eGFR according to infliximab:aCL IgG non-linear interaction
 
-[Supplementary Figure 5](#fig-sup_figure_5): eGFR according to infliximab:aCL IgM non-linear interaction  
+[Supplementary Figure 5](#fig-sup_figure_5): eGFR according to infliximab:aCL IgM non-linear interaction
 
-[Supplementary Figure 6](#fig-sup_figure_6): eGFR according to infliximab:aCL IgG 
-non-linear interaction but **after excluding the patients with large aCL IgG values** 
+[Supplementary Figure 6](#fig-sup_figure_6): eGFR according to infliximab:aCL IgG non-linear interaction but **after excluding the patients with large aCL IgG values**
 
 [Supplementary Figure 7](#fig-sup_figure_7): eGFR according to infliximab:aCL IgG non-linear interaction but without imputing eGFR values in cases of graft loss
 
 [Supplementary Figure 8](#fig-sup_figure_8): eGFR according to infliximab:aCL IgG non-linear interaction, excluding patients with lost of follow up before 480th day after transplantation
 
-[Supplementary Figure 9](#fig-sup_figure_9): infection risk according to infliximab:aPE-ind IgG non-linear interaction.     
+[Supplementary Figure 9](#fig-sup_figure_9): infection risk according to infliximab:aPE-ind IgG non-linear interaction.
 
 [Supplementary Figure 10](#fig-sup_figure_10): infection risk according to infliximab:aPE-dep IgG non-linear interaction.
-
-
-
 
 ## Tables
 
@@ -7071,14 +7046,13 @@ non-linear interaction but **after excluding the patients with large aCL IgG val
 
 [Supplementary Table 4](#tbl-sup_table_4): post-transplant outcomes by DGF and treatment
 
-[Supplementary Table 5](#tbl-sup_table_5): unadjusted effect of different variables on 
-DGF   
+[Supplementary Table 5](#tbl-sup_table_5): unadjusted effect of different variables on DGF
 
-[Table 1](#tbl-table_1): IFX x nAb non-linear interaction effects based on Bayesian logistic multivariable models 
+[Table 1](#tbl-table_1): IFX x nAb non-linear interaction effects based on Bayesian logistic multivariable models
 
 [Table 2](#tbl-table_2): IFX x nAb non-linear interaction effects based on Bayesian robust multivariable models modelling eGFR
 
-[Supplementary Table 6](#tbl-sup_table_6): unadjusted effect of different variables on eGFR   
+[Supplementary Table 6](#tbl-sup_table_6): unadjusted effect of different variables on eGFR
 
 [Supplementary Table 7](#tbl-sup_table_7): mediation analysis
 

@@ -20,7 +20,7 @@ This is a statistical report of the [study](https://doi.org/10.1016/j.ajt.2025.0
 
 When using this code or data, cite the original publication:
 
-> Petr, Vojtech, Filip Tichanek, Samuel L. Liu, Felix Poppelaars, Brandon Renner, Jennifer Laskowski, Shrey Purohit, Ming Zhao, Diana Jalal, Peter S. Heeger, Joshua M. Thurman  (2025). Pretransplant Natural Antibody Levels Identify a Subset of Deceased Donor Kidney Transplant Recipients That Benefit from Infliximab Induction. *American Journal of Transplantation*. https://doi.org/https://doi.org/10.1016/j.ajt.2025.06.003.
+> V. Petr, F. Tichanek, S.L. Liu, F. Poppelaars, B. Renner, J. Laskowski, S. Purohit, M. Zhao, D. Jalal, P.S. Heeger, J.M. Thurman, Pretransplant natural antibody levels identify a subset of deceased donor kidney transplant recipients that benefit from infliximab induction, American Journal of Transplantation (2025). https://doi.org/10.1016/j.ajt.2025.06.003.
 
 BibTeX entry is provided in a [CITATION.bib](https://github.com/filip-tichanek/infliximab_nAb/blob/main/CITATION.bib) file
 
